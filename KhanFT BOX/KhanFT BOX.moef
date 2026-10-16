@@ -1259,7 +1259,7 @@
 						</parameter>
 						<parameter name="Custom Mix" id="3" factoryID="25">
 							<flags>8606711824</flags>
-							<curve type="1" default="1" value="0.54000000000000004">
+							<curve type="1" default="1" value="0.85">
 								<min>0</min>
 								<max>1</max>
 							</curve>
@@ -2312,15 +2312,15 @@
 								<foldFlags>11</foldFlags>
 								<parameter name="X" id="1" factoryID="25">
 									<flags>8606711824</flags>
-									<curve type="1" default="1" value="1.6899999999999999"/>
+									<curve type="1" default="1" value="1.2"/>
 								</parameter>
 								<parameter name="Y" id="2" factoryID="25">
 									<flags>8606711824</flags>
-									<curve type="1" default="1" value="1.6899999999999999"/>
+									<curve type="1" default="1" value="1.2"/>
 								</parameter>
 								<parameter name="Z" id="3" factoryID="25">
 									<flags>8606711824</flags>
-									<curve type="1" default="1" value="1.6899999999999999"/>
+									<curve type="1" default="1" value="1.2"/>
 								</parameter>
 							</parameter>
 							<parameter name="Scale" id="2" factoryID="3">
