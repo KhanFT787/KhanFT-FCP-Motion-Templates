@@ -111,7 +111,7 @@ PSH = d.new(); _, prow = d.group('Pips Show', PSH, children=prow, beh=d.rig('Rig
 PIPP, prow = c.place('Pips Position', prow, 0, -830)
 
 # ---------- publish (inspector order): colours > icon > counter > title > pips > animation > reset
-ico = c.icon_block(px=0, py=640, size=0.85)
+ico = c.icon_block(px=0, py=640, size=0.85, t0=0.7)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(W_PRE, './2/100', 'Colour Preset')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')

@@ -344,7 +344,17 @@ class Card:
             dd = DUR[feel] + 0.15
             f = (lambda p: max(0, spring(p, ov=0.14))) if feel != 'Snappy' else ease_out4
             return dict(sx=[(0, 0), (t0, 0)] + keys(t0, dd, f)[1:], op=[(0, 0), (t0, 0)] + keys(t0, dd*0.3, smooth)[1:])
-        IPA = d.new(); _, g = d.group('Icon Pop', IPA, children=g, beh=self.feel_links(IPA, pop))
+        IPA = d.new(); self.burn(lambda: self.feel_links(IPA, pop))     # old fixed pop: ids kept, replaced by the menus
+        band = ('icon_id', 99000)
+        W_IIN = self.hi(lambda: d.w_popup('Icon In', ICON_IN, 0), *band)
+        W_IINS = self.hi(lambda: d.w_popup('Icon In Speed', SPEEDS, 1), *band)
+        W_IOUT = self.hi(lambda: d.w_popup('Icon Out', ICON_OUT, ICON_OUT.index('None')), *band)
+        W_IOUTS = self.hi(lambda: d.w_popup('Icon Out Speed', SPEEDS, 1), *band)
+        beh = self.hi(lambda: self.style_links(IPA, ICON_IN, W_IIN, 0, icon_in_motion(t0), w_speed=W_IINS), *band)
+        _, g = d.group('Icon Pop', IPA, children=g, beh=beh)
+        IOU = self.hi(d.new, *band)
+        beh = self.hi(lambda: self.style_links(IOU, ICON_OUT, W_IOUT, ICON_OUT.index('None'), icon_out_motion(), w_speed=W_IOUTS), *band)
+        _, g = d.group('Icon Out', IOU, children=g, beh=beh)
         ISH = d.new()
         _, g = d.group('Icon Show', ISH, children=g, op=1 if show else 0, sx=size, sy=size,
                        beh=d.rig('Rig Show Icon', ISH, 'GRP', './1/200/202', W_ICON, [(1, 0), (2, 1)], pname='Opacity'))
@@ -353,6 +363,7 @@ class Card:
             P = lambda o, ch, n: self.extras_pub.setdefault('Icon', []).append((o, ch, n))
             P(W_ICON, './2/100', 'Show Icon'); P(W_SRC, './2/100', 'Icon'); P(DZ, './1/324/300', 'Custom Icon Image')
             P(ICOP, './1/100/101', 'Icon Position'); P(ISH, './1/100/105', 'Icon Size')
+            P(W_IIN, './2/100', 'Icon In'); P(W_IINS, './2/100', 'Icon In Speed'); P(W_IOUT, './2/100', 'Icon Out'); P(W_IOUTS, './2/100', 'Icon Out Speed')
             P(W_FL, './2/100', 'Icon Float'); P(W_FAMT, './2/100', 'Icon Float Amount'); P(W_FSPD, './2/100', 'Icon Float Speed')
             P(DZ, './1/208/211', 'Icon Shadow Opacity'); P(DZ, './1/208/213', 'Icon Shadow Softness'); P(DZ, './1/208/212', 'Icon Shadow Distance')
         # icon layers copy the custom drop zone's shadow settings
@@ -565,6 +576,46 @@ def text_out_motion(dist, nd):
         if st == 'Slide to Right': return dict(px=hold(0) + seg(lambda p: dist*4*g(p)), op=fade)
         if st == 'Drop': return dict(py=hold(0) + seg(lambda p: -dist*g(p)), op=fade)
         if st == 'Pop': return dict(sx=hold(1) + seg(lambda p: 1 - 0.18*g(p)), op=hold(1) + seg(lambda p: 1 - smooth(p), dd*0.6))
+        raise ValueError(st)
+    return fn
+ICON_IN = ['Pop', 'Rise', 'Fade', 'Slide from Left', 'Slide from Right', 'Drop', 'None']
+ICON_OUT = ['Pop', 'Rise', 'Fade', 'Slide to Left', 'Slide to Right', 'Drop', 'None']
+def icon_in_motion(t0, dist=80):
+    def fn(st, feel, speed):
+        if st == 'Pop':      # the original pop, now with a speed
+            dd = (DUR[feel] + 0.15)*SPD[speed]
+            f = (lambda p: max(0, spring(p, ov=0.14))) if feel != 'Snappy' else ease_out4
+            return dict(sx=[(0, 0), (t0, 0)] + keys(t0, dd, f, n=max(10, int(dd*30)))[1:], op=[(0, 0), (t0, 0)] + keys(t0, dd*0.3, smooth, n=8)[1:])
+        dd = {'Smooth': 0.6, 'Snappy': 0.4, 'Gentle Bounce': 0.75}[feel]*SPD[speed]
+        if feel == 'Gentle Bounce': r = lambda p: 1 - spring(p, ov=0.12)
+        elif feel == 'Snappy': r = lambda p: 1 - ease_out4(p)
+        else: r = lambda p: 1 - ease_out(p)
+        pre = lambda v: [(0, v), (t0, v)]
+        seg = lambda f, d2=dd: keys(t0, d2, f, n=max(8, int(d2*30)))[1:]
+        fade = pre(0) + seg(smooth, dd*0.6)
+        if st == 'Rise': return dict(py=pre(-dist) + seg(lambda p: -dist*r(p)), op=fade)
+        if st == 'Fade': return dict(op=pre(0) + seg(smooth))
+        if st == 'Slide from Left': return dict(px=pre(-dist*4) + seg(lambda p: -dist*4*r(p)), op=fade)
+        if st == 'Slide from Right': return dict(px=pre(dist*4) + seg(lambda p: dist*4*r(p)), op=fade)
+        if st == 'Drop': return dict(py=pre(dist) + seg(lambda p: dist*r(p)), op=fade)
+        raise ValueError(st)
+    return fn
+def icon_out_motion(dist=80):
+    t0 = OUT_T0
+    def fn(st, feel, speed):
+        dd = {'Smooth': 0.5, 'Snappy': 0.35, 'Gentle Bounce': 0.6}[feel]*SPD[speed]
+        if feel == 'Gentle Bounce': g = lambda p: p*p*(2.4*p - 1.4)
+        elif feel == 'Snappy': g = lambda p: p**4
+        else: g = ease_in
+        hold = lambda v: [(0, v), (t0, v)]
+        seg = lambda f, d2=dd: keys(t0, d2, f, n=max(8, int(d2*30)))[1:]
+        fade = hold(1) + seg(lambda p: 1 - smooth(p), dd*0.8)
+        if st == 'Pop': return dict(sx=hold(1) + seg(lambda p: max(0, 1 - g(p))), op=hold(1) + [(t0 + dd*0.6, 1)] + keys(t0 + dd*0.6, dd*0.4, lambda p: 1 - p, n=8)[1:])
+        if st == 'Rise': return dict(py=hold(0) + seg(lambda p: dist*g(p)), op=fade)
+        if st == 'Fade': return dict(op=hold(1) + seg(lambda p: 1 - smooth(p)))
+        if st == 'Slide to Left': return dict(px=hold(0) + seg(lambda p: -dist*4*g(p)), op=fade)
+        if st == 'Slide to Right': return dict(px=hold(0) + seg(lambda p: dist*4*g(p)), op=fade)
+        if st == 'Drop': return dict(py=hold(0) + seg(lambda p: -dist*g(p)), op=fade)
         raise ValueError(st)
     return fn
 TEXT_IN = ['Rise', 'Word by Word', 'Fade', 'Slide from Left', 'Slide from Right', 'Drop', 'Pop', 'None']

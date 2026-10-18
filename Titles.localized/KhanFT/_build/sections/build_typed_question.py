@@ -105,7 +105,7 @@ qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'
 QO = c.hi(d.new, 'out_id', 98000); qx = d.group('Question Out', QO, children=qx, beh=c.text_out('Question', QO, 30, seq=OSEQ[0], rename={'Word by Word': 'Typewriter'}))[1]
 QP, qline = c.place('Question Position', qx, 0, -40)
 
-ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.2)
+ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.75)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')

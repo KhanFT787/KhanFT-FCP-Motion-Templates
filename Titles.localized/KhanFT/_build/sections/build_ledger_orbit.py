@@ -135,7 +135,7 @@ O2 = c.hi(d.new, 'out_id', 98000); t2 = d.group('Line 2 Out', O2, children=t2, b
 _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
 TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
-ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.5)
+ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.65)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
