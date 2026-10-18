@@ -252,3 +252,36 @@ class Card:
             im.resize((400, 225), Image.LANCZOS).save(os.path.join(outdir, self.name, 'large.png'))
             im.resize((160, 90), Image.LANCZOS).save(os.path.join(outdir, self.name, 'small.png'))
         return path, s
+
+# ---- shared entrance / exit library (every card offers all of these; cards may override some with their own look)
+ENTR_ALL = ['Cut', 'Fade', 'Fade Up', 'Zoom', 'Drop In', 'Rise In', 'Slide from Left', 'Slide from Right']
+EXIT_ALL = ['Cut', 'Fade', 'Fade Down', 'Zoom Out', 'Drop Out', 'Rise Out', 'Slide to Left', 'Slide to Right']
+def merge_styles(own, full):
+    """keep a card's existing menu order (clips store the menu position), then append the missing styles"""
+    return own + [s for s in full if s not in own]
+def _ease_in_f(feel):
+    if feel == 'Gentle Bounce': return lambda p: 1 - spring(p, ov=0.06, a=7)
+    if feel == 'Snappy': return lambda p: 1 - ease_out4(p)
+    return lambda p: 1 - ease_out(p)
+def std_in(st, feel, dx=4900, dy=3100):
+    dd = DUR[feel] * 1.1; f = _ease_in_f(feel)
+    if st in ('Fade', 'Dissolve'): return dict(op=keys(0.0, dd*0.6, smooth))
+    if st == 'Fade Up': return dict(op=keys(0.0, dd*0.7, smooth), py=keys(0.0, dd, lambda p: -140*f(p)))
+    if st == 'Zoom': return dict(sx=keys(0.0, dd, lambda p: 1 + 0.07*f(p)), op=keys(0.0, dd*0.5, smooth))
+    if st == 'Drop In': return dict(py=keys(0.0, dd, lambda p: dy*f(p)))
+    if st == 'Rise In': return dict(py=keys(0.0, dd, lambda p: -dy*f(p)))
+    if st == 'Slide from Left': return dict(px=keys(0.0, dd, lambda p: -dx*f(p)))
+    if st == 'Slide from Right': return dict(px=keys(0.0, dd, lambda p: dx*f(p)))
+    raise ValueError(st)
+def std_out(st, feel, dx=4900, dy=3100):
+    dd = DUR[feel] * 0.85; t0 = END - dd - 0.02
+    g = (lambda q: q**4) if feel == 'Snappy' else ease_in
+    hold = lambda v: [(0, v), (t0, v)]
+    if st == 'Fade': return dict(op=hold(1) + keys(t0, dd, lambda q: 1-smooth(q))[1:])
+    if st == 'Fade Down': return dict(op=hold(1) + keys(t0, dd, lambda q: 1-smooth(q))[1:], py=hold(0) + keys(t0, dd, lambda q: -140*smooth(q))[1:])
+    if st == 'Zoom Out': return dict(sx=hold(1) + keys(t0, dd, lambda q: 1+0.05*ease_in(q))[1:], op=hold(1) + keys(t0, dd, lambda q: 1-smooth(q))[1:])
+    if st == 'Drop Out': return dict(py=hold(0) + keys(t0, dd, lambda q: -dy*g(q))[1:])
+    if st == 'Rise Out': return dict(py=hold(0) + keys(t0, dd, lambda q: dy*g(q))[1:])
+    if st == 'Slide to Left': return dict(px=hold(0) + keys(t0, dd, lambda q: -dx*g(q))[1:])
+    if st == 'Slide to Right': return dict(px=hold(0) + keys(t0, dd, lambda q: dx*g(q))[1:])
+    raise ValueError(st)

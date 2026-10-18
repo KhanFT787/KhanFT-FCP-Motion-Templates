@@ -16,8 +16,8 @@ PRESETS = [('Graphite', hexc('202123'), hexc('151617'), hexc('0b0b0c')),
 SETS = [('Coin and Stones', ['Gold Coin', 'Jade Stone', 'Grey Stone']),
         ('Three Coins', ['Gold Coin', 'Silver Coin', 'Bronze Coin']),
         ('Custom Images', [None, None, None])]
-ENTR = ['Cut', 'Fade', 'Zoom']
-EXIT = ['Cut', 'Fade', 'Zoom Out']
+ENTR = merge_styles(['Cut', 'Fade', 'Zoom'], ENTR_ALL)
+EXIT = merge_styles(['Cut', 'Fade', 'Zoom Out'], EXIT_ALL)
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_SET = d.w_popup('Objects', [s[0] for s in SETS], 0)
 W_RING = d.w_check('Show Ring', True)
@@ -29,11 +29,13 @@ c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
 def card_in(st, feel):
+    if st not in ('Fade', 'Zoom'): return std_in(st, feel)
     din = DUR[feel]
     if st == 'Fade': return dict(op=keys(0.0, din*0.6, smooth))
     f = (lambda p: 1.07 - 0.07*ease_out4(p)) if feel != 'Gentle Bounce' else (lambda p: 1.07 - 0.07*spring(p, ov=0.25))
     return dict(sx=keys(0.0, din, f), op=keys(0.0, din*0.5, smooth))
 def card_out(st, feel):
+    if st not in ('Fade', 'Zoom Out'): return std_out(st, feel)
     dout = DUR[feel]*0.7; t0 = END - dout - 0.02
     if st == 'Fade': return dict(op=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1-smooth(q))[1:])
     return dict(sx=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1+0.05*ease_in(q))[1:],
@@ -130,6 +132,7 @@ _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
 TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
 ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.5)
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(VIG, './1/200/202', 'Vignette'); P(LN, './1/200/202', 'Line Texture'); P(GR, './1/200/202', 'Grain')
@@ -143,7 +146,6 @@ P(W_SET, './2/100', 'Objects')
 for k, dz in enumerate(DZS): P(dz, './1/324/300', f'Custom Object {k+1}')
 P(W_SPD, './2/100', 'Orbit Speed'); P(W_RING, './2/100', 'Show Ring'); P(RING, './1/200/202', 'Ring Opacity')
 P(ORBP, './1/100/101', 'Orbit Position'); P(OSZ, './1/100/105', 'Orbit Size')
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 CO = d.new(); CI = d.new()

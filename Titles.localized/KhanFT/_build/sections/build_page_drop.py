@@ -15,8 +15,8 @@ PRESETS = [('Cloud', hexc('ffffff'), hexc('eef0f5'), hexc('d9dde8')),
            ('Mint', hexc('ffffff'), hexc('e9f5f0'), hexc('cfe5dc')),
            ('Blush', hexc('ffffff'), hexc('f8eeee'), hexc('e9d6d6')),
            ('Custom', hexc('ffffff'), hexc('eef0f5'), hexc('d9dde8'))]
-ENTR = ['Cut', 'Drop In', 'Rise In', 'Slide In', 'Fade']
-EXIT = ['Cut', 'Drop Out', 'Rise Out', 'Slide Out', 'Fade']
+ENTR = merge_styles(['Cut', 'Drop In', 'Rise In', 'Slide from Right', 'Fade'], ENTR_ALL)
+EXIT = merge_styles(['Cut', 'Drop Out', 'Rise Out', 'Slide to Left', 'Fade'], EXIT_ALL)
 W_PRE = d.w_popup('Card Colour', [p[0] for p in PRESETS], 0)
 W_SHC = d.w_check('Show Counter', True)
 W_ENT = d.w_popup('Entrance', ENTR, 1)
@@ -27,6 +27,7 @@ P = d.publish
 DIST_Y, DIST_X = FH + 120, FW + 120
 
 def card_in(st, feel):
+    if st not in ('Drop In', 'Rise In', 'Slide from Right', 'Fade'): return std_in(st, feel, DIST_X, DIST_Y)
     dd = DUR[feel] * 0.9
     if st == 'Fade': return dict(op=keys(0.0, dd*0.7, smooth))
     if feel == 'Gentle Bounce':
@@ -39,6 +40,7 @@ def card_in(st, feel):
     if st == 'Rise In':  return dict(py=keys(0.0, dd, lambda p: -DIST_Y*f(p)))
     return dict(px=keys(0.0, dd, lambda p: DIST_X*f(p)))
 def card_out(st, feel):
+    if st not in ('Drop Out', 'Rise Out', 'Slide to Left', 'Fade'): return std_out(st, feel, DIST_X, DIST_Y)
     dd = DUR[feel]*0.75; t0 = END - dd - 0.01
     if st == 'Fade': return dict(op=[(0, 1), (t0, 1)] + keys(t0, dd, lambda q: 1-smooth(q))[1:])
     f = (lambda q: q**4) if feel == 'Snappy' else ease_in
@@ -84,6 +86,7 @@ CSH = d.new(); _, cnt = d.group('Counter Show', CSH, children=cnt, beh=d.rig('Ri
 CNTP, cnt = c.place('Counter Position', cnt, LEFT, 760)
 
 ico = c.icon_block(px=1180, py=-40, size=1.3, show=True, t0=0.75)
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Card Colour')
 P(BG['Custom'][1], './2/353/113/111', 'Custom Card'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge'); P(GR, './1/200/202', 'Grain')
 c.pub_extras('Icon')
@@ -92,7 +95,6 @@ c.pub_extras('Counter'); P(CNTP, './1/100/101', 'Counter Position')
 P(L1, './2/369', 'Title Line 1'); P(L1S, './14/16', 'Line 1 Colour'); c.pub_extras('Line 1')
 P(L2, './2/369', 'Title Line 2'); P(L2S, './14/16', 'Line 2 Colour'); c.pub_extras('Line 2')
 P(TTLP, './1/100/101', 'Title Position')
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 CO = d.new(); CI = d.new()

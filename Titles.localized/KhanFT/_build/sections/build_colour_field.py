@@ -17,8 +17,8 @@ PRESETS = [('Amber', hexc('ffd35a'), hexc('f0a21e'), hexc('b86006')),
            ('Sand', hexc('f8e4ba'), hexc('dcb877'), hexc('8a6830')),
            ('Lilac', hexc('dccbff'), hexc('9c7ee6'), hexc('4c3492')),
            ('Custom', hexc('a8ec86'), hexc('4fae3c'), hexc('235c20'))]
-ENTR = ['Cut', 'Fade', 'Zoom']
-EXIT = ['Cut', 'Fade', 'Zoom Out']
+ENTR = merge_styles(['Cut', 'Fade', 'Zoom'], ENTR_ALL)
+EXIT = merge_styles(['Cut', 'Fade', 'Zoom Out'], EXIT_ALL)
 T_IN, T_OUT = 1.0, END - 0.6
 
 W_PRE = d.w_popup('Colour Preset', [p[0] for p in PRESETS], 0)
@@ -33,11 +33,13 @@ c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
 def card_in(st, feel):
+    if st not in ('Fade', 'Zoom'): return std_in(st, feel)
     din = DUR[feel]
     if st == 'Fade': return dict(op=[(0, 0)] + keys(0.0, din*0.6, smooth)[1:])
     f = (lambda p: 1.07 - 0.07*ease_out4(p)) if feel != 'Gentle Bounce' else (lambda p: 1.07 - 0.07*spring(p, ov=0.25))
     return dict(sx=keys(0.0, din, f), op=keys(0.0, din*0.5, smooth))
 def card_out(st, feel):
+    if st not in ('Fade', 'Zoom Out'): return std_out(st, feel)
     dout = DUR[feel]*0.7; t0 = END - dout - 0.02
     if st == 'Fade': return dict(op=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1-smooth(q))[1:])
     return dict(sx=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1+0.05*ease_in(q))[1:],
@@ -110,6 +112,7 @@ PIPP, prow = c.place('Pips Position', prow, 0, -830)
 
 # ---------- publish (inspector order): colours > icon > counter > title > pips > animation > reset
 ico = c.icon_block(px=0, py=640, size=0.85)
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(W_PRE, './2/100', 'Colour Preset')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
@@ -119,7 +122,6 @@ c.pub_extras('Counter'); P(CNTP, './1/100/101', 'Counter Position')
 P(TTL, './2/369', 'Title Text'); P(TTL_STY, './14/16', 'Title Colour')
 c.pub_extras('Title'); P(TTLP, './1/100/101', 'Title Position')
 P(W_PIPS, './2/100', 'Progress Pips'); P(W_CUR, './2/100', 'Current Pip'); P(FILL, './2/353/113/111', 'Pip Colour'); P(PIPP, './1/100/101', 'Pips Position')
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 # ---------- assemble

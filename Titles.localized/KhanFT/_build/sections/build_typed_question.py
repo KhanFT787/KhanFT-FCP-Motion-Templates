@@ -13,8 +13,8 @@ PRESETS = [('Navy', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
            ('Forest', hexc('25453a'), hexc('183028'), hexc('0d1c17')),
            ('Plum', hexc('45284a'), hexc('2e1a33'), hexc('1b0f1e')),
            ('Custom', hexc('24395a'), hexc('18263c'), hexc('0e1726'))]
-ENTR = ['Cut', 'Dissolve', 'Fade Up']
-EXIT = ['Cut', 'Fade']
+ENTR = merge_styles(['Cut', 'Dissolve', 'Fade Up'], ENTR_ALL)
+EXIT = merge_styles(['Cut', 'Fade'], EXIT_ALL)
 SPEEDS = [('Normal', 1.9)]
 T0 = 0.3
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
@@ -27,10 +27,12 @@ c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
 def card_in(st, feel):
+    if st not in ('Dissolve', 'Fade Up'): return std_in(st, feel)
     dd = DUR[feel]*(0.5 if st == 'Dissolve' else 1)
     if st == 'Dissolve': return dict(op=keys(0, 0.16, lambda p: p))
     return dict(op=keys(0, dd*0.7, smooth), py=keys(0, dd, lambda p: -80*(1-ease_out4(p))))
 def card_out(st, feel):
+    if st != 'Fade': return std_out(st, feel)
     dd = DUR[feel]*0.7; t0 = END-dd-0.01
     return dict(op=[(0, 1), (t0, 1)] + keys(t0, dd, lambda q: 1-smooth(q))[1:])
 
@@ -93,13 +95,13 @@ qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'
 QP, qline = c.place('Question Position', qx, 0, -40)
 
 ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.2)
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength'); P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
 c.pub_extras('Icon')
 P(Q, './2/369', 'Question'); P(QS, './14/16', 'Text Colour'); P(W_CUR, './2/100', 'Show Cursor')
 c.pub_extras('Question'); P(QP, './1/100/101', 'Question Position')
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 CONT = d.new(); _, content = d.group('Content', CONT, children=ico + qline)
