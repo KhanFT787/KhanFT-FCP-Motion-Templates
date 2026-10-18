@@ -20,7 +20,7 @@ PRESETS = [('Amber', hexc('ffd35a'), hexc('f0a21e'), hexc('b86006')),
            ('Custom', hexc('a8ec86'), hexc('4fae3c'), hexc('235c20'))]
 ENTR = ['Cut', 'Fade', 'Zoom'] + DROP_IN + ['Fade Up', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade', 'Zoom Out'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Slide to Left', 'Slide to Right']
-ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
+ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
 T_IN, T_OUT = 1.0, END - 0.6
 
 W_PRE = d.w_popup('Colour Preset', [p[0] for p in PRESETS], 0)

@@ -16,7 +16,7 @@ PRESETS = [('Navy', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
            ('Custom', hexc('24395a'), hexc('18263c'), hexc('0e1726'))]
 ENTR = ['Cut', 'Dissolve', 'Fade Up'] + DROP_IN + ['Fade', 'Zoom', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Left', 'Slide to Right']
-ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
+ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
 TYPE_SPEEDS = [('Normal', 1.9)]
 T0 = 0.3
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)

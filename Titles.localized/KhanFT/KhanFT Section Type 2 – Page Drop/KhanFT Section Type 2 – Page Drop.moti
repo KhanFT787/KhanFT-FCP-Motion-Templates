@@ -489,7 +489,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="9"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -505,7 +505,7 @@
 <parameter name="Snapshots" id="12" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="11"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="13" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="12"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Entrance" id="100" flags="8606777360" default="0" value="1">
+<parameter name="Entrance" id="100" flags="8606777360" default="0" value="8">
 <entry name="Cut" tag="0"/>
 <entry name="Drop In – Blur" tag="1"/>
 <entry name="Rise In" tag="2"/>
@@ -550,7 +550,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="9"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -572,7 +572,7 @@
 <parameter name="Snapshots" id="18" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="17"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="19" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="18"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Exit" id="100" flags="8606777360" default="0" value="1">
+<parameter name="Exit" id="100" flags="8606777360" default="0" value="8">
 <entry name="Cut" tag="0"/>
 <entry name="Drop Down – Blur" tag="1"/>
 <entry name="Rise Out" tag="2"/>
@@ -7932,7 +7932,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30569" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30570" flags="16777234" default="-100" value="-100"/>
@@ -8261,7 +8261,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="31175" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="31176" flags="16777234" default="-100" value="-100"/>
@@ -8308,7 +8308,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="31180" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="31181" flags="16777234" default="-100" value="-100"/>
@@ -9174,7 +9174,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="32402" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="32403" flags="16777234" default="-100" value="-100"/>
@@ -9461,7 +9461,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="33008" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="33009" flags="16777234" default="-100" value="-100"/>
@@ -9502,7 +9502,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="33013" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="33014" flags="16777234" default="-100" value="-100"/>

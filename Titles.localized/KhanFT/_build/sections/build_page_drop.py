@@ -18,7 +18,7 @@ PRESETS = [('Cloud', hexc('ffffff'), hexc('eef0f5'), hexc('d9dde8')),
            ('Custom', hexc('ffffff'), hexc('eef0f5'), hexc('d9dde8'))]
 ENTR = ['Cut', 'Drop In – Blur', 'Rise In', 'Slide from Right', 'Fade'] + DROP_IN[1:] + ['Fade Up', 'Zoom', 'Slide from Left']
 EXIT = ['Cut', 'Drop Down – Blur', 'Rise Out', 'Slide to Left', 'Fade'] + DROP_DOWN[1:] + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Right']
-ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
+ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
 W_PRE = d.w_popup('Card Colour', [p[0] for p in PRESETS], 0)
 W_SHC = d.w_check('Show Counter', True)
 W_ENT = d.w_popup('Entrance', ENTR, ENT0)

@@ -19,7 +19,7 @@ SETS = [('Coin and Stones', ['Gold Coin', 'Jade Stone', 'Grey Stone']),
         ('Custom Images', [None, None, None])]
 ENTR = ['Cut', 'Fade', 'Zoom'] + DROP_IN + ['Fade Up', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade', 'Zoom Out'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Slide to Left', 'Slide to Right']
-ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
+ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_SET = d.w_popup('Objects', [s[0] for s in SETS], 0)
 W_RING = d.w_check('Show Ring', True)
