@@ -190,6 +190,7 @@ class Doc:
         t = t.replace(f'<parameter name="Substance" id="{o_sub}"', f'<parameter name="Substance" id="{sub}"')
         t = re.sub(r'<styleRun style="(\d+)" offset="0" length="\d+"/>', f'<styleRun style="{sid}" offset="0" length="{len(txt)}"/>', t, 1)
         t = t.replace('value="120"/>', f'value="{size}"/>', 1)
+        self.text_sizes = getattr(self, 'text_sizes', {}); self.text_sizes[tid] = size
         t = t.replace('<font>KohinoorBangla-Bold</font>', f'<font>{font}</font>', 1)
         t = re.sub(r'<parameter name="Alignment" id="401" flags="8606777360" default="0" value="\d"/>',
                    f'<parameter name="Alignment" id="401" flags="8606777360" default="0" value="{align}"/>', t)
@@ -383,8 +384,11 @@ class Doc:
         for m in list(pat.finditer(s)):
             chan, tgt, wid, v0 = m.groups()
             if wid not in sl: continue
-            a = s.find(f'<behavior name="'); a = re.search(rf'<behavior name="[^"]*" id="{tgt}"', s).start(); e = s.find('</behavior>', a)
+            mt = re.search(rf'<(behavior|scenenode|layer|group) name="[^"]*" id="{tgt}"', s); a = mt.start()
+            if mt.group(1) == 'behavior': e = s.find('</behavior>', a)
             cur = a
+            if mt.group(1) != 'behavior':
+                e = span(s, a, mt.group(1)); cur = s.rfind('<aspectRatio>', a, e); assert cur > 0
             for pid in chan[2:].split('/'):
                 mm = re.compile(rf'<parameter name="[^"]*" id="{pid}"[^>]*?(/?)>').search(s, cur, e)
                 assert mm, (tgt, chan)

@@ -80,14 +80,16 @@ class Card:
 
     # ---- float wiring. Motion honours only ONE rig per object, so amount and on/off live on separate links:
     #      source (oscillators) -> '<label> Float Amount' driver (link Scale rigged by Amount) -> target (link Custom Mix rigged by On)
+    def hi(self, fn):
+        """allocate ids from a separate high range so ids of earlier builds stay put (clips keep their settings)"""
+        d = self.d; keep = d.nid[0]; d.nid[0] = getattr(self, 'hi_id', 80000)
+        try: return fn()
+        finally: self.hi_id = d.nid[0]; d.nid[0] = keep
+
     def float_links(self, label, target, src, w_on, w_amt, on):
         # ids: the target links/rigs keep the exact ids of the earlier build (so clips already in a timeline keep
         # their settings); everything new is allocated from a separate high range.
-        d = self.d
-        def hi(fn):
-            keep = d.nid[0]; d.nid[0] = getattr(self, 'hi_id', 80000)
-            try: return fn()
-            finally: self.hi_id = d.nid[0]; d.nid[0] = keep
+        d = self.d; hi = self.hi
         AMT = hi(d.new); ab = ''; fb = ''
         for nm, chan, chs, sc in (('Float Y', './1/100/101', [('2', './1/100/101/2')], 0.5625), ('Float Tilt', './1/100/109', [('3', './1/100/109/3')], 1.0)):
             lid, lx = d.link(nm, target, 'GRP', chan, AMT, chs, mode=0, mix=1 if on else 0, scale=sc)
@@ -140,6 +142,16 @@ class Card:
                           '<parameter name="Angle" id="214" flags="8606711824" default="5.497787143782138" value="4.7123889803846897"/></parameter>\n'
                           '<parameter name="Lighting" id="230"', 1)
         box = box.replace('</scenenode>', fit + '</scenenode>')
+        # vertical offset: Bangla fonts reserve a deep descender, so the measured text bounds sit low on the
+        # visible letters. Default lift scales with the font size; adjustable per clip (-300..300 px).
+        dy = round(0.38 * d.text_sizes.get(tid, 120))
+        def offset_grp():
+            W_OY = d.w_slider(f'{label} Box Offset Y', round((dy + 300) / 600, 4), -300, 300)
+            OG = d.new()
+            _, x = d.group(f'{label} Box Offset', OG, children=box, py=dy,
+                           beh=d.rig(f'Rig {label} Box Offset', OG, 'GRP', './1/100/101/2', W_OY, [(1, -300), (2, 300)], pname='Y', rng=B))
+            return W_OY, x
+        W_OY, box = self.hi(offset_grp)
         BS = d.new()
         _, box = d.group(f'{label} Box Show', BS, children=box, op=1 if box_on else 0,
                          beh=d.rig(f'Rig {label} Box', BS, 'GRP', './1/200/202', W_BOX, [(1, 0), (2, 1)], pname='Opacity'))
@@ -157,7 +169,7 @@ class Card:
         P = lambda o, c, n: self.extras_pub.setdefault(label, []).append((o, c, n))
         P(W_FL, './2/100', f'{label} Float'); P(W_FA, './2/100', f'{label} Float Amount'); P(W_FS, './2/100', f'{label} Float Speed')
         P(W_BOX, './2/100', f'{label} Box'); P(BX, './2/353/113/111', f'{label} Box Colour'); P(BX, './1/200/202', f'{label} Box Opacity')
-        P(BX, './2/353/144', f'{label} Box Roundness'); P(W_PX, './2/100', f'{label} Box Padding X'); P(W_PY, './2/100', f'{label} Box Padding Y')
+        P(BX, './2/353/144', f'{label} Box Roundness'); P(W_PX, './2/100', f'{label} Box Padding X'); P(W_PY, './2/100', f'{label} Box Padding Y'); P(W_OY, './2/100', f'{label} Box Vertical Offset')
         P(BX, './2/353/108/105', f'{label} Box Border'); P(BX, './2/353/108/107', f'{label} Box Border Colour')
         P(BX, './1/208/211', f'{label} Box Shadow'); P(BX, './1/208/213', f'{label} Box Shadow Softness'); P(BX, './1/208/212', f'{label} Box Shadow Distance')
         return g
