@@ -1,0 +1,26 @@
+# Track only KhanFT's own templates; ignore MotionVFX, Apple and everything else.
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/LICENSE
+
+!/Effects.localized/
+/Effects.localized/*
+!/Effects.localized/KhanFT/
+
+!/Titles.localized/
+/Titles.localized/*
+!/Titles.localized/KhanFT/
+
+!/Transitions.localized/
+/Transitions.localized/*
+!/Transitions.localized/KhanFT/
+
+!/Generators.localized/
+/Generators.localized/*
+!/Generators.localized/KhanFT/
+
+.DS_Store
+__pycache__/
+*.pyc
