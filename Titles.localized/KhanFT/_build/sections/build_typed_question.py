@@ -28,13 +28,13 @@ INK = (0.063, 0.098, 0.169)
 TQ = ('tq_id', 160000)                   # band for everything added 19 Oct 2026 (older clips keep their settings)
 GMOTION = ['Off', 'Drift', 'Pan Up', 'Pan Right', 'Breathe', 'Light Sweep']
 GSPEEDS = ['Slow', 'Normal', 'Fast']; GMUL = {'Slow': 0.5, 'Normal': 1.0, 'Fast': 1.8}
-GM0, GS0 = 'Drift', 'Slow'               # defaults
+GM0, GS0 = 'Breathe', 'Normal'           # defaults
 ENTR = ['Cut', 'Dissolve', 'Fade Up'] + DROP_IN + ['Fade', 'Zoom', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Left', 'Slide to Right']
 ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
 TYPE_SPEEDS = [('Normal', 1.9)]
 T0 = 0.9
-W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
+W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 4)   # Custom (Navy colours) - Khan's default, 19 Oct 2026
 W_CUR = d.w_check('Show Cursor', True)
 W_GRID = d.w_check('Show Grid', True)
 W_ENT = d.w_popup('Entrance', ENTR, ENT0)
@@ -55,7 +55,7 @@ for i, (nm, hi, mid, edge) in enumerate(PRESETS):
         g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1200)
         g3, b = d.rect(f'{nm} Edge', FW+2*EDGE, FH+2*EDGE, edge)
         gg = d.new()
-        _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
+        _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 4 else 0,
                        beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
         return x, (g1, g2, g3)
     x, BG[nm] = c.hi(make, *TQ) if nm in NEW_PRESETS else make()
@@ -163,22 +163,74 @@ def grow(box):
     return d.group('Box Type Grow', BW, children=g, sx=bar_grow('Normal'), sy=1,
                    beh=c.hi(lambda: d.rig('Rig Box Type Grow', BW, 'GRP', './1/100/105/1', W_TSPD, [(j+1, bar_grow(sp)) for j, sp in enumerate(WORD_SPEEDS)], pname='X'), 'speed_id', 97000))[1]
 qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'), box_op=0.13, pad=(70, 40),
-                   border=(hexc('aacdeb'), 3), shadow=(0, 40, 14), box_wrap=grow, offset_x=20, shadow_layer=True)
+                   border=(hexc('aacdeb'), 3), shadow=(0, 40, 14), box_wrap=grow, offset_x=20, shadow_layer=True,
+                   float_on=True, float_speed=0.5, box_dy=30)
 QO = c.hi(d.new, 'out_id', 98000); qx = d.group('Question Out', QO, children=qx, beh=c.text_out('Question', QO, 30, seq=OSEQ[0], lead=0.35, rename={'Word by Word': 'Typewriter'}))[1]
 QP, qline = c.place('Question Position', qx, 0, -40)
-qline = ink('Question', qline)
 
-ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.75, icon_lead=0.25)
-P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
+ico = c.icon_block(px=0, py=520, size=0.8, show=True, t0=0.75, icon_lead=0.25)
+
+# ---------- counter (above the question) + progress pips (below), slow push-in - added 19 Oct 2026, ids from 'tq2_id'
+SOFT = hexc('aacdeb')
+PW, PH, PG = 90, 16, 24; PITCH = PW + PG; NP = 10; PIP_N = list(range(2, NP + 1))
+def extras():
+    W_SHC = d.w_check('Show Counter', True)
+    W_SHP = d.w_check('Show Pips', True)
+    W_PN = d.w_popup('Pip Count', [str(n) for n in PIP_N], PIP_N.index(4))
+    W_PC = d.w_popup('Current Pip', [str(i) for i in range(1, NP + 1)], 0)
+    W_PUSH = d.w_check('Slow Push-in', True)
+    seqs = []
+    def cnt_beh(tid, sub):
+        bid, x = d.seq_words('Counter Words', sub, 0.7, 0.7 + 0.6*WORD_MUL['Slow'], dy=0, spread=0, op0=0); seqs.append(bid); c.seq_norm[bid] = 0.6
+        ob, ox = c.out_seq('Counter Words Out', sub, 0.6); seqs.append(ob); return x + ox
+    CNT, CNT_STY, cnt = d.text('Counter', 'অধ্যায় ১ / ৪', 84, SOFT, beh_fn=cnt_beh)
+    cnt = c.text_extras('Counter', CNT, cnt, pad=(44, 22), float_on=True, float_speed=0.5)
+    CNTA = d.new()
+    cnt = d.group('Counter Anim', CNTA, children=cnt, beh=c.text_anim('Counter', CNTA, 0.7, 30, seq=seqs[0], default='Word by Word'))[1]
+    CNTO = c.hi(d.new, 'out_id', 98000)
+    cnt = d.group('Counter Out', CNTO, children=cnt, beh=c.text_out('Counter', CNTO, 30, seq=seqs[1], lead=0.3))[1]
+    CNTS = d.new()
+    cnt = d.group('Counter Show', CNTS, children=cnt, beh=d.rig('Rig Show Counter', CNTS, 'GRP', './1/200/202', W_SHC, [(1, 0), (2, 1)], pname='Opacity'))[1]
+    CNTP, cnt = c.place('Counter Position', cnt, 0, 235)
+    # pips: up to 10; the chosen one is filled
+    pips = ''
+    for i in range(1, NP + 1):
+        pid_, p = d.rect(f'Pip {i}', PW, PH, SOFT, px=(i-1)*PITCH, rnd=8, op=0.25 if i <= 4 else 0)
+        p = p.replace('</scenenode>', d.rig(f'Rig Pip {i}', pid_, 'SHP', './1/200/202', W_PN, [(j+1, 0.25 if i <= n else 0) for j, n in enumerate(PIP_N)], pname='Opacity') + '</scenenode>')
+        pips = p + pips
+    FILL, fill = d.rect('Active Pip', PW, PH, SOFT, rnd=8)
+    fill = d.group('Active Fill', children=fill, sx=[(0, 0), (0.3, 0)] + keys(0.3, 0.55, ease_out4)[1:], sy=1)[1]
+    ACT = d.new()
+    fill = d.group('Active Pip Slot', ACT, children=fill, beh=d.rig('Rig Current Pip', ACT, 'GRP', './1/100/101/1', W_PC, [(j+1, j*PITCH) for j in range(NP)], pname='X', rng=B))[1]
+    SH = d.new()
+    prow = d.group('Pips Row', SH, children=fill + pips, px=-1.5*PITCH,
+                   beh=d.rig('Rig Pip Centre', SH, 'GRP', './1/100/101/1', W_PN, [(j+1, -(n-1)/2*PITCH) for j, n in enumerate(PIP_N)], pname='X', rng=B))[1]
+    PSH = d.new()
+    prow = d.group('Pips Show', PSH, children=prow, beh=d.rig('Rig Pips Show', PSH, 'GRP', './1/200/202', W_SHP, [(1, 0), (2, 1)], pname='Opacity'))[1]
+    prow = c.follow_out('Pips Out', prow, 'Question', 0.5)
+    PIPP, prow = c.place('Pips Position', prow, 0, -300)
+    return W_SHC, W_SHP, W_PN, W_PC, W_PUSH, CNT, CNT_STY, CNTP, FILL, PIPP, cnt, prow
+W_SHC, W_SHP, W_PN, W_PC, W_PUSH, CNT, CNT_STY, CNTP, FILL, PIPP, cnt, prow = c.hi(extras, 'tq2_id', 170000)
+qline = ink('Question', cnt + qline + prow)
+P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength'); P(W_GM, './2/100', 'Grid Motion'); P(W_GS, './2/100', 'Grid Speed'); P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
 c.pub_extras('Icon')
+P(CNT, './2/369', 'Counter Text'); P(W_SHC, './2/100', 'Show Counter'); P(CNT_STY, './14/16', 'Counter Colour')
+c.pub_extras('Counter'); P(CNTP, './1/100/101', 'Counter Position')
 P(Q, './2/369', 'Question'); P(QS, './14/16', 'Text Colour'); P(W_CUR, './2/100', 'Show Cursor')
 c.pub_extras('Question'); P(QP, './1/100/101', 'Question Position')
+P(W_SHP, './2/100', 'Show Pips'); P(W_PN, './2/100', 'Pip Count'); P(W_PC, './2/100', 'Current Pip'); P(FILL, './2/353/113/111', 'Pip Colour'); P(PIPP, './1/100/101', 'Pips Position')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 CONT = d.new(); _, content = d.group('Content', CONT, children=ico + qline)
+def push():
+    PD = c.drv_group('Push Driver', dict(sx=[(0, 1), (T0, 1)] + keys(T0, END-0.6-T0, lambda p: 1+0.03*p, n=40)[1:]))
+    PG_ = d.new()
+    lid, lx = d.link('Push-in', PG_, 'GRP', './1/100/105', PD, CH['sx'][2], mix=1)
+    return d.group('Push-in', PG_, children=content, beh=lx + d.rig('Rig Push-in', lid, 'LNK', './207', W_PUSH, [(1, 0), (2, 1)], pname='Custom Mix'))[1]
+content = c.hi(push, 'tq2_id', 170000)
 CO = d.new(); CI = d.new()
 _, card = d.group('Card Out', CO, children=grain + vig + content + grid + bgs, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
 _, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))

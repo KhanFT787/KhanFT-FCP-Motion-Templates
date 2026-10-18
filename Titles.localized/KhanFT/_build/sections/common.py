@@ -251,7 +251,7 @@ class Card:
     # ---- per-text extras: a box that fits the text (live bounds via Align To markers) + its own float
     def text_extras(self, label, tid, text_xml, box_on=False, float_on=False, box_col=(1, 1, 1), box_op=0.9,
                     pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None, float_speed=0.3,
-                    offset_x=None, shadow_layer=False):
+                    offset_x=None, shadow_layer=False, box_dy=None):
         """returns xml: Float group > [text, edge markers, box]. Publishes '<label> …' controls."""
         d = self.d; P = d.publish
         K, KY = 4.0, 2.25
@@ -322,7 +322,7 @@ class Card:
             box += sh
         # vertical offset: Bangla fonts reserve a deep descender, so the measured text bounds sit low on the
         # visible letters. Default lift scales with the font size; adjustable per clip (-300..300 px).
-        dy = round(0.38 * d.text_sizes.get(tid, 120))
+        dy = round(0.38 * d.text_sizes.get(tid, 120)) if box_dy is None else box_dy
         def offset_grp():
             W_OY = d.w_slider(f'{label} Box Offset Y', round((dy + 300) / 600, 4), -300, 300)
             OG = d.new()
