@@ -345,7 +345,7 @@ class Card:
             f = (lambda p: max(0, spring(p, ov=0.14))) if feel != 'Snappy' else ease_out4
             return dict(sx=[(0, 0), (t0, 0)] + keys(t0, dd, f)[1:], op=[(0, 0), (t0, 0)] + keys(t0, dd*0.3, smooth)[1:])
         IPA = d.new(); self.burn(lambda: self.feel_links(IPA, pop))     # old fixed pop: ids kept, replaced by the menus
-        band = ('icon_id', 99000)
+        band = ('icon_id', 130000)   # own range: the text-out band (98000+) runs past 99000 on cards with several texts
         W_IIN = self.hi(lambda: d.w_popup('Icon In', ICON_IN, 0), *band)
         W_IINS = self.hi(lambda: d.w_popup('Icon In Speed', SPEEDS, 1), *band)
         W_IOUT = self.hi(lambda: d.w_popup('Icon Out', ICON_OUT, ICON_OUT.index('None')), *band)
@@ -391,6 +391,9 @@ class Card:
         path = os.path.join(outdir, self.name, self.name + ('.moti' if self.kind == 'title' else '.motr'))
         s = d.save(path, root + drv, markers=(markers or (1.0, END - 0.6)) if self.kind == 'title' else None)
         s = self.finish_shadow_links(s)
+        import collections
+        dup = [i for i, n in collections.Counter(re.findall(r'<(?:scenenode|behavior|layer|group|text|clip)\b[^>]* id="(\d+)"', s)).items() if n > 1]
+        assert not dup, f'duplicate object ids: {dup[:10]}'
         for bid, v in getattr(self, 'seq_base', {}).items():
             i = s.index(f' id="{bid}" factoryID="'); j = s.index('</behavior>', i)
             blk = s[i:j]; old = '<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="0"/>'
