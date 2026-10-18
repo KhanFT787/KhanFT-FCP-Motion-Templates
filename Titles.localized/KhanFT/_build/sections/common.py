@@ -1,3 +1,4 @@
+import re
 # common.py - pieces shared by all KhanFT section cards
 import os, shutil, math
 from kft import *
@@ -28,7 +29,39 @@ class Card:
         self.extras_pub = {}
 
     def pub_extras(self, label):
+        w = getattr(self, 'text_in_w', {}).pop(label, None)
+        if w: self.d.publish(w, './2/100', f'{label} Text In')
         for o, c, n in self.extras_pub.pop(label, []): self.d.publish(o, c, n)
+
+    # ---- per-text entrance ("<label> Text In" menu)
+    def burn(self, fn):
+        """run an old builder only to consume the same ids as before (keeps older clips' settings), discard its output"""
+        keep = self.drivers; fn(); self.drivers = keep
+
+    def text_anim(self, label, gid, delay, dist, seq=None, default='Rise', rename=None):
+        """behaviours for the text's Anim group: every TEXT_IN style x Motion Feel, picked by '<label> Text In'.
+        seq: the text's Sequence Text behaviour (word-by-word reveal) - its start opacity is switched by the menu."""
+        d = self.d; band = ('text_id', 96000)
+        di = TEXT_IN.index(default)
+        W = self.hi(lambda: d.w_popup(f'{label} Text In', [(rename or {}).get(t, t) for t in TEXT_IN], di), *band)
+        self.text_in_w = getattr(self, 'text_in_w', {}); self.text_in_w[label] = W
+        beh = self.hi(lambda: self.style_links_basic(gid, TEXT_IN, W, di, text_motion(delay, dist)), *band)
+        if seq:
+            # base value must equal the default entry's snapshot, or FCP shows the base at the default
+            self.seq_base = getattr(self, 'seq_base', {}); self.seq_base[seq] = 0 if default == 'Word by Word' else 1
+            beh += self.hi(lambda: d.rig(f'Rig {label} Words', seq, 'SEQ', './1000/1044', W,
+                                         [(j+1, 0 if s == 'Word by Word' else 1) for j, s in enumerate(TEXT_IN)], pname='Opacity'), *band)
+        return beh
+
+    def word_seq(self, name, delay, nwords):
+        """beh_fn for d.text(): a word-by-word Sequence Text (ids from the text band). Returns (fn, holder) - holder[0] = behaviour id."""
+        holder = []
+        def fn(tid, sub):
+            def mk():
+                bid, x = self.d.seq_words(name, sub, delay, delay + max(0.6, 0.2*nwords), dy=0, spread=0, op0=0)
+                holder.append(bid); return x
+            return self.hi(mk, 'text_id', 96000)
+        return fn, holder
 
     # ---- drivers
     def drv_group(self, name, kk):
@@ -297,6 +330,18 @@ class Card:
         path = os.path.join(outdir, self.name, self.name + ('.moti' if self.kind == 'title' else '.motr'))
         s = d.save(path, root + drv, markers=(markers or (1.0, END - 0.6)) if self.kind == 'title' else None)
         s = self.finish_shadow_links(s)
+        for bid, v in getattr(self, 'seq_base', {}).items():
+            i = s.index(f' id="{bid}" factoryID="'); j = s.index('</behavior>', i)
+            blk = s[i:j]; old = '<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="0"/>'
+            assert blk.count(old) == 1, bid
+            s = s[:i] + blk.replace(old, old.replace('value="0"', f'value="{v}"')) + s[j:]
+            # the menu rig must live on the text that owns the Sequence Text (next to it), not on the Anim group
+            m = re.search(r'<behavior name="Rig [^"]*" id="\d+" factoryID="\d+">\n<channelBehavior affectingFactory="[0-9a-f]+" affectingChannel="\./1000/1044"[^>]*/>\n'
+                          r'(?:(?!</behavior>).)*?"Affecting Object \(Hidden\)" id="199"[^>]*value="' + str(bid) + r'"/>.*?</behavior>\n', s, re.S)
+            assert m, bid
+            rig = m.group(0); s = s[:m.start()] + s[m.end():]
+            j = s.index('</behavior>', s.index(f' id="{bid}" factoryID="')) + len('</behavior>')
+            s = s[:j] + '\n' + rig.rstrip('\n') + s[j:]
         open(path, 'w').write(s)
         md = os.path.join(outdir, self.name, 'Media'); os.makedirs(md, exist_ok=True)
         for rel, src in self.media.items():
@@ -434,4 +479,25 @@ def card_motion(kind, dx, dy):
         r = drop_style(st, feel, dy, speed)
         if r: return r
         return std_in(st, feel, speed, dx, dy) if kind == 'in' else std_out(st, feel, speed, dx, dy)
+    return fn
+
+# ---- text entrances (per text, follows Motion Feel)
+TEXT_IN = ['Rise', 'Word by Word', 'Fade', 'Slide from Left', 'Slide from Right', 'Drop', 'Pop', 'None']
+def text_motion(delay, dist):
+    def fn(st, feel):
+        dd = {'Smooth': 0.6, 'Snappy': 0.4, 'Gentle Bounce': 0.75}[feel]
+        if feel == 'Gentle Bounce': r = lambda p: 1 - spring(p, ov=0.12)
+        elif feel == 'Snappy': r = lambda p: 1 - ease_out4(p)
+        else: r = lambda p: 1 - ease_out(p)
+        pre = lambda v: [(0, v), (delay, v)]
+        seg = lambda f, d2=dd: keys(delay, d2, f)[1:]
+        fade = pre(0) + seg(smooth, dd*0.6)
+        if st == 'Rise': return dict(py=pre(-dist) + seg(lambda p: -dist*r(p)), op=fade)
+        if st == 'Word by Word': return dict(py=pre(-dist*0.5) + seg(lambda p: -dist*0.5*r(p), dd*1.6), op=pre(0) + [(delay + 0.01, 1)])
+        if st == 'Fade': return dict(op=pre(0) + seg(smooth))
+        if st == 'Slide from Left': return dict(px=pre(-dist*4) + seg(lambda p: -dist*4*r(p)), op=fade)
+        if st == 'Slide from Right': return dict(px=pre(dist*4) + seg(lambda p: dist*4*r(p)), op=fade)
+        if st == 'Drop': return dict(py=pre(dist) + seg(lambda p: dist*r(p)), op=fade)
+        if st == 'Pop': return dict(sx=pre(0.82) + seg(lambda p: 1 - 0.18*r(p)), op=pre(0) + seg(smooth, dd*0.35))
+        raise ValueError(st)
     return fn

@@ -102,25 +102,32 @@ ORBP, orbit = c.place('Orbit Position', orbit, -1080, 0)
 
 # ---------- chapter label, rule, title
 LEFT = 170 + 1728
-LBL, LBLS, lbl = d.text('Chapter Label', 'অধ্যায় ৩', 74, hexc('bdbcb8'), align=0)
+LBL_FN, LBL_SEQ = c.word_seq('Label Words', 0.75, 2)
+LBL, LBLS, lbl = d.text('Chapter Label', 'অধ্যায় ৩', 74, hexc('bdbcb8'), align=0, beh_fn=LBL_FN)
 def lbl_in(feel):
     dd = DUR[feel]
     return dict(op=[(0, 0), (0.15, 0)] + keys(0.15, dd*0.7, smooth)[1:], py=[(0, -20), (0.15, -20)] + keys(0.15, dd, lambda p: -20*(1-ease_out4(p)))[1:])
 lbl = c.text_extras('Label', LBL, lbl, pad=(40, 22), box_col=(1, 1, 1), box_op=0.12)
-LA = d.new(); _, lbl = d.group('Label Anim', LA, children=lbl, beh=c.feel_links(LA, lbl_in))
+LA = d.new(); c.burn(lambda: c.feel_links(LA, lbl_in))
+_, lbl = d.group('Label Anim', LA, children=lbl, beh=c.text_anim('Label', LA, 0.75, 20, seq=LBL_SEQ[0]))
 RULE, rule = d.rect('Rule', 1700, 3, hexc('ffffff'), px=850, op=0.3)
 _, rule = d.group('Rule Draw', children=rule, px=-1328, py=24, sx=[(0, 0), (0.3, 0)] + keys(0.3, 0.9, ease_out4)[1:], sy=1)
 LBLP, lbl = c.place('Label Position', lbl + rule, LEFT, 360)
+T_SEQ = []
 def t_beh(t_in):
     def f(tid, sub):
-        _, x = d.seq_words('Words Sharpen', sub, t_in, t_in+0.75, dy=-35, spread=40, op0=0, scale=1.12); return x
+        bid, x = d.seq_words('Words In', sub, t_in, t_in+0.75, dy=0, spread=0, op0=0); T_SEQ.append(bid); return x
     return f
-T1, T1S, t1 = d.text('Title Line 1', 'চক্রবৃদ্ধির', 205, hexc('eeeeee'), align=0, beh_fn=t_beh(0.4))
-T2, T2S, t2 = d.text('Title Line 2', 'জাদু', 205, hexc('cfcfcf'), align=0, beh_fn=t_beh(0.62))
+T1, T1S, t1 = d.text('Title Line 1', 'চক্রবৃদ্ধির', 205, hexc('eeeeee'), align=0, beh_fn=t_beh(0.85))
+T2, T2S, t2 = d.text('Title Line 2', 'জাদু', 205, hexc('cfcfcf'), align=0, beh_fn=t_beh(1.05))
 t1 = c.text_extras('Line 1', T1, t1, pad=(70, 40), box_col=(1, 1, 1), box_op=0.12)
 t2 = c.text_extras('Line 2', T2, t2, pad=(70, 40), box_col=(1, 1, 1), box_op=0.12)
-_, t1 = d.group('Line 1 Hold', children=t1, op=[(0, 0), (0.39, 0), (0.4, 1), (END, 1)])
-_, t2 = d.group('Line 2 Hold', children=t2, op=[(0, 0), (0.61, 0), (0.62, 1), (END, 1)])
+_, t1 = d.group('Line 1 Hold', children=t1, op=[(0, 0), (0.84, 0), (0.85, 1), (END, 1)])
+_, t2 = d.group('Line 2 Hold', children=t2, op=[(0, 0), (1.04, 0), (1.05, 1), (END, 1)])
+A1 = c.hi(d.new, 'text_id', 96000)
+_, t1 = d.group('Line 1 Anim', A1, children=t1, beh=c.text_anim('Line 1', A1, 0.85, 40, seq=T_SEQ[0], default='Word by Word'))
+A2 = c.hi(d.new, 'text_id', 96000)
+_, t2 = d.group('Line 2 Anim', A2, children=t2, beh=c.text_anim('Line 2', A2, 1.05, 40, seq=T_SEQ[1], default='Word by Word'))
 _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
 TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
@@ -144,5 +151,5 @@ P(c.W_RESET, './2/100', 'Reset Layout')
 CO = d.new(); CI = d.new()
 _, card = d.group('Card Out', CO, children=vig + grain + lines + ico + ttl + lbl + orbit + bgs, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
 _, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))
-path, s = c.save(card, OUTDIR, markers=(1.8, END-1.5), thumb=SCR + 'chk_4.png')
+path, s = c.save(card, OUTDIR, markers=(2.4, END-1.5), thumb=SCR + 'chk_4.png')
 print('wrote', path, len(s))

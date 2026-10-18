@@ -18,7 +18,7 @@ ENTR = ['Cut', 'Dissolve', 'Fade Up'] + DROP_IN + ['Fade', 'Zoom', 'Rise In', 'S
 EXIT = ['Cut', 'Fade'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Left', 'Slide to Right']
 ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
 TYPE_SPEEDS = [('Normal', 1.9)]
-T0 = 0.3
+T0 = 0.9
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_CUR = d.w_check('Show Cursor', True)
 W_GRID = d.w_check('Show Grid', True)
@@ -73,6 +73,8 @@ CUR, cur = d.rect('Cursor', 9, 150, WHITE, py=45)
 CB = d.new()
 _, cur = d.group('Cursor Blink', CB, children=cur, op=0.5, beh=d.osc(CB, 'Blink', './1/200/202', 0.5, 55.0, phase=1.57)[1])
 _, q = d.group('Question Hold', children=q, op=[(0, 0), (T0-0.01, 0), (T0, 1), (END, 1)])
+QA = c.hi(d.new, 'text_id', 96000)
+_, q = d.group('Question Anim', QA, children=q, beh=c.text_anim('Question', QA, T0, 30, seq=SEQS[0][0], default='Word by Word', rename={'Word by Word': 'Typewriter'}))
 src = c.drv_group('Cursor After Typing', dict(op=[(0, 0), (T0+TYPE_SPEEDS[0][1], 0), (T0+TYPE_SPEEDS[0][1]+0.04, 1), (END, 1)]))
 CH_ = d.new()
 lid, lx = d.link('Cursor Timing', CH_, 'GRP', './1/200/202', src, CH['op'][2], mix=1)
@@ -104,5 +106,5 @@ CONT = d.new(); _, content = d.group('Content', CONT, children=ico + qline)
 CO = d.new(); CI = d.new()
 _, card = d.group('Card Out', CO, children=grain + vig + content + grid + bgs, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
 _, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))
-path, s = c.save(card, OUTDIR, markers=(1.8, END-1.5), thumb=SCR + 'chk_3.png')
+path, s = c.save(card, OUTDIR, markers=(2.4, END-1.5), thumb=SCR + 'chk_3.png')
 print('wrote', path, len(s))
