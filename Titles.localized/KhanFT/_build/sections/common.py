@@ -578,6 +578,7 @@ def _drop_out(feel, speed, lead):
     """a real drop, timed `lead` s before the card's own exit so the elements and the card fall as one stack"""
     dd = {'Smooth': 0.75, 'Snappy': 0.55, 'Gentle Bounce': 0.85}[feel]*SPD[speed]
     t0 = CARD_T0[feel] - lead; g = _fall(feel)
+    dd = min(dd, END - 0.03 - t0)   # Slow: still finish inside the clip
     return dict(py=[(0, 0), (t0, 0)] + keys(t0, dd, lambda p: -FALL*g(p), n=max(10, int(dd*30)))[1:],
                 op=[(0, 1), (t0, 1)])   # no fade (it falls out of frame); op kept so the links/ids match earlier builds
 def text_out_motion(dist, nd, lead=0.35, words=True):

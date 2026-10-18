@@ -66,7 +66,7 @@ def q_beh(tid, sub):
     for i, (nm, dur) in enumerate(TYPE_SPEEDS):
         bid, b = d.seq_words(f'Type {nm}', sub, T0, T0 + dur*WORD_MUL['Slow'], dy=0, spread=1, op0=0)
         c.seq_norm[bid] = dur; SEQS.append((bid, b)); x += b
-        ob, ox = c.out_seq(f'Untype {nm}', sub, dur*0.6, spread=1); OSEQ.append(ob); x += ox
+        ob, ox = c.out_seq(f'Untype {nm}', sub, dur*0.35, spread=1); OSEQ.append(ob); x += ox
     return x
 Q, QS, q = d.text('Question', 'আপনার টাকা আসলে কোথায় নিরাপদ?', 128, WHITE, beh_fn=q_beh)
 # cursor: sits at the right edge of the text, appears when typing is done, blinks
