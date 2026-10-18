@@ -49,24 +49,53 @@ class Card:
                 beh += lx + d.rig(f'Rig {feel} {nm}', lid, 'LNK', './207', self.W_FEEL, [(j+1, 1 if j == fi else 0) for j in range(3)], pname='Custom Mix')
         return beh
 
-    def style_links(self, target, styles, w_style, default, drv_fn):
+    def style_links_basic(self, target, styles, w_style, default, drv_fn):
         d = self.d; beh = ''
         for si, st in enumerate(styles):
             if st in ('Cut', 'None'): continue
             sel = d.new(); kinds = list(drv_fn(st, FEELS[0]).keys())
             sb = ''
             for fi, feel in enumerate(FEELS):
-                vid = self.drv_group(f'{st} {feel}', {k: v for k, v in drv_fn(st, feel).items() if k != 'bl'})
+                vid = self.drv_group(f'{st} {feel}', drv_fn(st, feel))
                 for k in kinds:
-                    if k == 'bl': continue
                     nm, chan, cc, sc = CH[k]
                     lid, lx = d.link(f'{feel} {nm}', sel, 'GRP', chan, vid, cc, mix=1 if fi == 0 else 0, scale=sc)
                     sb += lx + d.rig(f'Rig {feel} {nm}', lid, 'LNK', './207', self.W_FEEL, [(j+1, 1 if j == fi else 0) for j in range(3)], pname='Custom Mix')
             _, x = d.group(f'Selector {st}', sel, beh=sb); self.drivers += x
+            for k in kinds:
+                nm, chan, cc, sc = CH[k]
+                lid, lx = d.link(f'{st} {nm}', target, 'GRP', chan, sel, cc, mix=1 if si == default else 0, scale=sc)
+                beh += lx + d.rig(f'Rig {st} {nm}', lid, 'LNK', './207', w_style, [(j+1, 1 if j == si else 0) for j in range(len(styles))], pname='Custom Mix')
+        return beh
+
+    def style_links(self, target, styles, w_style, default, drv_fn, w_speed=None):
+        """styles x Motion Feel x Speed. Chain per style: (feel drivers) -> speed selector (Motion Feel rig)
+        -> style selector (Speed rig) -> target (style menu rig). One rig per link.
+        Without w_speed (the transition) drv_fn(st, feel) and the older two-stage chain are used."""
+        if w_speed is None: return self.style_links_basic(target, styles, w_style, default, drv_fn)
+        d = self.d; beh = ''
+        for si, st in enumerate(styles):
+            if st in ('Cut', 'None'): continue
+            kinds = [k for k in drv_fn(st, FEELS[0], 'Normal').keys() if k != 'bl']
+            sel = d.new(); selb = ''
+            for pi, sp in enumerate(SPEEDS):
+                ss = d.new(); sb = ''
+                for fi, feel in enumerate(FEELS):
+                    kk = {k: v for k, v in drv_fn(st, feel, sp).items() if k != 'bl'}
+                    vid = self.drv_group(f'{st} {sp} {feel}', kk)
+                    for k in kinds:
+                        nm, chan, cc, sc = CH[k]
+                        lid, lx = d.link(f'{feel} {nm}', ss, 'GRP', chan, vid, cc, mix=1 if fi == 0 else 0, scale=sc)
+                        sb += lx + d.rig(f'Rig {feel} {nm}', lid, 'LNK', './207', self.W_FEEL, [(j+1, 1 if j == fi else 0) for j in range(3)], pname='Custom Mix')
+                _, x = d.group(f'Selector {st} {sp}', ss, beh=sb); self.drivers += x
+                for k in kinds:
+                    nm, chan, cc, sc = CH[k]
+                    lid, lx = d.link(f'{sp} {nm}', sel, 'GRP', chan, ss, cc, mix=1 if sp == 'Normal' else 0, scale=sc)
+                    selb += lx + d.rig(f'Rig {sp} {nm}', lid, 'LNK', './207', w_speed, [(j+1, 1 if j == pi else 0) for j in range(3)], pname='Custom Mix')
+            _, x = d.group(f'Selector {st}', sel, beh=selb); self.drivers += x
             snaps = [(j+1, 1 if j == si else 0) for j in range(len(styles))]
             for k in kinds:
                 nm, chan, cc, sc = CH[k]
-                if k == 'bl': continue   # blur is keyframed on Directional Blur filters (see drop_blur)
                 lid, lx = d.link(f'{st} {nm}', target, 'GRP', chan, sel, cc, mix=1 if si == default else 0, scale=sc)
                 beh += lx + d.rig(f'Rig {st} {nm}', lid, 'LNK', './207', w_style, snaps, pname='Custom Mix')
         return beh
@@ -92,17 +121,22 @@ class Card:
         try: return fn()
         finally: setattr(self, band, d.nid[0]); d.nid[0] = keep
 
-    def drop_blur(self, styles, w_style, w_amt, dy, prefix):
+    def drop_blur(self, styles, w_style, w_speed, w_amt, dy, prefix):
+        """Directional Blur per blur look, keyframed from the drop speed. Blur look: Amount follows the Speed menu
+        (animated rig), Mix is switched on by the Entrance/Exit menu. Adjustable look: Amount follows the slider."""
         d = self.d; x = ''
         for st in styles:
             if not (st.endswith('– Blur') or st.endswith('– Blur (Adjustable)')): continue
-            prof = drop_style(st, 'Smooth', dy)['bl']
             gate = [(j+1, 1 if s2 == st else 0) for j, s2 in enumerate(styles)]
+            profs = {sp: drop_style(st, 'Smooth', dy, sp)['bl'] for sp in SPEEDS}
             def mk():
-                fid, fx = d.dir_blur(f'{prefix} {st}', amount=prof if not st.endswith('(Adjustable)') else 0)
+                fid, fx = d.dir_blur(f'{prefix} {st}', amount=0)
                 r = d.rig(f'Rig {st} On', fid, 'FILT', './10001', w_style, gate, pname='Mix')
                 if st.endswith('(Adjustable)'):
-                    r += d.rig(f'Rig {st} Amount', fid, 'FILT', './1', w_amt, [(1, [(t, 0) for t, _ in prof]), (2, [(t, 2*v) for t, v in prof])], pname='Amount', rng=B)
+                    pr = profs['Normal']
+                    r += d.rig(f'Rig {st} Amount', fid, 'FILT', './1', w_amt, [(1, [(t, 0) for t, _ in pr]), (2, [(t, 2*v) for t, v in pr])], pname='Amount', rng=B)
+                else:
+                    r += d.rig(f'Rig {st} Speed', fid, 'FILT', './1', w_speed, [(j+1, profs[sp]) for j, sp in enumerate(SPEEDS)], pname='Amount', rng=B)
                 return fx + r
             x += self.hi(mk, 'drop_id', 95000)
         return x
@@ -280,31 +314,56 @@ EXIT_ALL = ['Cut', 'Fade', 'Fade Down', 'Zoom Out', 'Drop Out', 'Rise Out', 'Sli
 def merge_styles(own, full):
     """keep a card's existing menu order (clips store the menu position), then append the missing styles"""
     return own + [s for s in full if s not in own]
-def _ease_in_f(feel):
-    if feel == 'Gentle Bounce': return lambda p: 1 - spring(p, ov=0.06, a=7)
-    if feel == 'Snappy': return lambda p: 1 - ease_out4(p)
-    return lambda p: 1 - ease_out(p)
-def std_in(st, feel, dx=5800, dy=4100):
-    dd = DUR[feel] * 1.1; f = _ease_in_f(feel)
-    if st in ('Fade', 'Dissolve'): return dict(op=keys(0.0, dd*0.6, smooth))
-    if st == 'Fade Up': return dict(op=keys(0.0, dd*0.7, smooth), py=keys(0.0, dd, lambda p: -140*f(p)))
-    if st == 'Zoom': return dict(sx=keys(0.0, dd, lambda p: 1 + 0.07*f(p)), op=keys(0.0, dd*0.5, smooth))
-    if st == 'Drop In': return dict(py=keys(0.0, dd, lambda p: dy*f(p)))
-    if st == 'Rise In': return dict(py=keys(0.0, dd, lambda p: -dy*f(p)))
-    if st == 'Slide from Left': return dict(px=keys(0.0, dd, lambda p: -dx*f(p)))
-    if st == 'Slide from Right': return dict(px=keys(0.0, dd, lambda p: dx*f(p)))
+# ---- motion library: every entrance/exit = look x Motion Feel (curve) x Speed (duration)
+SPEEDS = ['Slow', 'Normal', 'Fast']
+SPD = {'Slow': 1.45, 'Normal': 1.0, 'Fast': 0.7}
+BASE = {'Smooth': 0.8, 'Snappy': 0.65, 'Gentle Bounce': 0.9}      # Normal-speed move time per feel (s)
+def sine_io(p): return (1 - math.cos(math.pi*p))/2
+def quad_io(p): return 2*p*p if p < 0.5 else 1 - 2*(1-p)**2
+
+def arrive(feel, amp=0.06):
+    """progress 0->1 for a move INTO place. Even, eased motion so the eye can follow a full-screen card."""
+    if feel == 'Snappy': return quad_io
+    if feel == 'Gentle Bounce':
+        def g(p):
+            if p < 0.6: return 1 - math.cos(math.pi/2 * p/0.6)                      # falls in, gathering speed
+            t = (p-0.6)/0.4; return 1 + amp*math.sin(math.pi*2.5*t)*math.exp(-4*t)   # small settling bounce
+        return g
+    return sine_io
+
+def leave(feel):
+    """progress 0->1 for a move OUT of place."""
+    if feel == 'Snappy': return quad_io
+    if feel == 'Gentle Bounce':
+        def g(p):
+            if p < 0.25: return -0.04*math.sin(math.pi*p/0.25)                     # little lift first
+            return 1 - math.cos(math.pi/2 * (p-0.25)/0.75)
+        return g
+    return sine_io
+
+def dur(feel, speed): return BASE[feel] * SPD[speed]
+
+def std_in(st, feel, speed='Normal', dx=5800, dy=4100):
+    dd = dur(feel, speed); f = arrive(feel); r = lambda p: 1 - f(p)
+    if st == 'Dissolve': return dict(op=keys(0.0, dd*0.35, lambda p: p))
+    if st == 'Fade': return dict(op=keys(0.0, dd*0.7, smooth))
+    if st == 'Fade Up': return dict(op=keys(0.0, dd*0.7, smooth), py=keys(0.0, dd, lambda p: -140*r(p)))
+    if st == 'Zoom': return dict(sx=keys(0.0, dd, lambda p: 1 + 0.07*r(p)), op=keys(0.0, dd*0.5, smooth))
+    if st == 'Rise In': return dict(py=keys(0.0, dd, lambda p: -dy*r(p)))
+    if st == 'Slide from Left': return dict(px=keys(0.0, dd, lambda p: -dx*r(p)))
+    if st == 'Slide from Right': return dict(px=keys(0.0, dd, lambda p: dx*r(p)))
     raise ValueError(st)
-def std_out(st, feel, dx=5800, dy=4100):
-    dd = DUR[feel] * 0.85; t0 = END - dd - 0.02
-    g = (lambda q: q**4) if feel == 'Snappy' else ease_in
+
+def std_out(st, feel, speed='Normal', dx=5800, dy=4100):
+    dd = dur(feel, speed)*0.9; t0 = END - dd - 0.02; g = leave(feel)
     hold = lambda v: [(0, v), (t0, v)]
-    if st == 'Fade': return dict(op=hold(1) + keys(t0, dd, lambda q: 1-smooth(q))[1:])
-    if st == 'Fade Down': return dict(op=hold(1) + keys(t0, dd, lambda q: 1-smooth(q))[1:], py=hold(0) + keys(t0, dd, lambda q: -140*smooth(q))[1:])
-    if st == 'Zoom Out': return dict(sx=hold(1) + keys(t0, dd, lambda q: 1+0.05*ease_in(q))[1:], op=hold(1) + keys(t0, dd, lambda q: 1-smooth(q))[1:])
-    if st == 'Drop Out': return dict(py=hold(0) + keys(t0, dd, lambda q: -dy*g(q))[1:])
-    if st == 'Rise Out': return dict(py=hold(0) + keys(t0, dd, lambda q: dy*g(q))[1:])
-    if st == 'Slide to Left': return dict(px=hold(0) + keys(t0, dd, lambda q: -dx*g(q))[1:])
-    if st == 'Slide to Right': return dict(px=hold(0) + keys(t0, dd, lambda q: dx*g(q))[1:])
+    seg = lambda fn: keys(t0, dd, fn)[1:]
+    if st == 'Fade': return dict(op=hold(1) + seg(lambda q: 1-smooth(q)))
+    if st == 'Fade Down': return dict(op=hold(1) + seg(lambda q: 1-smooth(q)), py=hold(0) + seg(lambda q: -140*smooth(q)))
+    if st == 'Zoom Out': return dict(sx=hold(1) + seg(lambda q: 1+0.05*smooth(q)), op=hold(1) + seg(lambda q: 1-smooth(q)))
+    if st == 'Rise Out': return dict(py=hold(0) + seg(lambda q: dy*g(q)))
+    if st == 'Slide to Left': return dict(px=hold(0) + seg(lambda q: -dx*g(q)))
+    if st == 'Slide to Right': return dict(px=hold(0) + seg(lambda q: dx*g(q)))
     raise ValueError(st)
 
 # ---- drop family: Drop In (from above), Drop Out (back up), Drop Down (falls off the bottom), six looks each
@@ -323,58 +382,56 @@ def _blur_from(kk, ch='py'):
         out.append((t, round(min(abs(vel)*SHUTTER, 400), 2)))
     return out
 
-def drop_in(look, feel, dy):
-    if look in ('Blur', 'Blur (Adjustable)'): feel = 'Smooth'   # blur is keyframed, so these looks keep one timing
-    dd = DUR[feel]*1.15
-    if look == 'Bounce':
-        dd *= 1.4; kk = dict(py=keys(0.0, dd, lambda p: dy*(1-spring(p, ov=0.05, a=5.5, half=0.2))))
-        return kk
-    f = _ease_in_f(feel)
-    kk = dict(py=keys(0.0, dd, lambda p: dy*f(p)))
+def _look_timing(look, feel, speed):
+    """Blur looks keep the Smooth feel (their blur is keyframed); the Adjustable one also stays at Normal speed
+    (one Directional Blur can't follow the menu, the speed and the slider at once)."""
+    if look in ('Blur', 'Blur (Adjustable)'): feel = 'Smooth'
+    if look == 'Blur (Adjustable)': speed = 'Normal'
+    if look == 'Bounce': feel = 'Gentle Bounce'
+    return feel, speed
+
+def drop_in(look, feel, dy, speed='Normal'):
+    feel, speed = _look_timing(look, feel, speed)
+    dd = dur(feel, speed)
+    f = arrive(feel, amp=0.09 if look == 'Bounce' else 0.06)
+    kk = dict(py=keys(0.0, dd, lambda p: dy*(1-f(p))))
     if look in ('Blur', 'Blur (Adjustable)'):
         kk['bl'] = _blur_from(kk)
     elif look == 'Stretch':
-        vmax = max(abs(b[1]-a[1])/(b[0]-a[0]) for a, b in zip(kk['py'], kk['py'][1:]))
-        bl = _blur_from(kk)
-        sy = [(t, 1 + 0.16*(v/(vmax*SHUTTER) if vmax else 0)) for t, v in bl]
-        sy = sy[:-1] + keys(dd, 0.22, lambda p: 1 - 0.05*math.sin(math.pi*p))   # small squash on landing
-        kk['sy'] = sy
+        bl = _blur_from(kk); vmax = max(v for _, v in bl) or 1
+        kk['sy'] = [(t, 1 + 0.14*v/vmax) for t, v in bl][:-1] + keys(dd, 0.22, lambda p: 1 - 0.05*math.sin(math.pi*p))
     elif look == 'Swing':
-        kk['rz'] = keys(0.0, dd*1.5, lambda p: 0.075*math.exp(-3.2*p)*math.cos(8.5*p))
+        kk['rz'] = keys(0.0, dd*1.3, lambda p: 0.075*math.exp(-3.2*p)*math.cos(8.5*p))
     return kk
 
-def drop_exit(look, feel, dy, up):
+def drop_exit(look, feel, dy, up, speed='Normal'):
     """Drop Down (falls, up=False) or Drop Out (lifts away, up=True), ending at the clip's end."""
     sgn = 1 if up else -1
-    if look in ('Blur', 'Blur (Adjustable)'): feel = 'Smooth'
-    dd = DUR[feel]*0.95
-    if look == 'Bounce': dd *= 1.25
-    t0 = END - dd - 0.02
-    g = (lambda q: q**4) if feel == 'Snappy' else ease_in
-    if look == 'Bounce':   # small hop the other way first, then away
-        hop = lambda q: -0.05*math.sin(math.pi*min(q/0.3, 1)) if q < 0.3 else ease_in((q-0.3)/0.7)
-        kk = dict(py=[(0, 0), (t0, 0)] + keys(t0, dd, lambda q: sgn*dy*hop(q))[1:])
-        return kk
+    feel, speed = _look_timing(look, feel, speed)
+    dd = dur(feel, speed)*0.9; t0 = END - dd - 0.02; g = leave(feel)
+    if look == 'Bounce':
+        g0 = g; g = lambda q: (-0.07*math.sin(math.pi*q/0.25) if q < 0.25 else g0(q))
     kk = dict(py=[(0, 0), (t0, 0)] + keys(t0, dd, lambda q: sgn*dy*g(q))[1:])
     if look in ('Blur', 'Blur (Adjustable)'):
         kk['bl'] = _blur_from(kk)
     elif look == 'Stretch':
         bl = _blur_from(kk); vmax = max(v for _, v in bl) or 1
-        kk['sy'] = [(t, 1 + 0.16*v/vmax) for t, v in bl]
+        kk['sy'] = [(t, 1 + 0.14*v/vmax) for t, v in bl]
     elif look == 'Swing':
         kk['rz'] = [(0, 0), (t0, 0)] + keys(t0, dd, lambda q: -sgn*0.09*smooth(q))[1:]
     return kk
 
-def drop_style(st, feel, dy):
+def drop_style(st, feel, dy, speed='Normal'):
     """returns driver dict for any Drop In / Drop Out / Drop Down style name, else None"""
-    for fam, f in (('Drop In – ', lambda lk: drop_in(lk, feel, dy)), ('Drop Down – ', lambda lk: drop_exit(lk, feel, dy, False)),
-                   ('Drop Out – ', lambda lk: drop_exit(lk, feel, dy, True))):
+    for fam, f in (('Drop In – ', lambda lk: drop_in(lk, feel, dy, speed)), ('Drop Down – ', lambda lk: drop_exit(lk, feel, dy, False, speed)),
+                   ('Drop Out – ', lambda lk: drop_exit(lk, feel, dy, True, speed))):
         if st.startswith(fam): return f(st[len(fam):])
     return None
 
-def card_body(card, children, w=3840+1000, h=2160+1000):
-    """wrap a card's layers in a group clipped to the card's size, so soft glows never trail past its edges while it moves"""
-    return card.hi(lambda: card.d.group('Card Body', children=children, crop=(w, h))[1], 'drop_id', 95000)
-
-    # (Card method) Directional Blur filters for the drop looks: amount keyframed from the drop speed,
-    # switched on by the Entrance/Exit menu (filter Mix rig). The Adjustable look scales with the slider (animated rig).
+def card_motion(kind, dx, dy):
+    """drv_fn(st, feel, speed) for a card: every style goes through the shared library"""
+    def fn(st, feel, speed):
+        r = drop_style(st, feel, dy, speed)
+        if r: return r
+        return std_in(st, feel, speed, dx, dy) if kind == 'in' else std_out(st, feel, speed, dx, dy)
+    return fn

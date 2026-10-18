@@ -27,27 +27,13 @@ W_SPD = d.w_slider('Orbit Speed', 0.5, 0, 100)
 W_ENT = d.w_popup('Entrance', ENTR, ENT0)
 W_EXT = d.w_popup('Exit', EXIT, EXT0)
 W_BLUR = c.hi(lambda: d.w_slider('Drop Blur Amount', 0.5, 0, 100), 'drop_id', 95000)
+W_ESPD = c.hi(lambda: d.w_popup('Entrance Speed', SPEEDS, 1), 'drop_id', 95000)
+W_XSPD = c.hi(lambda: d.w_popup('Exit Speed', SPEEDS, 1), 'drop_id', 95000)
 c.W_FEEL = d.w_popup('Motion Feel', FEELS, 0)
 c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
-def card_in(st, feel):
-    r = drop_style(st, feel, 4100)
-    if r: return r
-    if st not in ('Fade', 'Zoom'): return std_in(st, feel)
-    din = DUR[feel]
-    if st == 'Fade': return dict(op=keys(0.0, din*0.6, smooth))
-    f = (lambda p: 1.07 - 0.07*ease_out4(p)) if feel != 'Gentle Bounce' else (lambda p: 1.07 - 0.07*spring(p, ov=0.25))
-    return dict(sx=keys(0.0, din, f), op=keys(0.0, din*0.5, smooth))
-def card_out(st, feel):
-    r = drop_style(st, feel, 4100)
-    if r: return r
-    if st not in ('Fade', 'Zoom Out'): return std_out(st, feel)
-    dout = DUR[feel]*0.7; t0 = END - dout - 0.02
-    if st == 'Fade': return dict(op=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1-smooth(q))[1:])
-    return dict(sx=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1+0.05*ease_in(q))[1:],
-                op=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1-smooth(q))[1:])
-
+card_in, card_out = card_motion('in', 5800, 4100), card_motion('out', 5800, 4100)
 # ---------- background
 bgs = ''; BG = {}
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
@@ -139,7 +125,7 @@ _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
 TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
 ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.5)
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
+P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(VIG, './1/200/202', 'Vignette'); P(LN, './1/200/202', 'Line Texture'); P(GR, './1/200/202', 'Grain')
@@ -156,7 +142,7 @@ P(ORBP, './1/100/101', 'Orbit Position'); P(OSZ, './1/100/105', 'Orbit Size')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 CO = d.new(); CI = d.new()
-_, card = d.group('Card Out', CO, children=vig + grain + lines + ico + ttl + lbl + orbit + bgs, beh=c.drop_blur(EXIT, W_EXT, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out))
-_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in))
-path, s = c.save(card, OUTDIR, markers=(1.4, END-0.6), thumb=SCR + 'chk_4.png')
+_, card = d.group('Card Out', CO, children=vig + grain + lines + ico + ttl + lbl + orbit + bgs, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
+_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))
+path, s = c.save(card, OUTDIR, markers=(1.8, END-1.5), thumb=SCR + 'chk_4.png')
 print('wrote', path, len(s))

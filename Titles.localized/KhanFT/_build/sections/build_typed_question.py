@@ -17,7 +17,7 @@ PRESETS = [('Navy', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
 ENTR = ['Cut', 'Dissolve', 'Fade Up'] + DROP_IN + ['Fade', 'Zoom', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Left', 'Slide to Right']
 ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
-SPEEDS = [('Normal', 1.9)]
+TYPE_SPEEDS = [('Normal', 1.9)]
 T0 = 0.3
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_CUR = d.w_check('Show Cursor', True)
@@ -25,24 +25,13 @@ W_GRID = d.w_check('Show Grid', True)
 W_ENT = d.w_popup('Entrance', ENTR, ENT0)
 W_EXT = d.w_popup('Exit', EXIT, EXT0)
 W_BLUR = c.hi(lambda: d.w_slider('Drop Blur Amount', 0.5, 0, 100), 'drop_id', 95000)
+W_ESPD = c.hi(lambda: d.w_popup('Entrance Speed', SPEEDS, 1), 'drop_id', 95000)
+W_XSPD = c.hi(lambda: d.w_popup('Exit Speed', SPEEDS, 1), 'drop_id', 95000)
 c.W_FEEL = d.w_popup('Motion Feel', FEELS, 0)
 c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
-def card_in(st, feel):
-    r = drop_style(st, feel, 4100)
-    if r: return r
-    if st not in ('Dissolve', 'Fade Up'): return std_in(st, feel)
-    dd = DUR[feel]*(0.5 if st == 'Dissolve' else 1)
-    if st == 'Dissolve': return dict(op=keys(0, 0.16, lambda p: p))
-    return dict(op=keys(0, dd*0.7, smooth), py=keys(0, dd, lambda p: -80*(1-ease_out4(p))))
-def card_out(st, feel):
-    r = drop_style(st, feel, 4100)
-    if r: return r
-    if st != 'Fade': return std_out(st, feel)
-    dd = DUR[feel]*0.7; t0 = END-dd-0.01
-    return dict(op=[(0, 1), (t0, 1)] + keys(t0, dd, lambda q: 1-smooth(q))[1:])
-
+card_in, card_out = card_motion('in', 5800, 4100), card_motion('out', 5800, 4100)
 # ---------- background + grid
 bgs = ''; BG = {}
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
@@ -74,7 +63,7 @@ GR, _, grain = d.image('Grain', 'Grain', 'Media/Grain.png', 1920, 1080, dropzone
 SEQS = []
 def q_beh(tid, sub):
     x = ''
-    for i, (nm, dur) in enumerate(SPEEDS):
+    for i, (nm, dur) in enumerate(TYPE_SPEEDS):
         bid, b = d.seq_words(f'Type {nm}', sub, T0, T0+dur, dy=0, spread=1, op0=0)
         SEQS.append((bid, b)); x += b
     return x
@@ -84,7 +73,7 @@ CUR, cur = d.rect('Cursor', 9, 150, WHITE, py=45)
 CB = d.new()
 _, cur = d.group('Cursor Blink', CB, children=cur, op=0.5, beh=d.osc(CB, 'Blink', './1/200/202', 0.5, 55.0, phase=1.57)[1])
 _, q = d.group('Question Hold', children=q, op=[(0, 0), (T0-0.01, 0), (T0, 1), (END, 1)])
-src = c.drv_group('Cursor After Typing', dict(op=[(0, 0), (T0+SPEEDS[0][1], 0), (T0+SPEEDS[0][1]+0.04, 1), (END, 1)]))
+src = c.drv_group('Cursor After Typing', dict(op=[(0, 0), (T0+TYPE_SPEEDS[0][1], 0), (T0+TYPE_SPEEDS[0][1]+0.04, 1), (END, 1)]))
 CH_ = d.new()
 lid, lx = d.link('Cursor Timing', CH_, 'GRP', './1/200/202', src, CH['op'][2], mix=1)
 _, cur = d.group('Cursor Timing', CH_, children=cur, beh=lx)
@@ -94,7 +83,7 @@ _, cursor = d.group('Cursor', CSH, children=cur, beh=al + d.rig('Rig Cursor', CS
 # text box (was the "bar"): fits the question, grows from the centre while the words type on
 BARG = d.new()
 def bar_drv(feel):
-    return dict(sx=[(0, 0.04), (T0-0.12, 0.04)] + keys(T0-0.12, SPEEDS[0][1]+0.1, ease_io)[1:])
+    return dict(sx=[(0, 0.04), (T0-0.12, 0.04)] + keys(T0-0.12, TYPE_SPEEDS[0][1]+0.1, ease_io)[1:])
 def grow(box):
     return d.group('Box Grow', BARG, children=box, beh=c.feel_links(BARG, bar_drv), sy=1)[1]
 qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'), box_op=0.13, pad=(70, 40),
@@ -102,7 +91,7 @@ qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'
 QP, qline = c.place('Question Position', qx, 0, -40)
 
 ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.2)
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
+P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength'); P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
@@ -113,7 +102,7 @@ P(c.W_RESET, './2/100', 'Reset Layout')
 
 CONT = d.new(); _, content = d.group('Content', CONT, children=ico + qline)
 CO = d.new(); CI = d.new()
-_, card = d.group('Card Out', CO, children=grain + vig + content + grid + bgs, beh=c.drop_blur(EXIT, W_EXT, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out))
-_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in))
-path, s = c.save(card, OUTDIR, markers=(T0 + 0.2, END-0.6), thumb=SCR + 'chk_3.png')
+_, card = d.group('Card Out', CO, children=grain + vig + content + grid + bgs, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
+_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))
+path, s = c.save(card, OUTDIR, markers=(1.8, END-1.5), thumb=SCR + 'chk_3.png')
 print('wrote', path, len(s))
