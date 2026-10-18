@@ -397,6 +397,20 @@ class Doc:
              '<parameter name="Publish OSC" id="10005" flags="12901679104" default="0" value="0"/>\n</filter>\n')
         return fid, x
 
+    def colorize(self, name, rgb, mix=0):
+        """Colorize filter mapping black and white both to rgb (so a white layer becomes that colour). Returns (fid, xml)."""
+        fid = self.new()
+        c3 = ''.join(f'<parameter name="{n}" id="{k+1}" flags="8606711824" default="0" value="{v}"/>' for k, (n, v) in enumerate(zip(('Red', 'Green', 'Blue'), rgb)))
+        return fid, (f'<filter name="{name}" id="{fid}" factoryID="{self.F("FILT")}" pluginUUID="D995BBCF-F766-4950-89D5-7A4828CD9B6F" pluginVersion="1" pluginName="Colorize" pluginDynamicParams="0">\n'
+                     f'{TIMING}\n<baseFlags>8589934608</baseFlags>\n'
+                     f'<parameter name="Remap Black To" id="1" flags="12884906000"><foldFlags>15</foldFlags>{c3}</parameter>\n'
+                     f'<parameter name="Remap White To" id="2" flags="12884906000"><foldFlags>15</foldFlags>{c3}</parameter>\n'
+                     '<parameter name="Intensity" id="3" flags="12901679120" default="1" value="1"/>\n'
+                     '<parameter name="Colorize::HDR In Rec. 709" id="4" flags="12905938992" default="0" value="0"/>\n'
+                     f'<parameter name="Mix" id="10001" flags="12901679104" default="1" value="{mix}"/>\n'
+                     '<parameter name="Flip" id="10002" flags="12905938976" default="0" value="0"/>\n'
+                     '<parameter name="Input Points" id="10003" flags="12905938976" default="1" value="1"/>\n</filter>\n')
+
     def publish(self, obj, chan, name): self.pub.append((obj, chan, name))
 
     # ---- assemble

@@ -250,7 +250,8 @@ class Card:
 
     # ---- per-text extras: a box that fits the text (live bounds via Align To markers) + its own float
     def text_extras(self, label, tid, text_xml, box_on=False, float_on=False, box_col=(1, 1, 1), box_op=0.9,
-                    pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None, float_speed=0.3):
+                    pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None, float_speed=0.3,
+                    offset_x=None, shadow_layer=False):
         """returns xml: Float group > [text, edge markers, box]. Publishes '<label> …' controls."""
         d = self.d; P = d.publish
         K, KY = 4.0, 2.25
@@ -270,8 +271,13 @@ class Card:
             ax += d.rig(f'Rig Pad {nm}', aid, 'ALIGN', chan, wid, [(1, 0), (2, axis*mx)], pname='X' if nm in 'LR' else 'Y', rng=B)
             M[nm] = mid; mk += m.replace('</scenenode>', ax + '</scenenode>')
         X_, Y_ = './1/100/101/1', './1/100/101/2'
-        def L(nm, chan, src, sc, tgt, scale, mode=0):
-            return d.link(nm, BX, 'SHP', chan, src, [(tgt, sc)], mode=mode, scale=scale)[1]
+        def L(nm, chan, src, sc, tgt, scale, mode=0, target=None):
+            return d.link(nm, target or BX, 'SHP', chan, src, [(tgt, sc)], mode=mode, scale=scale)[1]
+        def fit_links(t=None):
+            return (L('W minus L', './2/353/160/1', M['L'], X_, '1', -K, target=t) + L('W from R', './2/353/160/1', M['R'], X_, '1', K, mode=2, target=t) +
+                    L('H minus B', './2/353/160/2', M['B'], Y_, '2', -KY, target=t) + L('H from T', './2/353/160/2', M['T'], Y_, '2', KY, mode=2, target=t) +
+                    L('X from L', './1/100/101', M['L'], X_, '1', 0.5, target=t) + L('X from R', './1/100/101', M['R'], X_, '1', 0.5, mode=2, target=t) +
+                    L('Y from B', './1/100/101', M['B'], Y_, '2', 0.5, target=t) + L('Y from T', './1/100/101', M['T'], Y_, '2', 0.5, mode=2, target=t))
         BX = d.new()
         fit = (L('W minus L', './2/353/160/1', M['L'], X_, '1', -K) + L('W from R', './2/353/160/1', M['R'], X_, '1', K, mode=2) +
                L('H minus B', './2/353/160/2', M['B'], Y_, '2', -KY) + L('H from T', './2/353/160/2', M['T'], Y_, '2', KY, mode=2) +
@@ -288,6 +294,32 @@ class Card:
                           '<parameter name="Angle" id="214" flags="8606711824" default="5.497787143782138" value="4.7123889803846897"/></parameter>\n'
                           '<parameter name="Lighting" id="230"', 1)
         box = box.replace('</scenenode>', fit + '</scenenode>')
+        if shadow_layer:   # a separate soft shadow under the box: stays visible however see-through the box is
+            def mk_shadow():
+                SHX = d.new()
+                _, sh = d.rect(f'{label} Box Shadow Shape', 600, 200, (0, 0, 0), rnd=rnd, feather=80)
+                sh = re.sub(r'<scenenode name="[^"]*" id="\d+"', f'<scenenode name="{label} Box Shadow Shape" id="{SHX}"', sh, 1)
+                sh = sh.replace('<parameter name="Feather" id="102" flags="8606744592"', '<parameter name="Feather" id="102" flags="8606711824"', 1)
+                sh = sh.replace('</scenenode>', fit_links(SHX) + '</scenenode>')
+                W_SD = d.w_slider(f'{label} Box Shadow Distance', 0.15, 0, 200)
+                SD = d.new()
+                _, sh = d.group(f'{label} Box Shadow Drop', SD, children=sh, py=-30,
+                                beh=d.rig(f'Rig {label} Shadow Distance', SD, 'GRP', './1/100/101/2', W_SD, [(1, 0), (2, -200)], pname='Y', rng=B))
+                # cut-out: a copy of the box shape (Silhouette Alpha) so the shadow only shows outside the see-through box
+                CUT = d.new()
+                _, cut = d.rect(f'{label} Box Shadow Cutout', 600, 200, (1, 1, 1), rnd=rnd)
+                cut = re.sub(r'<scenenode name="[^"]*" id="\d+"', f'<scenenode name="{label} Box Shadow Cutout" id="{CUT}"', cut, 1)
+                cut = cut.replace('</scenenode>', fit_links(CUT) + '</scenenode>')
+                o = re.search(r'<parameter name="Opacity" id="202"[^>]*/>', cut).group(0)
+                cut = cut.replace(o, o + '<parameter name="Blend Mode" id="203" flags="8606777360" default="0" value="27"/>', 1)
+                SG = d.new()
+                _, sh = d.group(f'{label} Box Shadow', SG, children=cut + sh, op=0)
+                o = '<parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/>'
+                assert o in sh
+                sh = sh.replace(o, o + '<parameter name="Blend Mode" id="203" flags="8606779408" default="34" value="0"/>', 1)
+                return SHX, SG, W_SD, sh
+            SHX, SG, W_SD, sh = self.hi(mk_shadow, 'tq_id', 160000)
+            box += sh
         # vertical offset: Bangla fonts reserve a deep descender, so the measured text bounds sit low on the
         # visible letters. Default lift scales with the font size; adjustable per clip (-300..300 px).
         dy = round(0.38 * d.text_sizes.get(tid, 120))
@@ -298,6 +330,15 @@ class Card:
                            beh=d.rig(f'Rig {label} Box Offset', OG, 'GRP', './1/100/101/2', W_OY, [(1, -300), (2, 300)], pname='Y', rng=B))
             return W_OY, x
         W_OY, box = self.hi(offset_grp)
+        W_OX = None
+        if offset_x is not None:
+            def offset_x_grp():
+                W = d.w_slider(f'{label} Box Offset X', round((offset_x + 300) / 600, 4), -300, 300)
+                OX = d.new()
+                _, x = d.group(f'{label} Box Offset X', OX, children=box, px=offset_x,
+                               beh=d.rig(f'Rig {label} Box Offset X', OX, 'GRP', './1/100/101/1', W, [(1, -300), (2, 300)], pname='X', rng=B))
+                return W, x
+            W_OX, box = self.hi(offset_x_grp, 'tq_id', 160000)
         BS = d.new()
         _, box = d.group(f'{label} Box Show', BS, children=box, op=1 if box_on else 0,
                          beh=d.rig(f'Rig {label} Box', BS, 'GRP', './1/200/202', W_BOX, [(1, 0), (2, 1)], pname='Opacity'))
@@ -316,8 +357,12 @@ class Card:
         P(W_FL, './2/100', f'{label} Float'); P(W_FA, './2/100', f'{label} Float Amount'); P(W_FS, './2/100', f'{label} Float Speed')
         P(W_BOX, './2/100', f'{label} Box'); P(BX, './2/353/113/111', f'{label} Box Colour'); P(BX, './1/200/202', f'{label} Box Opacity')
         P(BX, './2/353/144', f'{label} Box Roundness'); P(W_PX, './2/100', f'{label} Box Padding X'); P(W_PY, './2/100', f'{label} Box Padding Y'); P(W_OY, './2/100', f'{label} Box Vertical Offset')
+        if W_OX: P(W_OX, './2/100', f'{label} Box Horizontal Offset')
         P(BX, './2/353/108/105', f'{label} Box Border'); P(BX, './2/353/108/107', f'{label} Box Border Colour')
-        P(BX, './1/208/211', f'{label} Box Shadow'); P(BX, './1/208/213', f'{label} Box Shadow Softness'); P(BX, './1/208/212', f'{label} Box Shadow Distance')
+        if shadow_layer:
+            P(SG, './1/200/202', f'{label} Box Shadow'); P(SHX, './2/353/102', f'{label} Box Shadow Softness'); P(W_SD, './2/100', f'{label} Box Shadow Distance')
+        else:
+            P(BX, './1/208/211', f'{label} Box Shadow'); P(BX, './1/208/213', f'{label} Box Shadow Softness'); P(BX, './1/208/212', f'{label} Box Shadow Distance')
         return g
 
     # ---- optional floating icon: built-in finance icons or your own image, soft shadow, float

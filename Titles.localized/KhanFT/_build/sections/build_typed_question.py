@@ -13,7 +13,22 @@ PRESETS = [('Navy', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
            ('Charcoal', hexc('34363c'), hexc('222428'), hexc('141517')),
            ('Forest', hexc('25453a'), hexc('183028'), hexc('0d1c17')),
            ('Plum', hexc('45284a'), hexc('2e1a33'), hexc('1b0f1e')),
-           ('Custom', hexc('24395a'), hexc('18263c'), hexc('0e1726'))]
+           ('Custom', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
+           # added later (after Custom so clips already set to Custom keep it); ids from the 'tq_id' band
+           ('Deep Teal', hexc('1f5053'), hexc('15393c'), hexc('0b2224')),
+           ('Indigo', hexc('30306e'), hexc('202052'), hexc('121234')),
+           ('Wine', hexc('5c2437'), hexc('411827'), hexc('270d17')),
+           ('Espresso', hexc('4b3527'), hexc('34251b'), hexc('1f160f')),
+           ('Ocean', hexc('1e4f7a'), hexc('14395a'), hexc('0a2239')),
+           ('Graphite', hexc('2a2c30'), hexc('1c1d20'), hexc('0d0d0f')),
+           ('Paper', hexc('fffbf2'), hexc('f6eedb'), hexc('e6d9bb'))]
+NEW_PRESETS = ('Deep Teal', 'Indigo', 'Wine', 'Espresso', 'Ocean', 'Graphite', 'Paper')
+INK_PRESETS = ('Paper',)                 # light backgrounds: the white question, box and grid turn to navy ink
+INK = (0.063, 0.098, 0.169)
+TQ = ('tq_id', 160000)                   # band for everything added 19 Oct 2026 (older clips keep their settings)
+GMOTION = ['Off', 'Drift', 'Pan Up', 'Pan Right', 'Breathe', 'Light Sweep']
+GSPEEDS = ['Slow', 'Normal', 'Fast']; GMUL = {'Slow': 0.5, 'Normal': 1.0, 'Fast': 1.8}
+GM0, GS0 = 'Drift', 'Slow'               # defaults
 ENTR = ['Cut', 'Dissolve', 'Fade Up'] + DROP_IN + ['Fade', 'Zoom', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Left', 'Slide to Right']
 ENT0, EXT0 = ENTR.index('Drop In – Stretch'), EXIT.index('Drop Down – Stretch')   # defaults
@@ -35,27 +50,74 @@ card_in, card_out = card_motion('in', 5800, 4100), card_motion('out', 5800, 4100
 # ---------- background + grid
 bgs = ''; BG = {}
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
-    g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, rnd=950, feather=1200)
-    g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1200)
-    g3, b = d.rect(f'{nm} Edge', FW+2*EDGE, FH+2*EDGE, edge)
-    gg = d.new()
-    _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
-                   beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
-    bgs += x; BG[nm] = (g1, g2, g3)
+    def make():
+        g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, rnd=950, feather=1200)
+        g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1200)
+        g3, b = d.rect(f'{nm} Edge', FW+2*EDGE, FH+2*EDGE, edge)
+        gg = d.new()
+        _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
+                       beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
+        return x, (g1, g2, g3)
+    x, BG[nm] = c.hi(make, *TQ) if nm in NEW_PRESETS else make()
+    bgs += x
+def ink(name, children):
+    """wraps children in a group whose Colorize (on for Paper) turns white to navy ink"""
+    def f():
+        fid, fx = d.colorize(f'{name} Ink', INK, 0)
+        fx += d.rig(f'Rig {name} Ink', fid, 'FILT', './10001', W_PRE, [(j+1, 1 if p[0] in INK_PRESETS else 0) for j, p in enumerate(PRESETS)], pname='Mix')
+        return d.group(f'{name} Ink', children=children, beh=fx)[1]
+    return c.hi(f, *TQ)
 _, bgs = d.group('Backgrounds', children=bgs)
 GRIDC = hexc('aacdeb'); STEP = 240; gl = ''
+GV, GH = FH+6800, FW+6800               # long enough for the Pan motions
 for k in range(-8, 9):
-    _, r = d.rect(f'Grid V{k}', 3, FH+400, GRIDC, px=k*STEP); gl += r
+    _, r = d.rect(f'Grid V{k}', 3, GV, GRIDC, px=k*STEP); gl += r
 for k in range(-4, 5):
-    _, r = d.rect(f'Grid H{k}', FW+400, 3, GRIDC, py=k*STEP); gl += r
+    _, r = d.rect(f'Grid H{k}', GH, 3, GRIDC, py=k*STEP); gl += r
 GRID = d.new()
-_, grid = d.group('Grid', GRID, children=gl, op=0.07)
-GSH = d.new(); _, grid = d.group('Grid Show', GSH, children=grid, beh=d.rig('Rig Grid', GSH, 'GRP', './1/200/202', W_GRID, [(1, 0), (2, 1)], pname='Opacity'))
+def grid_motion():
+    """extra lines for the pans + Grid Motion / Grid Speed menus; each motion's amplitude is switched by the menu"""
+    x = gl
+    for k in list(range(-22, -8)) + list(range(9, 23)):
+        x += d.rect(f'Grid V{k}', 3, GV, GRIDC, px=k*STEP)[1]
+    for k in list(range(-18, -4)) + list(range(5, 19)):
+        x += d.rect(f'Grid H{k}', GH, 3, GRIDC, py=k*STEP)[1]
+    W_GM = d.w_popup('Grid Motion', GMOTION, GMOTION.index(GM0))
+    W_GS = d.w_popup('Grid Speed', GSPEEDS, GSPEEDS.index(GS0))
+    def osc(gid, name, chan, amp, period, opt, phase=0.0):
+        cpm = 60.0/period; on = lambda o: amp if o == opt else 0
+        oid, ox = d.osc(gid, name, chan, on(GM0), round(cpm*GMUL[GS0], 6), phase=phase)
+        ox += d.rig(f'Rig {name} On', oid, 'OSC', './201', W_GM, [(j+1, on(o)) for j, o in enumerate(GMOTION)], pname='Amplitude')
+        ox += d.rig(f'Rig {name} Speed', oid, 'OSC', './202', W_GS, [(j+1, round(cpm*GMUL[sp], 6)) for j, sp in enumerate(GSPEEDS)], pname='Speed')
+        return ox
+    def grp(name, children, beh_fn, **kw):
+        gid = d.new(); return d.group(name, gid, children=children, beh=beh_fn(gid), **kw)[1]
+    x = grp('Grid Drift', x, lambda g: osc(g, 'Grid Drift X', './1/100/101/1', 120, 40.0, 'Drift') + osc(g, 'Grid Drift Y', './1/100/101/2', 80, 52.0, 'Drift', phase=1.0))
+    PAN, V = 4800, 30.0                  # a very slow sine: steady 30 px/s (Normal) across the clip
+    x = grp('Grid Pan', x, lambda g: osc(g, 'Grid Pan Up', './1/100/101/2', PAN, 2*math.pi*PAN/V, 'Pan Up') + osc(g, 'Grid Pan Right', './1/100/101/1', PAN, 2*math.pi*PAN/V, 'Pan Right'))
+    x = grp('Grid Breathe', x, lambda g: osc(g, 'Grid Breathe X', './1/100/105/1', 0.03, 14.0, 'Breathe') + osc(g, 'Grid Breathe Y', './1/100/105/2', 0.03, 14.0, 'Breathe'))
+    # Light Sweep: a soft band of light glides across the grid
+    beam = d.rect('Grid Sweep Beam', 900, FH+3200, (1, 1, 1), feather=420)[1]
+    beam = d.group('Grid Sweep Tilt', children=beam, rz=math.radians(-18))[1]
+    beam = grp('Grid Sweep Move', beam, lambda g: osc(g, 'Grid Sweep', './1/100/101/1', 3400, 16.0, 'Light Sweep', phase=-math.pi/2))
+    sw = d.new()
+    beam = d.group('Grid Sweep', sw, children=beam, op=0,
+                   beh=d.rig('Rig Grid Sweep', sw, 'GRP', './1/200/202', W_GM, [(j+1, 0.06 if o == 'Light Sweep' else 0) for j, o in enumerate(GMOTION)], pname='Opacity'))[1]
+    return W_GM, W_GS, x, beam
+W_GM, W_GS, gmove, gsweep = c.hi(grid_motion, *TQ)
+_, grid = d.group('Grid', GRID, children=gmove, op=0.07)
+GSH = d.new(); _, grid = d.group('Grid Show', GSH, children=grid + gsweep, beh=d.rig('Rig Grid', GSH, 'GRP', './1/200/202', W_GRID, [(1, 0), (2, 1)], pname='Opacity'))
+grid = ink('Grid', grid)
 vb = ''
 for nm, w, h, x, y in (('Top', FW+1600, 900, 0, FH/2+150), ('Bottom', FW+1600, 900, 0, -FH/2-150),
                        ('Left', 900, FH+1600, -FW/2-150, 0), ('Right', 900, FH+1600, FW/2+150, 0)):
     _, r = d.rect(f'Vignette {nm}', w, h, (0, 0, 0), px=x, py=y, feather=750); vb += r
 VIG, vig = d.group('Vignette', children=vb, op=0.35)
+def vig_paper():
+    g = d.new()
+    return d.group('Vignette Paper', g, children=vig, beh=d.rig('Rig Vignette Paper', g, 'GRP', './1/200/202', W_PRE,
+                   [(j+1, 0.4 if p[0] in INK_PRESETS else 1) for j, p in enumerate(PRESETS)], pname='Opacity'))[1]
+vig = c.hi(vig_paper, *TQ)
 c.media['Media/Grain.png'] = os.path.join(SRC, 'Grain.png')
 GR, _, grain = d.image('Grain', 'Grain', 'Media/Grain.png', 1920, 1080, dropzone=False, s=2.05, op=0.10)
 
@@ -101,15 +163,16 @@ def grow(box):
     return d.group('Box Type Grow', BW, children=g, sx=bar_grow('Normal'), sy=1,
                    beh=c.hi(lambda: d.rig('Rig Box Type Grow', BW, 'GRP', './1/100/105/1', W_TSPD, [(j+1, bar_grow(sp)) for j, sp in enumerate(WORD_SPEEDS)], pname='X'), 'speed_id', 97000))[1]
 qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'), box_op=0.13, pad=(70, 40),
-                   border=(hexc('aacdeb'), 3), shadow=(0, 40, 14), box_wrap=grow)
+                   border=(hexc('aacdeb'), 3), shadow=(0, 40, 14), box_wrap=grow, offset_x=20, shadow_layer=True)
 QO = c.hi(d.new, 'out_id', 98000); qx = d.group('Question Out', QO, children=qx, beh=c.text_out('Question', QO, 30, seq=OSEQ[0], lead=0.35, rename={'Word by Word': 'Typewriter'}))[1]
 QP, qline = c.place('Question Position', qx, 0, -40)
+qline = ink('Question', qline)
 
 ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.75, icon_lead=0.25)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
-P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength'); P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
+P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength'); P(W_GM, './2/100', 'Grid Motion'); P(W_GS, './2/100', 'Grid Speed'); P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
 c.pub_extras('Icon')
 P(Q, './2/369', 'Question'); P(QS, './14/16', 'Text Colour'); P(W_CUR, './2/100', 'Show Cursor')
 c.pub_extras('Question'); P(QP, './1/100/101', 'Question Position')
