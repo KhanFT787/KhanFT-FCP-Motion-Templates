@@ -1963,7 +1963,7 @@
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30231"/>
-<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30226"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="80012"/>
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
@@ -1987,25 +1987,13 @@
 <parameter name="Custom Mix" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 </parameter>
 </behavior>
-<behavior name="Rig Float Y Amount" id="30237" factoryID="26">
-<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
-<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
-<baseFlags>8589934610</baseFlags>
-<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30232"/>
-<parameter name="Widget" id="200" flags="77309476880" default="0" value="30203"/>
-<parameter name="Snapshots" id="202" flags="8590004242">
-<flags>8590004242</flags>
-<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
-<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1.6875"/></parameter>
-</parameter>
-</behavior>
 <behavior name="Float Tilt" id="30238" factoryID="24">
 <dynamicChannelIDSet offsetChannelID="30239" rangeMinChannelID="30240" rangeMaxChannelID="30241"/>
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/109" sliderRange="3.4028234663852886e+38"/>
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30231"/>
-<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30226"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="80012"/>
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1.0"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
@@ -2027,18 +2015,6 @@
 <flags>8590004242</flags>
 <parameter name="Custom Mix" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
 <parameter name="Custom Mix" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
-</parameter>
-</behavior>
-<behavior name="Rig Float Tilt Amount" id="30243" factoryID="26">
-<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
-<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
-<baseFlags>8589934610</baseFlags>
-<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30238"/>
-<parameter name="Widget" id="200" flags="77309476880" default="0" value="30203"/>
-<parameter name="Snapshots" id="202" flags="8590004242">
-<flags>8590004242</flags>
-<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
-<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="3.0"/></parameter>
 </parameter>
 </behavior>
 </group>
@@ -2843,7 +2819,7 @@
 <parameter name="Object" id="200" flags="77326254096" default="0" value="30070"/>
 <parameter name="Align" id="201" flags="8606777360" default="0" value="0"/>
 <parameter name="To" id="202" flags="8606777360" default="0" value="2"/>
-<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="-70"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
+<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 </behavior>
 <behavior name="Rig Pad L" id="30097" factoryID="26">
 <channelBehavior affectingFactory="eecb322ed23242d8ae51f33765574dbd" affectingChannel="./203/1" sliderRange="3.4028234663852886e+38"/>
@@ -2964,7 +2940,7 @@
 <parameter name="Object" id="200" flags="77326254096" default="0" value="30070"/>
 <parameter name="Align" id="201" flags="8606777360" default="0" value="0"/>
 <parameter name="To" id="202" flags="8606777360" default="0" value="3"/>
-<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="70"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
+<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 </behavior>
 <behavior name="Rig Pad R" id="30100" factoryID="26">
 <channelBehavior affectingFactory="eecb322ed23242d8ae51f33765574dbd" affectingChannel="./203/1" sliderRange="3.4028234663852886e+38"/>
@@ -3085,7 +3061,7 @@
 <parameter name="Object" id="200" flags="77326254096" default="0" value="30070"/>
 <parameter name="Align" id="201" flags="8606777360" default="0" value="0"/>
 <parameter name="To" id="202" flags="8606777360" default="0" value="4"/>
-<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="40"/></parameter>
+<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 </behavior>
 <behavior name="Rig Pad T" id="30103" factoryID="26">
 <channelBehavior affectingFactory="eecb322ed23242d8ae51f33765574dbd" affectingChannel="./203/2" sliderRange="3.4028234663852886e+38"/>
@@ -3206,7 +3182,7 @@
 <parameter name="Object" id="200" flags="77326254096" default="0" value="30070"/>
 <parameter name="Align" id="201" flags="8606777360" default="0" value="0"/>
 <parameter name="To" id="202" flags="8606777360" default="0" value="5"/>
-<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="-40"/></parameter>
+<parameter name="Offset" id="203" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 </behavior>
 <behavior name="Rig Pad B" id="30106" factoryID="26">
 <channelBehavior affectingFactory="eecb322ed23242d8ae51f33765574dbd" affectingChannel="./203/2" sliderRange="3.4028234663852886e+38"/>
@@ -3635,11 +3611,11 @@
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30175"/>
-<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30170"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="80001"/>
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30177" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30178" flags="16777234" default="-100" value="-100"/>
@@ -3659,29 +3635,17 @@
 <parameter name="Custom Mix" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 </parameter>
 </behavior>
-<behavior name="Rig Float Y Amount" id="30181" factoryID="26">
-<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
-<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
-<baseFlags>8589934610</baseFlags>
-<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30176"/>
-<parameter name="Widget" id="200" flags="77309476880" default="0" value="30093"/>
-<parameter name="Snapshots" id="202" flags="8590004242">
-<flags>8590004242</flags>
-<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
-<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1.6875"/></parameter>
-</parameter>
-</behavior>
 <behavior name="Float Tilt" id="30182" factoryID="24">
 <dynamicChannelIDSet offsetChannelID="30183" rangeMinChannelID="30184" rangeMaxChannelID="30185"/>
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/109" sliderRange="3.4028234663852886e+38"/>
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30175"/>
-<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30170"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="80001"/>
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1.0"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30183" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30184" flags="16777234" default="-100" value="-100"/>
@@ -3699,18 +3663,6 @@
 <flags>8590004242</flags>
 <parameter name="Custom Mix" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
 <parameter name="Custom Mix" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
-</parameter>
-</behavior>
-<behavior name="Rig Float Tilt Amount" id="30187" factoryID="26">
-<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
-<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
-<baseFlags>8589934610</baseFlags>
-<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30182"/>
-<parameter name="Widget" id="200" flags="77309476880" default="0" value="30093"/>
-<parameter name="Snapshots" id="202" flags="8590004242">
-<flags>8590004242</flags>
-<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
-<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="3.0"/></parameter>
 </parameter>
 </behavior>
 </group>
@@ -8383,7 +8335,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30170"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="2.28"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="30"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="11.0"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2"/>
 </behavior>
 <behavior name="Float Tilt" id="30172" factoryID="23">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/109/3" sliderRange="3.4028234663852886e+38"/>
@@ -8392,7 +8344,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30170"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="1.3"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.012"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="7.0"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5"/>
 </behavior>
 <behavior name="Rig Float Y Speed" id="30173" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="100"/>
@@ -8416,6 +8368,81 @@
 <flags>8590004242</flags>
 <parameter name="Speed" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1.5"/></parameter>
 <parameter name="Speed" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="21"/></parameter>
+</parameter>
+</behavior>
+</group>
+<group name="Question Float Amount" id="80001">
+<aspectRatio>1</aspectRatio>
+<flags>0</flags>
+<timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>524304</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704">
+<parameter name="Transform" id="100" flags="8589938704">
+<parameter name="Position" id="101" flags="8589938704"><foldFlags>11</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
+<parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
+<parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
+</parameter>
+<behavior name="Float Y Amount" id="80002" factoryID="24">
+<dynamicChannelIDSet offsetChannelID="80003" rangeMinChannelID="80004" rangeMaxChannelID="80005"/>
+<channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/101" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934608</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="80001"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30170"/>
+<parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
+<parameter name="Scale" id="204" flags="8606711824" default="1" value="0"/>
+<parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
+<parameter name="Value offset" id="80003" flags="16777232" default="0" value="0"/>
+<parameter name="Value min" id="80004" flags="16777234" default="-100" value="-100"/>
+<parameter name="Value max" id="80005" flags="16777234" default="100" value="100"/>
+<sourceParentChannelRef>./1/100/101/2</sourceParentChannelRef>
+<expressionChannels><sourceChannelRef>./1/100/101/2</sourceChannelRef><targetChannelID>2</targetChannelID><offsetChannelRef>./80003</offsetChannelRef><minChannelRef>./80004</minChannelRef><maxChannelRef>./80005</maxChannelRef></expressionChannels>
+</behavior>
+<behavior name="Rig Float Y Amount" id="80006" factoryID="26">
+<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="80002"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="30093"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
+<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1.6875"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Float Tilt Amount" id="80007" factoryID="24">
+<dynamicChannelIDSet offsetChannelID="80008" rangeMinChannelID="80009" rangeMaxChannelID="80010"/>
+<channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/109" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934608</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="80001"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30170"/>
+<parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
+<parameter name="Scale" id="204" flags="8606711824" default="1" value="0"/>
+<parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
+<parameter name="Value offset" id="80008" flags="16777232" default="0" value="0"/>
+<parameter name="Value min" id="80009" flags="16777234" default="-100" value="-100"/>
+<parameter name="Value max" id="80010" flags="16777234" default="100" value="100"/>
+<sourceParentChannelRef>./1/100/109/3</sourceParentChannelRef>
+<expressionChannels><sourceChannelRef>./1/100/109/3</sourceChannelRef><targetChannelID>3</targetChannelID><offsetChannelRef>./80008</offsetChannelRef><minChannelRef>./80009</minChannelRef><maxChannelRef>./80010</maxChannelRef></expressionChannels>
+</behavior>
+<behavior name="Rig Float Tilt Amount" id="80011" factoryID="26">
+<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="80007"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="30093"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
+<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="3.0"/></parameter>
 </parameter>
 </behavior>
 </group>
@@ -8455,7 +8482,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30226"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="0.65"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="40"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="12.0"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2"/>
 </behavior>
 <behavior name="Float Tilt" id="30228" factoryID="23">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/109/3" sliderRange="3.4028234663852886e+38"/>
@@ -8464,7 +8491,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="30226"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="3.7"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.035"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="8.0"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5"/>
 </behavior>
 <behavior name="Rig Float Y Speed" id="30229" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="100"/>
@@ -8488,6 +8515,81 @@
 <flags>8590004242</flags>
 <parameter name="Speed" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1.5"/></parameter>
 <parameter name="Speed" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="23"/></parameter>
+</parameter>
+</behavior>
+</group>
+<group name="Icon Float Amount" id="80012">
+<aspectRatio>1</aspectRatio>
+<flags>0</flags>
+<timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>524304</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704">
+<parameter name="Transform" id="100" flags="8589938704">
+<parameter name="Position" id="101" flags="8589938704"><foldFlags>11</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
+<parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
+<parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
+</parameter>
+<behavior name="Float Y Amount" id="80013" factoryID="24">
+<dynamicChannelIDSet offsetChannelID="80014" rangeMinChannelID="80015" rangeMaxChannelID="80016"/>
+<channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/101" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934608</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="80012"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30226"/>
+<parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
+<parameter name="Scale" id="204" flags="8606711824" default="1" value="0"/>
+<parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
+<parameter name="Value offset" id="80014" flags="16777232" default="0" value="0"/>
+<parameter name="Value min" id="80015" flags="16777234" default="-100" value="-100"/>
+<parameter name="Value max" id="80016" flags="16777234" default="100" value="100"/>
+<sourceParentChannelRef>./1/100/101/2</sourceParentChannelRef>
+<expressionChannels><sourceChannelRef>./1/100/101/2</sourceChannelRef><targetChannelID>2</targetChannelID><offsetChannelRef>./80014</offsetChannelRef><minChannelRef>./80015</minChannelRef><maxChannelRef>./80016</maxChannelRef></expressionChannels>
+</behavior>
+<behavior name="Rig Float Y Amount" id="80017" factoryID="26">
+<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="80013"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="30203"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
+<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1.6875"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Float Tilt Amount" id="80018" factoryID="24">
+<dynamicChannelIDSet offsetChannelID="80019" rangeMinChannelID="80020" rangeMaxChannelID="80021"/>
+<channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/100/109" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934608</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="80012"/>
+<parameter name="Source Object" id="201" flags="77326254096" default="0" value="30226"/>
+<parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
+<parameter name="Scale" id="204" flags="8606711824" default="1" value="0"/>
+<parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
+<parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
+<parameter name="Value offset" id="80019" flags="16777232" default="0" value="0"/>
+<parameter name="Value min" id="80020" flags="16777234" default="-100" value="-100"/>
+<parameter name="Value max" id="80021" flags="16777234" default="100" value="100"/>
+<sourceParentChannelRef>./1/100/109/3</sourceParentChannelRef>
+<expressionChannels><sourceChannelRef>./1/100/109/3</sourceChannelRef><targetChannelID>3</targetChannelID><offsetChannelRef>./80019</offsetChannelRef><minChannelRef>./80020</minChannelRef><maxChannelRef>./80021</maxChannelRef></expressionChannels>
+</behavior>
+<behavior name="Rig Float Tilt Amount" id="80022" factoryID="26">
+<channelBehavior affectingFactory="68fba2c1aa094655bf4b81587efec626" affectingChannel="./204" sliderRange="3.4028234663852886e+38"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="80018"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="30203"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="Scale" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0"/></parameter>
+<parameter name="Scale" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="3.0"/></parameter>
 </parameter>
 </behavior>
 </group>

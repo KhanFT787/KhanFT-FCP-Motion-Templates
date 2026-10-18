@@ -78,6 +78,28 @@ class Card:
         _, x = d.group(name, gid, children=children, px=px, py=py, beh=beh)
         return gid, x
 
+    # ---- float wiring. Motion honours only ONE rig per object, so amount and on/off live on separate links:
+    #      source (oscillators) -> '<label> Float Amount' driver (link Scale rigged by Amount) -> target (link Custom Mix rigged by On)
+    def float_links(self, label, target, src, w_on, w_amt, on):
+        # ids: the target links/rigs keep the exact ids of the earlier build (so clips already in a timeline keep
+        # their settings); everything new is allocated from a separate high range.
+        d = self.d
+        def hi(fn):
+            keep = d.nid[0]; d.nid[0] = getattr(self, 'hi_id', 80000)
+            try: return fn()
+            finally: self.hi_id = d.nid[0]; d.nid[0] = keep
+        AMT = hi(d.new); ab = ''; fb = ''
+        for nm, chan, chs, sc in (('Float Y', './1/100/101', [('2', './1/100/101/2')], 0.5625), ('Float Tilt', './1/100/109', [('3', './1/100/109/3')], 1.0)):
+            lid, lx = d.link(nm, target, 'GRP', chan, AMT, chs, mode=0, mix=1 if on else 0, scale=sc)
+            fb += lx + d.rig(f'Rig {nm} On', lid, 'LNK', './207', w_on, [(1, 0), (2, 1)], pname='Custom Mix')
+            d.new()   # id formerly used by the amount rig
+            def amt():
+                alid, alx = d.link(f'{nm} Amount', AMT, 'GRP', chan, src, chs, mode=0, scale=0.9*sc)
+                return alx + d.rig(f'Rig {nm} Amount', alid, 'LNK', './204', w_amt, [(1, 0), (2, 3*sc)], pname='Scale', rng=B)
+            ab += hi(amt)
+        _, x = d.group(f'{label} Float Amount', AMT, beh=ab); self.drivers += x
+        return fb
+
     # ---- per-text extras: a box that fits the text (live bounds via Align To markers) + its own float
     def text_extras(self, label, tid, text_xml, box_on=False, float_on=False, box_col=(1, 1, 1), box_op=0.9,
                     pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None):
@@ -129,11 +151,8 @@ class Card:
         sp = d.rig('Rig Float Y Speed', o1, 'OSC', './202', W_FS, [(1, 2), (2, 32)], pname='Speed', rng='100')
         sp += d.rig('Rig Float Tilt Speed', o2, 'OSC', './202', W_FS, [(1, 1.5), (2, 21)], pname='Speed', rng='100')
         _, fsrc = d.group(f'{label} Float Source', FS, beh=x1 + x2 + sp); self.drivers += fsrc
-        FG = d.new(); fb = ''
-        for nm, chan, chs, sc in (('Float Y', './1/100/101', [('2', './1/100/101/2')], 0.5625), ('Float Tilt', './1/100/109', [('3', './1/100/109/3')], 1.0)):
-            lid, lx = d.link(nm, FG, 'GRP', chan, FS, chs, mode=0, scale=sc)
-            fb += lx + d.rig(f'Rig {nm} On', lid, 'LNK', './207', W_FL, [(1, 0), (2, 1)], pname='Custom Mix')
-            fb += d.rig(f'Rig {nm} Amount', lid, 'LNK', './204', W_FA, [(1, 0), (2, 3*sc)], pname='Scale', rng=B)
+        FG = d.new()
+        fb = self.float_links(label, FG, FS, W_FL, W_FA, float_on)
         _, g = d.group(f'{label} Float', FG, children=text_xml + mk + box, beh=fb)
         P = lambda o, c, n: self.extras_pub.setdefault(label, []).append((o, c, n))
         P(W_FL, './2/100', f'{label} Float'); P(W_FA, './2/100', f'{label} Float Amount'); P(W_FS, './2/100', f'{label} Float Speed')
@@ -168,11 +187,8 @@ class Card:
         sp = d.rig('Rig Float Y Speed', o1id, 'OSC', './202', W_FSPD, [(1, 2), (2, 35)], pname='Speed', rng='100')
         sp += d.rig('Rig Float Tilt Speed', o2id, 'OSC', './202', W_FSPD, [(1, 1.5), (2, 23)], pname='Speed', rng='100')
         _, fsrc = d.group('Float Source', FSRC, beh=o1 + o2 + sp); self.drivers += fsrc
-        FLG = d.new(); fb = ''
-        for nm, chan, chs, sc in (('Float Y', './1/100/101', [('2', './1/100/101/2')], 0.5625), ('Float Tilt', './1/100/109', [('3', './1/100/109/3')], 1.0)):
-            lid, lx = d.link(nm, FLG, 'GRP', chan, FSRC, chs, mode=0, scale=sc)
-            fb += lx + d.rig(f'Rig {nm} On', lid, 'LNK', './207', W_FL, [(1, 0), (2, 1)], pname='Custom Mix')
-            fb += d.rig(f'Rig {nm} Amount', lid, 'LNK', './204', W_FAMT, [(1, 0), (2, 3*sc)], pname='Scale', rng=B)
+        FLG = d.new()
+        fb = self.float_links('Icon', FLG, FSRC, W_FL, W_FAMT, True)
         _, g = d.group('Icon Float', FLG, children=inner, beh=fb)
         def pop(feel):
             dd = DUR[feel] + 0.15

@@ -353,7 +353,7 @@ class Doc:
 
     def w_slider(self, name, val, rmin=0, rmax=100):
         """two snapshots: 0 -> value at rmin, 1 -> value at rmax ; val in [0,1]"""
-        wid = self.new()
+        wid = self.new(); self.sliders = getattr(self, 'sliders', set()) | {wid}
         self.widgets += f'''<scenenode name="{name}" id="{wid}" factoryID="{self.F("W")}" version="5">
 <affecting>3</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -372,6 +372,30 @@ class Doc:
     def publish(self, obj, chan, name): self.pub.append((obj, chan, name))
 
     # ---- assemble
+    def slider_bases(self, s):
+        """Final Cut renders a published slider set to exactly 0 with the rigged parameter's stored (base) value,
+        so every slider-rigged parameter gets the value of the slider's 0-snapshot as its base value."""
+        sl = getattr(self, 'sliders', set()); n = 0
+        pat = re.compile(r'<behavior name="[^"]*" id="\d+" factoryID="\d+">\s*<channelBehavior affectingFactory="[^"]*" affectingChannel="([^"]*)"[^>]*/>'
+                         r'\s*<timing[^>]*/>\s*<baseFlags>\d+</baseFlags>\s*<parameter name="Affecting Object \(Hidden\)" id="199" flags="\d+" default="0" value="(\d+)"/>'
+                         r'\s*<parameter name="Widget" id="200" flags="\d+" default="0" value="(\d+)"/>\s*<parameter name="Snapshots" id="202"[^>]*>\s*<flags>\d+</flags>'
+                         r'\s*<parameter name="[^"]*" id="1" factoryID="\d+"><flags>\d+</flags><curve type="1" default="1" value="([^"]*)"/>')
+        for m in list(pat.finditer(s)):
+            chan, tgt, wid, v0 = m.groups()
+            if wid not in sl: continue
+            a = s.find(f'<behavior name="'); a = re.search(rf'<behavior name="[^"]*" id="{tgt}"', s).start(); e = s.find('</behavior>', a)
+            cur = a
+            for pid in chan[2:].split('/'):
+                mm = re.compile(rf'<parameter name="[^"]*" id="{pid}"[^>]*?(/?)>').search(s, cur, e)
+                assert mm, (tgt, chan)
+                cur = mm.start()
+            tag_end = s.find('>', cur)
+            tag = s[cur:tag_end]
+            assert ' value="' in tag, (tgt, chan, tag)
+            s = s[:cur] + re.sub(r' value="[^"]*"', f' value="{v0}"', tag, 1) + s[tag_end:]; n += 1
+        self.slider_base_count = n
+        return s
+
     def save(self, path, root_xml, markers=(1.0, END-0.6)):
         s = self.s
         a = s.find('<layer name="Group"'); b = s.find('>', a)+1
@@ -392,6 +416,7 @@ class Doc:
                    lambda m: '<publishSettings>\n\t\t<version>2</version>\n' + pubx, s, 1)
         if markers: s = s.replace('<timemarkerset/>', f'<timemarkerset><timemarker><inpoint>{T(markers[0])}</inpoint><color>1</color><type>4</type></timemarker>'
                       f'<timemarker><inpoint>{T(markers[1])}</inpoint><color>1</color><type>6</type></timemarker></timemarkerset>', 1)
+        s = self.slider_bases(s)
         self.F('RIG')
         s = s.replace('<build>', self.add_fac + '<build>', 1)
         os.makedirs(os.path.dirname(path), exist_ok=True)
