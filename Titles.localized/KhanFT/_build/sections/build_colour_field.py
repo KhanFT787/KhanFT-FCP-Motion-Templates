@@ -71,11 +71,13 @@ GR, _, grain = d.image('Grain', 'Grain', 'Media/Grain.png', 1920, 1080, dropzone
 def cnt_beh(tid, sub):
     _, x = d.seq_words('Counter Bounce', sub, 0.0, 0.42, dy=60, spread=45, op0=0.15); return x
 CNT, CNT_STY, cnt = d.text('Counter', 'অধ্যায় ১ / ৪', 104, NAVY, beh_fn=cnt_beh)
+cnt = c.text_extras('Counter', CNT, cnt, pad=(50, 26))
 CNTA = d.new(); _, cnt = d.group('Counter Anim', CNTA, children=cnt, beh=c.feel_links(CNTA, rise(0.0, 30)))
 CNTS = d.new(); _, cnt = d.group('Counter Show', CNTS, children=cnt, beh=d.rig('Rig Show Counter', CNTS, 'GRP', './1/200/202', W_SHC, [(1, 0), (2, 1)], pname='Opacity'))
 CNTP, cnt = c.place('Counter Position', cnt, 0, 235)
 # ---------- title
 TTL, TTL_STY, ttl = d.text('Title', 'টাকার মনস্তত্ত্ব', 290, NAVY)
+ttl = c.text_extras('Title', TTL, ttl, pad=(90, 50))
 TTLA = d.new(); _, ttl = d.group('Title Anim', TTLA, children=ttl, beh=c.feel_links(TTLA, rise(0.06, 45)))
 TTLP, ttl = c.place('Title Position', ttl, 0, -95)
 # ---------- pips
@@ -99,6 +101,7 @@ P(W_PRE, './2/100', 'Colour Preset')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(TTL_STY, './14/16', 'Title Colour'); P(CNT_STY, './14/16', 'Counter Colour')
 P(W_SHC, './2/100', 'Show Counter')
+c.pub_extras('Title'); c.pub_extras('Counter')
 P(W_PIPS, './2/100', 'Progress Pips'); P(W_CUR, './2/100', 'Current Pip'); P(FILL, './2/353/113/111', 'Pip Colour')
 P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')

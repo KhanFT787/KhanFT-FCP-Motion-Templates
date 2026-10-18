@@ -19,7 +19,6 @@ SPEEDS = [('Normal', 1.9)]
 T0 = 0.3
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_CUR = d.w_check('Show Cursor', True)
-W_BAR = d.w_check('Show Bar', True)
 W_GRID = d.w_check('Show Grid', True)
 W_ENT = d.w_popup('Entrance', ENTR, 1)
 W_EXT = d.w_popup('Exit', EXIT, 0)
@@ -83,19 +82,20 @@ _, cur = d.group('Cursor Timing', CH_, children=cur, beh=lx)
 CSH = d.new()
 al_id, al = d.align_to(Q, 3, ox=30, oy=0)
 _, cursor = d.group('Cursor', CSH, children=cur, beh=al + d.rig('Rig Cursor', CSH, 'GRP', './1/200/202', W_CUR, [(1, 0), (2, 1)], pname='Opacity'))
-# bar behind the text: grows from the centre while the words type on
-BAR, bar = d.rect('Bar', 2300, 230, hexc('6ea0c8'), py=45, rnd=26, op=0.13, outline=(hexc('aacdeb'), 3))
+# text box (was the "bar"): fits the question, grows from the centre while the words type on
 BARG = d.new()
 def bar_drv(feel):
     return dict(sx=[(0, 0.04), (T0-0.12, 0.04)] + keys(T0-0.12, SPEEDS[0][1]+0.1, ease_io)[1:])
-_, bar = d.group('Bar Grow', BARG, children=bar, beh=c.feel_links(BARG, bar_drv), sy=1)
-BSH = d.new(); _, bar = d.group('Bar Show', BSH, children=bar, beh=d.rig('Rig Bar', BSH, 'GRP', './1/200/202', W_BAR, [(1, 0), (2, 1)], pname='Opacity'))
-QP, qline = c.place('Question Position', cursor + q + bar, 0, -40)
+def grow(box):
+    return d.group('Box Grow', BARG, children=box, beh=c.feel_links(BARG, bar_drv), sy=1)[1]
+qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'), box_op=0.13, pad=(70, 40),
+                   border=(hexc('aacdeb'), 3), shadow=(0, 40, 14), box_wrap=grow)
+QP, qline = c.place('Question Position', qx, 0, -40)
 
 P(Q, './2/369', 'Question'); P(QS, './14/16', 'Text Colour')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
-P(W_BAR, './2/100', 'Show Bar'); P(BAR, './2/353/113/111', 'Bar Colour'); P(BAR, './1/200/202', 'Bar Opacity'); P(BAR, './2/353/160/1', 'Bar Width')
+c.pub_extras('Question')
 P(W_CUR, './2/100', 'Show Cursor')
 P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength')
 P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')

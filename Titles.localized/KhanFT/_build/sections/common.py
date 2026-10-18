@@ -23,6 +23,10 @@ class Card:
         self.W_RESET = None
         self.media = {}            # relative path -> source file
         self.post_rigs = []        # (behaviour name regex, xml-fn) applied after save
+        self.extras_pub = {}
+
+    def pub_extras(self, label):
+        for o, c, n in self.extras_pub.pop(label, []): self.d.publish(o, c, n)
 
     # ---- drivers
     def drv_group(self, name, kk):
@@ -73,6 +77,71 @@ class Card:
             beh += lx + d.rig(f'Rig Reset {nm}', lid, 'LNK', './207', self.W_RESET, [(1, 0), (2, 1)], pname='Custom Mix')
         _, x = d.group(name, gid, children=children, px=px, py=py, beh=beh)
         return gid, x
+
+    # ---- per-text extras: a box that fits the text (live bounds via Align To markers) + its own float
+    def text_extras(self, label, tid, text_xml, box_on=False, float_on=False, box_col=(1, 1, 1), box_op=0.9,
+                    pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None):
+        """returns xml: Float group > [text, edge markers, box]. Publishes '<label> …' controls."""
+        d = self.d; P = d.publish
+        K, KY = 4.0, 2.25
+        W_BOX = d.w_check(f'{label} Box', box_on)
+        W_PX = d.w_slider(f'{label} Box Padding X', round(pad[0]/300, 4), 0, 300)
+        W_PY = d.w_slider(f'{label} Box Padding Y', round(pad[1]/200, 4), 0, 200)
+        W_FL = d.w_check(f'{label} Float', float_on)
+        W_FA = d.w_slider(f'{label} Float Amount', 0.3, 0, 100)
+        W_FS = d.w_slider(f'{label} Float Speed', 0.3, 0, 100)
+        # padded edge markers (invisible 2x2 shapes aligned to the text's edges)
+        M = {}; mk = ''
+        for nm, code, axis, wid, mx, chan in (('L', 2, -1, W_PX, 300, './203/1'), ('R', 3, 1, W_PX, 300, './203/1'),
+                                             ('T', 4, 1, W_PY, 200, './203/2'), ('B', 5, -1, W_PY, 200, './203/2')):
+            mid, m = d.rect(f'{label} Edge {nm}', 2, 2, (1, 0, 0), op=0)
+            ox = axis*pad[0] if nm in 'LR' else 0; oy = axis*pad[1] if nm in 'TB' else 0
+            aid, ax = d.align_to(tid, code, ox=ox, oy=oy)
+            ax += d.rig(f'Rig Pad {nm}', aid, 'ALIGN', chan, wid, [(1, 0), (2, axis*mx)], pname='X' if nm in 'LR' else 'Y', rng=B)
+            M[nm] = mid; mk += m.replace('</scenenode>', ax + '</scenenode>')
+        X_, Y_ = './1/100/101/1', './1/100/101/2'
+        def L(nm, chan, src, sc, tgt, scale, mode=0):
+            return d.link(nm, BX, 'SHP', chan, src, [(tgt, sc)], mode=mode, scale=scale)[1]
+        BX = d.new()
+        fit = (L('W minus L', './2/353/160/1', M['L'], X_, '1', -K) + L('W from R', './2/353/160/1', M['R'], X_, '1', K, mode=2) +
+               L('H minus B', './2/353/160/2', M['B'], Y_, '2', -KY) + L('H from T', './2/353/160/2', M['T'], Y_, '2', KY, mode=2) +
+               L('X from L', './1/100/101', M['L'], X_, '1', 0.5) + L('X from R', './1/100/101', M['R'], X_, '1', 0.5, mode=2) +
+               L('Y from B', './1/100/101', M['B'], Y_, '2', 0.5) + L('Y from T', './1/100/101', M['T'], Y_, '2', 0.5, mode=2))
+        _, box = d.rect(f'{label} Box', 600, 200, box_col, op=box_op, rnd=rnd, outline=border or ((1, 1, 1), 0))
+        box = re.sub(r'<scenenode name="[^"]*" id="\d+"', f'<scenenode name="{label} Box" id="{BX}"', box, 1)
+        so, sb, sd = shadow
+        box = box.replace('<parameter name="Lighting" id="230"',
+                          '<parameter name="Drop Shadow" id="208" flags="8589940752"><foldFlags>131083</foldFlags>'
+                          f'<parameter name="Opacity" id="211" flags="8606711824" default="0.75" value="{so}"/>'
+                          f'<parameter name="Blur" id="213" flags="8606711824" default="5" value="{sb}"/>'
+                          f'<parameter name="Distance" id="212" flags="8606711824" default="5" value="{sd}"/>'
+                          '<parameter name="Angle" id="214" flags="8606711824" default="5.497787143782138" value="4.7123889803846897"/></parameter>\n'
+                          '<parameter name="Lighting" id="230"', 1)
+        box = box.replace('</scenenode>', fit + '</scenenode>')
+        BS = d.new()
+        _, box = d.group(f'{label} Box Show', BS, children=box, op=1 if box_on else 0,
+                         beh=d.rig(f'Rig {label} Box', BS, 'GRP', './1/200/202', W_BOX, [(1, 0), (2, 1)], pname='Opacity'))
+        if box_wrap: box = box_wrap(box)
+        # float
+        FS = d.new()
+        o1, x1 = d.osc(FS, 'Float Y', './1/100/101/2', 30, 11.0, phase=round(sum(map(ord, label)) % 628 / 100, 2))
+        o2, x2 = d.osc(FS, 'Float Tilt', './1/100/109/3', 0.012, 7.0, phase=1.3)
+        sp = d.rig('Rig Float Y Speed', o1, 'OSC', './202', W_FS, [(1, 2), (2, 32)], pname='Speed', rng='100')
+        sp += d.rig('Rig Float Tilt Speed', o2, 'OSC', './202', W_FS, [(1, 1.5), (2, 21)], pname='Speed', rng='100')
+        _, fsrc = d.group(f'{label} Float Source', FS, beh=x1 + x2 + sp); self.drivers += fsrc
+        FG = d.new(); fb = ''
+        for nm, chan, chs, sc in (('Float Y', './1/100/101', [('2', './1/100/101/2')], 0.5625), ('Float Tilt', './1/100/109', [('3', './1/100/109/3')], 1.0)):
+            lid, lx = d.link(nm, FG, 'GRP', chan, FS, chs, mode=0, scale=sc)
+            fb += lx + d.rig(f'Rig {nm} On', lid, 'LNK', './207', W_FL, [(1, 0), (2, 1)], pname='Custom Mix')
+            fb += d.rig(f'Rig {nm} Amount', lid, 'LNK', './204', W_FA, [(1, 0), (2, 3*sc)], pname='Scale', rng=B)
+        _, g = d.group(f'{label} Float', FG, children=text_xml + mk + box, beh=fb)
+        P = lambda o, c, n: self.extras_pub.setdefault(label, []).append((o, c, n))
+        P(W_FL, './2/100', f'{label} Float'); P(W_FA, './2/100', f'{label} Float Amount'); P(W_FS, './2/100', f'{label} Float Speed')
+        P(W_BOX, './2/100', f'{label} Box'); P(BX, './2/353/113/111', f'{label} Box Colour'); P(BX, './1/200/202', f'{label} Box Opacity')
+        P(BX, './2/353/144', f'{label} Box Roundness'); P(W_PX, './2/100', f'{label} Box Padding X'); P(W_PY, './2/100', f'{label} Box Padding Y')
+        P(BX, './2/353/108/105', f'{label} Box Border'); P(BX, './2/353/108/107', f'{label} Box Border Colour')
+        P(BX, './1/208/211', f'{label} Box Shadow'); P(BX, './1/208/213', f'{label} Box Shadow Softness'); P(BX, './1/208/212', f'{label} Box Shadow Distance')
+        return g
 
     # ---- optional floating icon: built-in finance icons or your own image, soft shadow, float
     def icon_block(self, px=0, py=600, size=0.9, show=False, shadow=(0.35, 40, 26, 4.7124), t0=0.12, publish=True):
@@ -140,6 +209,7 @@ class Card:
 
     def save(self, root, outdir, markers=None, thumb=None):
         d = self.d
+        assert not self.extras_pub, f'unpublished text extras: {list(self.extras_pub)}'
         _, drv = d.group('Drivers', children=self.drivers, op=0)
         path = os.path.join(outdir, self.name, self.name + ('.moti' if self.kind == 'title' else '.motr'))
         s = d.save(path, root + drv, markers=(markers or (1.0, END - 0.6)) if self.kind == 'title' else None)

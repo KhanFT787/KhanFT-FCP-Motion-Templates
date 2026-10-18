@@ -111,6 +111,7 @@ LBL, LBLS, lbl = d.text('Chapter Label', 'অধ্যায় ৩', 74, hexc('
 def lbl_in(feel):
     dd = DUR[feel]
     return dict(op=[(0, 0), (0.15, 0)] + keys(0.15, dd*0.7, smooth)[1:], py=[(0, -20), (0.15, -20)] + keys(0.15, dd, lambda p: -20*(1-ease_out4(p)))[1:])
+lbl = c.text_extras('Label', LBL, lbl, pad=(40, 22), box_col=(1, 1, 1), box_op=0.12)
 LA = d.new(); _, lbl = d.group('Label Anim', LA, children=lbl, beh=c.feel_links(LA, lbl_in))
 RULE, rule = d.rect('Rule', 1700, 3, hexc('ffffff'), px=850, op=0.3)
 _, rule = d.group('Rule Draw', children=rule, px=-1328, py=24, sx=[(0, 0), (0.3, 0)] + keys(0.3, 0.9, ease_out4)[1:], sy=1)
@@ -121,6 +122,8 @@ def t_beh(t_in):
     return f
 T1, T1S, t1 = d.text('Title Line 1', 'চক্রবৃদ্ধির', 205, hexc('eeeeee'), align=0, beh_fn=t_beh(0.4))
 T2, T2S, t2 = d.text('Title Line 2', 'জাদু', 205, hexc('cfcfcf'), align=0, beh_fn=t_beh(0.62))
+t1 = c.text_extras('Line 1', T1, t1, pad=(70, 40), box_col=(1, 1, 1), box_op=0.12)
+t2 = c.text_extras('Line 2', T2, t2, pad=(70, 40), box_col=(1, 1, 1), box_op=0.12)
 _, t1 = d.group('Line 1 Hold', children=t1, op=[(0, 0), (0.39, 0), (0.4, 1), (END, 1)])
 _, t2 = d.group('Line 2 Hold', children=t2, op=[(0, 0), (0.61, 0), (0.62, 1), (END, 1)])
 _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
@@ -128,6 +131,7 @@ TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
 P(LBL, './2/369', 'Chapter Label'); P(T1, './2/369', 'Title Line 1'); P(T2, './2/369', 'Title Line 2')
 P(LBLS, './14/16', 'Label Colour'); P(T1S, './14/16', 'Line 1 Colour'); P(T2S, './14/16', 'Line 2 Colour'); P(RULE, './1/200/202', 'Line Opacity')
+c.pub_extras('Label'); c.pub_extras('Line 1'); c.pub_extras('Line 2')
 P(W_SET, './2/100', 'Objects')
 for k, dz in enumerate(DZS): P(dz, './1/324/300', f'Custom Object {k+1}')
 P(W_SPD, './2/100', 'Orbit Speed'); P(W_RING, './2/100', 'Show Ring'); P(RING, './1/200/202', 'Ring Opacity')
