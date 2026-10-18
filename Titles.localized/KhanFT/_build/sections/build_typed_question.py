@@ -102,10 +102,10 @@ def grow(box):
                    beh=c.hi(lambda: d.rig('Rig Box Type Grow', BW, 'GRP', './1/100/105/1', W_TSPD, [(j+1, bar_grow(sp)) for j, sp in enumerate(WORD_SPEEDS)], pname='X'), 'speed_id', 97000))[1]
 qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'), box_op=0.13, pad=(70, 40),
                    border=(hexc('aacdeb'), 3), shadow=(0, 40, 14), box_wrap=grow)
-QO = c.hi(d.new, 'out_id', 98000); qx = d.group('Question Out', QO, children=qx, beh=c.text_out('Question', QO, 30, seq=OSEQ[0], rename={'Word by Word': 'Typewriter'}))[1]
+QO = c.hi(d.new, 'out_id', 98000); qx = d.group('Question Out', QO, children=qx, beh=c.text_out('Question', QO, 30, seq=OSEQ[0], lead=0.35, rename={'Word by Word': 'Typewriter'}))[1]
 QP, qline = c.place('Question Position', qx, 0, -40)
 
-ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.75)
+ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.75, icon_lead=0.25)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')

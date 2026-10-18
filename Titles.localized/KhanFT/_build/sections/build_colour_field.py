@@ -84,7 +84,7 @@ CNT, CNT_STY, cnt = d.text('Counter', 'অধ্যায় ১ / ৪', 104, NA
 cnt = c.text_extras('Counter', CNT, cnt, pad=(50, 26))
 CNTA = d.new(); c.burn(lambda: c.feel_links(CNTA, rise(0.0, 30)))
 _, cnt = d.group('Counter Anim', CNTA, children=cnt, beh=c.text_anim('Counter', CNTA, 0.75, 30, seq=CNT_SEQ[0], default='Word by Word'))
-CNTO = c.hi(d.new, 'out_id', 98000); cnt = d.group('Counter Out', CNTO, children=cnt, beh=c.text_out('Counter', CNTO, 30, seq=CNT_SEQ[1]))[1]
+CNTO = c.hi(d.new, 'out_id', 98000); cnt = d.group('Counter Out', CNTO, children=cnt, beh=c.text_out('Counter', CNTO, 30, seq=CNT_SEQ[1], lead=0.3))[1]
 CNTS = d.new(); _, cnt = d.group('Counter Show', CNTS, children=cnt, beh=d.rig('Rig Show Counter', CNTS, 'GRP', './1/200/202', W_SHC, [(1, 0), (2, 1)], pname='Opacity'))
 CNTP, cnt = c.place('Counter Position', cnt, 0, 235)
 # ---------- title
@@ -93,7 +93,7 @@ TTL, TTL_STY, ttl = d.text('Title', 'টাকার মনস্তত্ত্
 ttl = c.text_extras('Title', TTL, ttl, pad=(90, 50))
 TTLA = d.new(); c.burn(lambda: c.feel_links(TTLA, rise(0.06, 45)))
 _, ttl = d.group('Title Anim', TTLA, children=ttl, beh=c.text_anim('Title', TTLA, 0.85, 45, seq=TTL_SEQ[0]))
-TTLO = c.hi(d.new, 'out_id', 98000); ttl = d.group('Title Out', TTLO, children=ttl, beh=c.text_out('Title', TTLO, 45, seq=TTL_SEQ[1]))[1]
+TTLO = c.hi(d.new, 'out_id', 98000); ttl = d.group('Title Out', TTLO, children=ttl, beh=c.text_out('Title', TTLO, 45, seq=TTL_SEQ[1], lead=0.4))[1]
 TTLP, ttl = c.place('Title Position', ttl, 0, -95)
 # ---------- pips
 PW, PH, PG = 130, 22, 32; PITCH = PW + PG; PIP_N = [0, 3, 4, 5, 6]
@@ -108,10 +108,11 @@ ACT = d.new(); _, fill = d.group('Active Pip Slot', ACT, children=fill, beh=d.ri
 SH = d.new(); _, prow = d.group('Pips Row', SH, children=fill + pips, px=-1.5*PITCH,
                                  beh=d.rig('Rig Pip Centre', SH, 'GRP', './1/100/101/1', W_PIPS, [(j+1, -(max(n, 1)-1)/2*PITCH) for j, n in enumerate(PIP_N)], pname='X', rng=B))
 PSH = d.new(); _, prow = d.group('Pips Show', PSH, children=prow, beh=d.rig('Rig Pips Show', PSH, 'GRP', './1/200/202', W_PIPS, [(j+1, 0 if n == 0 else 1) for j, n in enumerate(PIP_N)], pname='Opacity'))
+prow = c.follow_out('Pips Out', prow, 'Title', 0.5)   # pips leave with the title, first
 PIPP, prow = c.place('Pips Position', prow, 0, -830)
 
 # ---------- publish (inspector order): colours > icon > counter > title > pips > animation > reset
-ico = c.icon_block(px=0, py=640, size=0.85, t0=0.7)
+ico = c.icon_block(px=0, py=640, size=0.85, t0=0.7, icon_lead=0.2)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(W_PRE, './2/100', 'Colour Preset')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')

@@ -110,7 +110,7 @@ def lbl_in(feel):
 lbl = c.text_extras('Label', LBL, lbl, pad=(40, 22), box_col=(1, 1, 1), box_op=0.12)
 LA = d.new(); c.burn(lambda: c.feel_links(LA, lbl_in))
 _, lbl = d.group('Label Anim', LA, children=lbl, beh=c.text_anim('Label', LA, 0.75, 20, seq=LBL_SEQ[0]))
-LBO = c.hi(d.new, 'out_id', 98000); lbl = d.group('Label Out', LBO, children=lbl, beh=c.text_out('Label', LBO, 20, seq=LBL_SEQ[1]))[1]
+LBO = c.hi(d.new, 'out_id', 98000); lbl = d.group('Label Out', LBO, children=lbl, beh=c.text_out('Label', LBO, 20, seq=LBL_SEQ[1], lead=0.25))[1]
 RULE, rule = d.rect('Rule', 1700, 3, hexc('ffffff'), px=850, op=0.3)
 _, rule = d.group('Rule Draw', children=rule, px=-1328, py=24, sx=[(0, 0), (0.3, 0)] + keys(0.3, 0.9, ease_out4)[1:], sy=1)
 LBLP, lbl = c.place('Label Position', lbl + rule, LEFT, 360)
@@ -128,14 +128,14 @@ _, t1 = d.group('Line 1 Hold', children=t1, op=[(0, 0), (0.84, 0), (0.85, 1), (E
 _, t2 = d.group('Line 2 Hold', children=t2, op=[(0, 0), (1.04, 0), (1.05, 1), (END, 1)])
 A1 = c.hi(d.new, 'text_id', 96000)
 _, t1 = d.group('Line 1 Anim', A1, children=t1, beh=c.text_anim('Line 1', A1, 0.85, 40, seq=T_SEQ[0], default='Word by Word'))
-O1 = c.hi(d.new, 'out_id', 98000); t1 = d.group('Line 1 Out', O1, children=t1, beh=c.text_out('Line 1', O1, 40, seq=T_OSEQ[0]))[1]
+O1 = c.hi(d.new, 'out_id', 98000); t1 = d.group('Line 1 Out', O1, children=t1, beh=c.text_out('Line 1', O1, 40, seq=T_OSEQ[0], lead=0.35))[1]
 A2 = c.hi(d.new, 'text_id', 96000)
 _, t2 = d.group('Line 2 Anim', A2, children=t2, beh=c.text_anim('Line 2', A2, 1.05, 40, seq=T_SEQ[1], default='Word by Word'))
-O2 = c.hi(d.new, 'out_id', 98000); t2 = d.group('Line 2 Out', O2, children=t2, beh=c.text_out('Line 2', O2, 40, seq=T_OSEQ[1]))[1]
+O2 = c.hi(d.new, 'out_id', 98000); t2 = d.group('Line 2 Out', O2, children=t2, beh=c.text_out('Line 2', O2, 40, seq=T_OSEQ[1], lead=0.45))[1]
 _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
 TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
-ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.65)
+ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.65, icon_lead=0.5)
 P(W_ENT, './2/100', 'Entrance'); P(W_ESPD, './2/100', 'Entrance Speed'); P(W_EXT, './2/100', 'Exit'); P(W_XSPD, './2/100', 'Exit Speed'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')

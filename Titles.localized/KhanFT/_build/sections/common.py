@@ -69,6 +69,13 @@ class Card:
                                          [(j+1, o) for j, o in enumerate(offs)], pname='End Offset'), *sband)
         return beh
 
+    def follow_out(self, name, children, label, lead):
+        """wrap `children` so they leave with <label>'s Text Out / Out Speed (no words: Word by Word = Fade)"""
+        d = self.d; W, WS, di = self.out_info[label]; band = ('follow_id', 140000)
+        gid = self.hi(d.new, *band)
+        beh = self.hi(lambda: self.style_links(gid, TEXT_OUT, W, di, text_out_motion(30, 0.6, lead, words=False), w_speed=WS), *band)
+        return d.group(name, gid, children=children, beh=beh)[1]
+
     def word_seq(self, name, delay, nwords):
         """beh_fn for d.text(): a word-by-word Sequence Text (ids from the text band). Returns (fn, holder) - holder[0] = behaviour id."""
         holder = []
@@ -93,7 +100,7 @@ class Card:
             self.seq_out[bid] = nd; return bid, x
         return self.hi(mk, 'out_id', 98000)
 
-    def text_out(self, label, gid, dist, seq=None, rename=None, default='None'):
+    def text_out(self, label, gid, dist, seq=None, rename=None, default='None', lead=0.35):
         """exit for one text: '<label> Text Out' (the Text In looks, reversed; default None = leaves with the card)
         and '<label> Out Speed'. Behaviours go on a wrapper group gid around the text's Anim group."""
         d = self.d; band = ('out_id', 98000)
@@ -101,8 +108,9 @@ class Card:
         W = self.hi(lambda: d.w_popup(f'{label} Text Out', [(rename or {}).get(t, t) for t in TEXT_OUT], di), *band)
         WS = self.hi(lambda: d.w_popup(f'{label} Out Speed', SPEEDS, 1), *band)
         self.out_w[label] = [(W, f'{label} Text Out'), (WS, f'{label} Out Speed')]
+        self.out_info = getattr(self, 'out_info', {}); self.out_info[label] = (W, WS, di)
         nd = self.seq_out.get(seq, 0.6)
-        beh = self.hi(lambda: self.style_links(gid, TEXT_OUT, W, di, text_out_motion(dist, nd), w_speed=WS), *band)
+        beh = self.hi(lambda: self.style_links(gid, TEXT_OUT, W, di, text_out_motion(dist, nd, lead), w_speed=WS), *band)
         if seq:
             self.seq_base = getattr(self, 'seq_base', {}); self.seq_base[seq] = 1     # off at the default (None)
             offs = [round((END - (OUT_T0 + nd*SPD[sp]))*FPS, 3) for sp in SPEEDS]
@@ -313,7 +321,7 @@ class Card:
         return g
 
     # ---- optional floating icon: built-in finance icons or your own image, soft shadow, float
-    def icon_block(self, px=0, py=600, size=0.9, show=False, shadow=(0.35, 40, 26, 4.7124), t0=0.12, publish=True, icon_out='None'):
+    def icon_block(self, px=0, py=600, size=0.9, show=False, shadow=(0.35, 40, 26, 4.7124), t0=0.12, publish=True, icon_out='None', icon_lead=0.25):
         d = self.d
         W_ICON = d.w_check('Show Icon', show)
         W_SRC = d.w_popup('Icon', ICONS + ['Custom Image'], 0)
@@ -353,7 +361,7 @@ class Card:
         beh = self.hi(lambda: self.style_links(IPA, ICON_IN, W_IIN, 0, icon_in_motion(t0), w_speed=W_IINS), *band)
         _, g = d.group('Icon Pop', IPA, children=g, beh=beh)
         IOU = self.hi(d.new, *band)
-        beh = self.hi(lambda: self.style_links(IOU, ICON_OUT, W_IOUT, ICON_OUT.index(icon_out), icon_out_motion(), w_speed=W_IOUTS), *band)
+        beh = self.hi(lambda: self.style_links(IOU, ICON_OUT, W_IOUT, ICON_OUT.index(icon_out), icon_out_motion(lead=icon_lead), w_speed=W_IOUTS), *band)
         _, g = d.group('Icon Out', IOU, children=g, beh=beh)
         ISH = d.new()
         _, g = d.group('Icon Show', ISH, children=g, op=1 if show else 0, sx=size, sy=size,
@@ -557,13 +565,29 @@ def card_motion(kind, dx, dy):
 WORD_SPEEDS = ['Slow', 'Normal', 'Fast']          # how fast the words come in (Word by Word / Typewriter)
 WORD_MUL = {'Slow': 1.5, 'Normal': 1.0, 'Fast': 0.6}
 FPS = 60000/1001
-OUT_T0 = END - 1.75                                  # texts start leaving here (before the card's exit)
+OUT_T0 = END - 1.45                                  # word-by-word exits start here (Sequence Text timing is fixed)
 TEXT_OUT = ['Rise', 'Word by Word', 'Fade', 'Slide to Left', 'Slide to Right', 'Drop', 'Pop', 'None']
-def text_out_motion(dist, nd):
-    """the Text In looks played backwards: Rise lifts away, Drop sinks, Pop shrinks... all start at OUT_T0."""
-    t0 = OUT_T0
+CARD_T0 = {f: END - BASE[f]*0.9 - 0.02 for f in FEELS}   # when the card's own exit starts (Normal Exit Speed)
+FALL = 3000                                          # Drop exit: far enough to leave the frame from anywhere on the card
+def _fall(feel):
+    """gravity: slow start, then accelerating out of frame (Gentle Bounce: a little hop first)"""
+    if feel == 'Snappy': return lambda p: p**3
+    if feel == 'Gentle Bounce': return lambda p: -0.025*math.sin(math.pi*p/0.2) if p < 0.2 else ((p - 0.2)/0.8)**2.2
+    return lambda p: p**2.2
+def _drop_out(feel, speed, lead):
+    """a real drop, timed `lead` s before the card's own exit so the elements and the card fall as one stack"""
+    dd = {'Smooth': 0.75, 'Snappy': 0.55, 'Gentle Bounce': 0.85}[feel]*SPD[speed]
+    t0 = CARD_T0[feel] - lead; g = _fall(feel)
+    return dict(py=[(0, 0), (t0, 0)] + keys(t0, dd, lambda p: -FALL*g(p), n=max(10, int(dd*30)))[1:],
+                op=[(0, 1), (t0, 1)])   # no fade (it falls out of frame); op kept so the links/ids match earlier builds
+def text_out_motion(dist, nd, lead=0.35, words=True):
+    """the Text In looks played backwards. Drop is a real fall locked to the card's exit; the others end just as
+    the card starts to leave (lead = how far ahead of the card this element goes; lower elements go first)."""
     def fn(st, feel, speed):
+        if st == 'Drop': return _drop_out(feel, speed, lead)
+        if st == 'Word by Word' and not words: st = 'Fade'
         dd = {'Smooth': 0.5, 'Snappy': 0.35, 'Gentle Bounce': 0.6}[feel]*SPD[speed]
+        t0 = OUT_T0 if st == 'Word by Word' else CARD_T0[feel] - lead - dd*0.75
         if feel == 'Gentle Bounce': g = lambda p: p*p*(2.4*p - 1.4)          # small wind-up, then away
         elif feel == 'Snappy': g = lambda p: p**4
         else: g = ease_in
@@ -577,7 +601,6 @@ def text_out_motion(dist, nd):
         if st == 'Fade': return dict(op=hold(1) + seg(lambda p: 1 - smooth(p)))
         if st == 'Slide to Left': return dict(px=hold(0) + seg(lambda p: -dist*4*g(p)), op=fade)
         if st == 'Slide to Right': return dict(px=hold(0) + seg(lambda p: dist*4*g(p)), op=fade)
-        if st == 'Drop': return dict(py=hold(0) + seg(lambda p: -dist*g(p)), op=fade)
         if st == 'Pop': return dict(sx=hold(1) + seg(lambda p: 1 - 0.18*g(p)), op=hold(1) + seg(lambda p: 1 - smooth(p), dd*0.6))
         raise ValueError(st)
     return fn
@@ -603,10 +626,11 @@ def icon_in_motion(t0, dist=80):
         if st == 'Drop': return dict(py=pre(dist) + seg(lambda p: dist*r(p)), op=fade)
         raise ValueError(st)
     return fn
-def icon_out_motion(dist=80):
-    t0 = OUT_T0
+def icon_out_motion(dist=80, lead=0.25):
     def fn(st, feel, speed):
+        if st == 'Drop': return _drop_out(feel, speed, lead)
         dd = {'Smooth': 0.5, 'Snappy': 0.35, 'Gentle Bounce': 0.6}[feel]*SPD[speed]
+        t0 = CARD_T0[feel] - lead - dd*0.75
         if feel == 'Gentle Bounce': g = lambda p: p*p*(2.4*p - 1.4)
         elif feel == 'Snappy': g = lambda p: p**4
         else: g = ease_in
@@ -618,7 +642,6 @@ def icon_out_motion(dist=80):
         if st == 'Fade': return dict(op=hold(1) + seg(lambda p: 1 - smooth(p)))
         if st == 'Slide to Left': return dict(px=hold(0) + seg(lambda p: -dist*4*g(p)), op=fade)
         if st == 'Slide to Right': return dict(px=hold(0) + seg(lambda p: dist*4*g(p)), op=fade)
-        if st == 'Drop': return dict(py=hold(0) + seg(lambda p: -dist*g(p)), op=fade)
         raise ValueError(st)
     return fn
 TEXT_IN = ['Rise', 'Word by Word', 'Fade', 'Slide from Left', 'Slide from Right', 'Drop', 'Pop', 'None']
