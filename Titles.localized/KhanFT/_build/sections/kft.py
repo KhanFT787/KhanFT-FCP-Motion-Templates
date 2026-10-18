@@ -124,7 +124,7 @@ class Doc:
     def scal(name, pid, default, v):
         return f'<parameter name="{name}" id="{pid}" flags="8606711824" default="{default}" value="{v}"/>'
 
-    def group(self, name, gid=None, children='', px=0, py=0, sx=1, sy=1, rz=0, op=1, beh='', ax=0, ay=0, pz=None, crop=None):
+    def group(self, name, gid=None, children='', px=0, py=0, sx=1, sy=1, rz=0, op=1, beh='', ax=0, ay=0, pz=None, crop=None, rx=0):
         """px/py/sx/sy/op may be numbers or keyframe lists [(t,v),...]"""
         gid = gid or self.new()
         def ch(nm, pid, dflt, v): return self.curve(nm, pid, dflt, v) if isinstance(v, list) else self.scal(nm, pid, dflt, v)
@@ -145,7 +145,7 @@ class Doc:
 <parameter name="Properties" id="1" flags="8589938704">
 <parameter name="Transform" id="100" flags="8589938704">
 <parameter name="Position" id="101" flags="8589938704"><foldFlags>11</foldFlags>{ch('X','1',0,px)}{ch('Y','2',0,py)}{ch('Z','3',0,pz) if pz is not None else ''}</parameter>
-<parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags>{ch('Z','3',0,rz)}</parameter>
+<parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags>{ch('X','1',0,rx) if rx else ''}{ch('Z','3',0,rz)}</parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags>{ch('X','1',1,sx)}{ch('Y','2',1,sy)}</parameter>
 {anchor}</parameter>
 <parameter name="Blending" id="200" flags="8589938704">{ch('Opacity','202',1,op)}</parameter>
