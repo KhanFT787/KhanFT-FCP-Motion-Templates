@@ -78,11 +78,13 @@ GR, _, grain = d.image('Grain', 'Grain', 'Media/Grain.png', 1920, 1080, dropzone
 # ---------- counter
 CNT_SEQ = []
 def cnt_beh(tid, sub):
-    bid, x = d.seq_words('Counter Words', sub, 0.75, 0.75 + 0.6*WORD_MUL['Slow'], dy=0, spread=0, op0=0); CNT_SEQ.append(bid); c.seq_norm[bid] = 0.6; return x
+    bid, x = d.seq_words('Counter Words', sub, 0.75, 0.75 + 0.6*WORD_MUL['Slow'], dy=0, spread=0, op0=0); CNT_SEQ.append(bid); c.seq_norm[bid] = 0.6
+    ob, ox = c.out_seq('Counter Words Out', sub, 0.6); CNT_SEQ.append(ob); return x + ox
 CNT, CNT_STY, cnt = d.text('Counter', 'অধ্যায় ১ / ৪', 104, NAVY, beh_fn=cnt_beh)
 cnt = c.text_extras('Counter', CNT, cnt, pad=(50, 26))
 CNTA = d.new(); c.burn(lambda: c.feel_links(CNTA, rise(0.0, 30)))
 _, cnt = d.group('Counter Anim', CNTA, children=cnt, beh=c.text_anim('Counter', CNTA, 0.75, 30, seq=CNT_SEQ[0], default='Word by Word'))
+CNTO = c.hi(d.new, 'out_id', 98000); cnt = d.group('Counter Out', CNTO, children=cnt, beh=c.text_out('Counter', CNTO, 30, seq=CNT_SEQ[1]))[1]
 CNTS = d.new(); _, cnt = d.group('Counter Show', CNTS, children=cnt, beh=d.rig('Rig Show Counter', CNTS, 'GRP', './1/200/202', W_SHC, [(1, 0), (2, 1)], pname='Opacity'))
 CNTP, cnt = c.place('Counter Position', cnt, 0, 235)
 # ---------- title
@@ -91,6 +93,7 @@ TTL, TTL_STY, ttl = d.text('Title', 'টাকার মনস্তত্ত্
 ttl = c.text_extras('Title', TTL, ttl, pad=(90, 50))
 TTLA = d.new(); c.burn(lambda: c.feel_links(TTLA, rise(0.06, 45)))
 _, ttl = d.group('Title Anim', TTLA, children=ttl, beh=c.text_anim('Title', TTLA, 0.85, 45, seq=TTL_SEQ[0]))
+TTLO = c.hi(d.new, 'out_id', 98000); ttl = d.group('Title Out', TTLO, children=ttl, beh=c.text_out('Title', TTLO, 45, seq=TTL_SEQ[1]))[1]
 TTLP, ttl = c.place('Title Position', ttl, 0, -95)
 # ---------- pips
 PW, PH, PG = 130, 22, 32; PITCH = PW + PG; PIP_N = [0, 3, 4, 5, 6]
@@ -129,5 +132,5 @@ _, content = d.group('Content', CONT, children=ico + cnt + ttl + prow, beh=lx + 
 CO = d.new(); CI = d.new()
 _, card = d.group('Card Out', CO, children=grain + vig + content + backgrounds, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
 _, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))
-path, s = c.save(card, OUTDIR, markers=(2.4, END-1.5), thumb='/tmp/claude-0/-home-claude/14ea8a7a-73b0-5e09-b753-32cc7b5c2796/scratchpad/chk_2.png')
+path, s = c.save(card, OUTDIR, markers=(2.4, END-2.0), thumb='/tmp/claude-0/-home-claude/14ea8a7a-73b0-5e09-b753-32cc7b5c2796/scratchpad/chk_2.png')
 print('wrote', path, len(s))

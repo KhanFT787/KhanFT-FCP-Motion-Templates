@@ -29,12 +29,15 @@ class Card:
         self.extras_pub = {}
         self.seq_norm = {}         # Sequence Text id -> reveal time at Normal word speed (behaviour spans the Slow time)
         self.speed_w = {}          # text label -> (word speed widget, published name)
+        self.seq_out = {}          # word-by-word exit Sequence Text id -> its time at Normal out speed
+        self.out_w = {}            # text label -> [(widget, published name)] for Text Out / Out Speed
 
     def pub_extras(self, label):
         w = getattr(self, 'text_in_w', {}).pop(label, None)
         if w: self.d.publish(w, './2/100', f'{label} Text In')
         sw = self.speed_w.pop(label, None)
         if sw: self.d.publish(sw[0], './2/100', sw[1])
+        for w2, nm in self.out_w.pop(label, []): self.d.publish(w2, './2/100', nm)
         for o, c, n in self.extras_pub.pop(label, []): self.d.publish(o, c, n)
 
     # ---- per-text entrance ("<label> Text In" menu)
@@ -73,9 +76,42 @@ class Card:
             def mk():
                 nd = max(0.6, 0.2*nwords)
                 bid, x = self.d.seq_words(name, sub, delay, delay + nd*WORD_MUL['Slow'], dy=0, spread=0, op0=0)
-                self.seq_norm[bid] = nd; holder.append(bid); return x
+                self.seq_norm[bid] = nd; holder.append(bid)
+                ob, ox = self.out_seq(name.replace('Words', 'Words Out'), sub, nd)
+                holder.append(ob); return x + ox
             return self.hi(mk, 'text_id', 96000)
         return fn, holder
+
+    def out_seq(self, name, sub, nd, spread=0):
+        """word-by-word exit: Sequence Text 'To' opacity 0, from OUT_T0 to the clip end (ids from the out band).
+        Its End Offset finishes it earlier for Normal / Fast out speed; holder of the text out menu switches it on."""
+        def mk():
+            bid, x = self.d.seq_words(name, sub, OUT_T0, END, dy=0, spread=spread, op0=0)
+            old = '<parameter name="Sequencing" id="202" flags="8606777360" default="1" value="1"/>'
+            assert x.count(old) == 1
+            x = x.replace(old, old.replace('value="1"/>', 'value="0"/>'))
+            self.seq_out[bid] = nd; return bid, x
+        return self.hi(mk, 'out_id', 98000)
+
+    def text_out(self, label, gid, dist, seq=None, rename=None):
+        """exit for one text: '<label> Text Out' (the Text In looks, reversed; default None = leaves with the card)
+        and '<label> Out Speed'. Behaviours go on a wrapper group gid around the text's Anim group."""
+        d = self.d; band = ('out_id', 98000)
+        di = TEXT_OUT.index('None')
+        W = self.hi(lambda: d.w_popup(f'{label} Text Out', [(rename or {}).get(t, t) for t in TEXT_OUT], di), *band)
+        WS = self.hi(lambda: d.w_popup(f'{label} Out Speed', SPEEDS, 1), *band)
+        self.out_w[label] = [(W, f'{label} Text Out'), (WS, f'{label} Out Speed')]
+        nd = self.seq_out.get(seq, 0.6)
+        beh = self.hi(lambda: self.style_links(gid, TEXT_OUT, W, di, text_out_motion(dist, nd), w_speed=WS), *band)
+        if seq:
+            self.seq_base = getattr(self, 'seq_base', {}); self.seq_base[seq] = 1     # off at the default (None)
+            offs = [round((END - (OUT_T0 + nd*SPD[sp]))*FPS, 3) for sp in SPEEDS]
+            self.seq_end = getattr(self, 'seq_end', {}); self.seq_end[seq] = offs[1]
+            beh += self.hi(lambda: d.rig(f'Rig {label} Words Out', seq, 'SEQ', './1000/1044', W,
+                                         [(j+1, 0 if s == 'Word by Word' else 1) for j, s in enumerate(TEXT_OUT)], pname='Opacity'), *band)
+            beh += self.hi(lambda: d.rig(f'Rig {label} Out Speed', seq, 'SEQ', './201/213', WS,
+                                         [(j+1, o) for j, o in enumerate(offs)], pname='End Offset'), *band)
+        return beh
 
     # ---- drivers
     def drv_group(self, name, kk):
@@ -507,6 +543,30 @@ def card_motion(kind, dx, dy):
 WORD_SPEEDS = ['Slow', 'Normal', 'Fast']          # how fast the words come in (Word by Word / Typewriter)
 WORD_MUL = {'Slow': 1.5, 'Normal': 1.0, 'Fast': 0.6}
 FPS = 60000/1001
+OUT_T0 = END - 1.75                                  # texts start leaving here (before the card's exit)
+TEXT_OUT = ['Rise', 'Word by Word', 'Fade', 'Slide to Left', 'Slide to Right', 'Drop', 'Pop', 'None']
+def text_out_motion(dist, nd):
+    """the Text In looks played backwards: Rise lifts away, Drop sinks, Pop shrinks... all start at OUT_T0."""
+    t0 = OUT_T0
+    def fn(st, feel, speed):
+        dd = {'Smooth': 0.5, 'Snappy': 0.35, 'Gentle Bounce': 0.6}[feel]*SPD[speed]
+        if feel == 'Gentle Bounce': g = lambda p: p*p*(2.4*p - 1.4)          # small wind-up, then away
+        elif feel == 'Snappy': g = lambda p: p**4
+        else: g = ease_in
+        hold = lambda v: [(0, v), (t0, v)]
+        seg = lambda f, d2=dd: keys(t0, d2, f, n=max(8, int(d2*30)))[1:]     # 30 keys/s keeps the files light
+        fade = hold(1) + seg(lambda p: 1 - smooth(p), dd*0.8)
+        if st == 'Rise': return dict(py=hold(0) + seg(lambda p: dist*g(p)), op=fade)
+        if st == 'Word by Word':
+            wd = nd*SPD[speed]
+            return dict(py=hold(0) + seg(lambda p: dist*0.5*g(p), wd), op=hold(1) + [(t0 + wd - 0.05, 1)] + keys(t0 + wd - 0.05, 0.2, lambda p: 1 - smooth(p), n=8)[1:])   # box fades after the words
+        if st == 'Fade': return dict(op=hold(1) + seg(lambda p: 1 - smooth(p)))
+        if st == 'Slide to Left': return dict(px=hold(0) + seg(lambda p: -dist*4*g(p)), op=fade)
+        if st == 'Slide to Right': return dict(px=hold(0) + seg(lambda p: dist*4*g(p)), op=fade)
+        if st == 'Drop': return dict(py=hold(0) + seg(lambda p: -dist*g(p)), op=fade)
+        if st == 'Pop': return dict(sx=hold(1) + seg(lambda p: 1 - 0.18*g(p)), op=hold(1) + seg(lambda p: 1 - smooth(p), dd*0.6))
+        raise ValueError(st)
+    return fn
 TEXT_IN = ['Rise', 'Word by Word', 'Fade', 'Slide from Left', 'Slide from Right', 'Drop', 'Pop', 'None']
 def text_motion(delay, dist):
     def fn(st, feel):

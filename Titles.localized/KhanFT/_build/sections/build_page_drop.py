@@ -62,11 +62,13 @@ L1, L1S, l1 = d.text('Title Line 1', 'সঞ্চয় আগে,', 250, INK, 
 l1 = c.text_extras('Line 1', L1, l1, pad=(70, 40))
 L1A = d.new(); c.burn(lambda: c.feel_links(L1A, rise(0.42, 60)))
 _, l1 = d.group('Line 1 Anim', L1A, children=l1, beh=c.text_anim('Line 1', L1A, 0.85, 60, seq=L1_SEQ[0]))
+L1O = c.hi(d.new, 'out_id', 98000); l1 = d.group('Line 1 Out', L1O, children=l1, beh=c.text_out('Line 1', L1O, 60, seq=L1_SEQ[1]))[1]
 L2_FN, L2_SEQ = c.word_seq('Line 2 Words', 1.0, 2)
 L2, L2S, l2 = d.text('Title Line 2', 'খরচ পরে', 250, INK, align=0, beh_fn=L2_FN)
 l2 = c.text_extras('Line 2', L2, l2, pad=(70, 40))
 L2A = d.new(); c.burn(lambda: c.feel_links(L2A, rise(0.56, 60)))
 _, l2 = d.group('Line 2 Anim', L2A, children=l2, beh=c.text_anim('Line 2', L2A, 1.0, 60, seq=L2_SEQ[0]))
+L2O = c.hi(d.new, 'out_id', 98000); l2 = d.group('Line 2 Out', L2O, children=l2, beh=c.text_out('Line 2', L2O, 60, seq=L2_SEQ[1]))[1]
 _, l2 = d.group('Line 2 Offset', children=l2, py=-300)
 TTLP, ttl = c.place('Title Position', l1 + l2, LEFT, 60)
 CNT_FN, CNT_SEQ = c.word_seq('Counter Words', 1.15, 3)
@@ -74,6 +76,7 @@ CNT, CNTS_, cnt = d.text('Counter', '০২ / ০৫', 72, GREYTXT, align=0, tra
 cnt = c.text_extras('Counter', CNT, cnt, pad=(40, 22))
 CNTA = d.new(); c.burn(lambda: c.feel_links(CNTA, rise(0.7, 25)))
 _, cnt = d.group('Counter Anim', CNTA, children=cnt, beh=c.text_anim('Counter', CNTA, 1.15, 25, seq=CNT_SEQ[0]))
+CNTO = c.hi(d.new, 'out_id', 98000); cnt = d.group('Counter Out', CNTO, children=cnt, beh=c.text_out('Counter', CNTO, 25, seq=CNT_SEQ[1]))[1]
 CSH = d.new(); _, cnt = d.group('Counter Show', CSH, children=cnt, beh=d.rig('Rig Show Counter', CSH, 'GRP', './1/200/202', W_SHC, [(1, 0), (2, 1)], pname='Opacity'))
 CNTP, cnt = c.place('Counter Position', cnt, LEFT, 760)
 
@@ -92,7 +95,7 @@ P(c.W_RESET, './2/100', 'Reset Layout')
 CO = d.new(); CI = d.new()
 _, card = d.group('Card Out', CO, children=grain + ico + cnt + ttl + bgs, beh=c.drop_blur(EXIT, W_EXT, W_XSPD, W_BLUR, TDY, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out, W_XSPD))
 _, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_ESPD, W_BLUR, TDY, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in, W_ESPD))
-path, s = c.save(card, OUTDIR, markers=(2.4, END-1.5), thumb=SCR + 'chk_1.png')
+path, s = c.save(card, OUTDIR, markers=(2.4, END-2.0), thumb=SCR + 'chk_1.png')
 print('wrote', path, len(s))
 
 # ======================================================= transition
