@@ -74,12 +74,12 @@ def _shape(s, radius, w):
     return make
 
 
-def motion_layer(c, d, FW, FH):
+def motion_layer(c, d, FW, FH, layer=0, speed='Normal'):
     """returns (xml, publish) - publish(P) adds the three controls to the inspector.
     Never call run() inside another run() lambda: the band cursor is only stored when the outer call returns."""
     def run(fn): return c.hi(fn, *BAND)
-    W_LAY = run(lambda: d.w_popup('Motion Layer', LAYERS, 0))
-    W_SPD = run(lambda: d.w_popup('Motion Speed', MSPEEDS, 1))
+    W_LAY = run(lambda: d.w_popup('Motion Layer', LAYERS, layer))
+    W_SPD = run(lambda: d.w_popup('Motion Speed', MSPEEDS, MSPEEDS.index(speed)))
 
     def img(name, path, w, h, op, px=0, py=0):
         rel = f'Media/Motion {name}.png'; c.media[rel] = path
@@ -89,18 +89,18 @@ def motion_layer(c, d, FW, FH):
     def osc(gid, name, chan, amp, period, phase=0.0):
         """oscillate with a full cycle of `period` s at Normal speed; Motion Speed rigs its rate"""
         cpm = 60.0/period
-        oid, ox = run(lambda: d.osc(gid, name, chan, amp, cpm, phase=phase))
+        oid, ox = run(lambda: d.osc(gid, name, chan, amp, round(cpm*MMUL[speed], 5), phase=phase))   # base = the default speed
         ox += run(lambda: d.rig(f'Rig {name} Speed', oid, 'OSC', './202', W_SPD, [(j+1, round(cpm*MMUL[sp], 5)) for j, sp in enumerate(MSPEEDS)], pname='Speed'))
         return ox
 
     def rate(gid, name, chan, r):
-        bid, bx = run(lambda: d.rate(gid, name, chan, r))
+        bid, bx = run(lambda: d.rate(gid, name, chan, round(r*MMUL[speed], 6)))
         bx += run(lambda: d.rig(f'Rig {name} Speed', bid, 'RATE', './200', W_SPD, [(j+1, round(r*MMUL[sp], 6)) for j, sp in enumerate(MSPEEDS)], pname='Rate'))
         return bx
 
     def option(i, name, children, beh=''):
         gid = run(d.new)
-        _, x = run(lambda: d.group(f'Motion {name}', gid, children=children, op=1 if i == 0 else 0,
+        _, x = run(lambda: d.group(f'Motion {name}', gid, children=children, op=1 if i == layer else 0,
                                    beh=beh + d.rig(f'Rig Motion {name}', gid, 'GRP', './1/200/202', W_LAY,
                                                    [(j+1, 1 if j == i else 0) for j in range(len(LAYERS))], pname='Opacity')))
         return x

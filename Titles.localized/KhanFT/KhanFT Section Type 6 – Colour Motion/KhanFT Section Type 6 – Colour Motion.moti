@@ -449,7 +449,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="1"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -462,7 +462,7 @@
 <parameter name="Snapshots" id="9" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="8"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="10" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="9"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Colour Preset" id="100" flags="8606777360" default="0" value="0">
+<parameter name="Colour Preset" id="100" flags="8606777360" default="0" value="1">
 <entry name="Amber" tag="0"/>
 <entry name="Teal" tag="1"/>
 <entry name="Coral" tag="2"/>
@@ -826,12 +826,12 @@
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704"><parameter name="Options" id="103" flags="8589938688"/>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="1"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Counter Float" id="100" flags="8606711824" default="0" value="0"/></parameter></scenenode>
+<parameter name="Counter Float" id="100" flags="8606711824" default="0" value="1"/></parameter></scenenode>
 <scenenode name="Counter Float Amount" id="30052" factoryID="27" version="5">
 <affecting>3</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -855,7 +855,7 @@
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Counter Float Speed" id="100" flags="8606712080" default="0" value="0.3"/></parameter></scenenode>
+<parameter name="Counter Float Speed" id="100" flags="8606712080" default="0" value="0.4"/></parameter></scenenode>
 <scenenode name="Counter Box Offset Y" id="80001" factoryID="27" version="5">
 <affecting>3</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -950,7 +950,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="8"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="6"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -961,7 +961,7 @@
 <parameter name="Snapshots" id="7" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="6"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="8" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="7"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Counter Text Out" id="100" flags="8606777360" default="0" value="7">
+<parameter name="Counter Text Out" id="100" flags="8606777360" default="0" value="5">
 <entry name="Rise" tag="0"/>
 <entry name="Word by Word" tag="1"/>
 <entry name="Fade" tag="2"/>
@@ -1003,12 +1003,12 @@
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704"><parameter name="Options" id="103" flags="8589938688"/>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="1"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Title Box" id="100" flags="8606711824" default="0" value="0"/></parameter></scenenode>
+<parameter name="Title Box" id="100" flags="8606711824" default="0" value="1"/></parameter></scenenode>
 <scenenode name="Title Box Padding X" id="30176" factoryID="27" version="5">
 <affecting>3</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -1038,12 +1038,12 @@
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704"><parameter name="Options" id="103" flags="8589938688"/>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="1"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Title Float" id="100" flags="8606711824" default="0" value="0"/></parameter></scenenode>
+<parameter name="Title Float" id="100" flags="8606711824" default="0" value="1"/></parameter></scenenode>
 <scenenode name="Title Float Amount" id="30179" factoryID="27" version="5">
 <affecting>3</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -1067,7 +1067,7 @@
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Title Float Speed" id="100" flags="8606712080" default="0" value="0.3"/></parameter></scenenode>
+<parameter name="Title Float Speed" id="100" flags="8606712080" default="0" value="0.4"/></parameter></scenenode>
 <scenenode name="Title Box Offset Y" id="80015" factoryID="27" version="5">
 <affecting>3</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -1162,7 +1162,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="8"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="6"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -1173,7 +1173,7 @@
 <parameter name="Snapshots" id="7" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="6"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="8" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="7"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Title Text Out" id="100" flags="8606777360" default="0" value="7">
+<parameter name="Title Text Out" id="100" flags="8606777360" default="0" value="5">
 <entry name="Rise" tag="0"/>
 <entry name="Word by Word" tag="1"/>
 <entry name="Fade" tag="2"/>
@@ -1215,12 +1215,12 @@
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704"><parameter name="Options" id="103" flags="8589938688"/>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="1"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Show Icon" id="100" flags="8606711824" default="0" value="0"/></parameter></scenenode>
+<parameter name="Show Icon" id="100" flags="8606711824" default="0" value="1"/></parameter></scenenode>
 <scenenode name="Icon" id="30329" factoryID="27" version="5">
 <affecting>2</affecting>
 <snapshot>1</snapshot>
@@ -1371,7 +1371,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="7"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="6"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -1381,7 +1381,7 @@
 <parameter name="Snapshots" id="6" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="5"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="7" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="6"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Icon Out" id="100" flags="8606777360" default="0" value="6">
+<parameter name="Icon Out" id="100" flags="8606777360" default="0" value="5">
 <entry name="Pop" tag="0"/>
 <entry name="Rise" tag="1"/>
 <entry name="Fade" tag="2"/>
@@ -1431,7 +1431,7 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="1"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="4"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
@@ -1439,7 +1439,7 @@
 <parameter name="Snapshots" id="4" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="3"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="5" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="4"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Motion Layer" id="100" flags="8606777360" default="0" value="0">
+<parameter name="Motion Layer" id="100" flags="8606777360" default="0" value="3">
 <entry name="Quiet Rings" tag="0"/>
 <entry name="Light Sweep" tag="1"/>
 <entry name="Drifting Dot Grid" tag="2"/>
@@ -1460,13 +1460,13 @@
 <parameter name="Properties" id="1" flags="8589938704"/>
 <parameter name="Object" id="2" flags="8589938704">
 <parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
-<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="3"/>
 <parameter name="Snapshots" id="101" flags="8589938706">
 <parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 <parameter name="Snapshots" id="3" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="2"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Motion Speed" id="100" flags="8606777360" default="0" value="1">
+<parameter name="Motion Speed" id="100" flags="8606777360" default="0" value="2">
 <entry name="Slow" tag="0"/>
 <entry name="Normal" tag="1"/>
 <entry name="Fast" tag="2"/>
@@ -3565,7 +3565,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="131661" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="131662" flags="16777234" default="-100" value="-100"/>
@@ -3600,7 +3600,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="131666" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="131667" flags="16777234" default="-100" value="-100"/>
@@ -3637,7 +3637,7 @@
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="0.85"/><parameter name="Y" id="2" flags="8606711824" default="1" value="0.85"/></parameter>
 </parameter>
-<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/></parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
 <behavior name="Rig Show Icon" id="30416" factoryID="26">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/200/202" sliderRange="1"/>
@@ -4811,7 +4811,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30109" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30110" flags="16777234" default="-100" value="-100"/>
@@ -4841,7 +4841,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1.0"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30115" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30116" flags="16777234" default="-100" value="-100"/>
@@ -5696,7 +5696,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="98789" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="98790" flags="16777234" default="-100" value="-100"/>
@@ -5732,7 +5732,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="98794" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="98795" flags="16777234" default="-100" value="-100"/>
@@ -6982,7 +6982,7 @@
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/></parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
 <behavior name="Rig Title Box" id="30228" factoryID="26">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/200/202" sliderRange="1"/>
@@ -7020,7 +7020,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30236" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30237" flags="16777234" default="-100" value="-100"/>
@@ -7050,7 +7050,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="0"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1.0"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="30242" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="30243" flags="16777234" default="-100" value="-100"/>
@@ -7905,7 +7905,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="0.5625"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="99770" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="99771" flags="16777234" default="-100" value="-100"/>
@@ -7941,7 +7941,7 @@
 <parameter name="Apply Mode" id="200" flags="8606777360" default="2" value="2"/>
 <parameter name="Scale" id="204" flags="8606711824" default="1" value="1"/>
 <parameter name="Mix Time Range" id="206" flags="8606711826" default="10" value="10"/>
-<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="0"/>
+<parameter name="Custom Mix" id="207" flags="8606711824" default="1" value="1"/>
 <parameter name="Clamp Source Value Within Range" id="209" flags="8606711826" default="1" value="0"/>
 <parameter name="Value offset" id="99775" flags="16777232" default="0" value="0"/>
 <parameter name="Value min" id="99776" flags="16777234" default="-100" value="-100"/>
@@ -9218,7 +9218,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120113"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="6.3"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.4"/>
 </behavior>
 <behavior name="Rig Shape 8 X Speed" id="120115" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9240,7 +9240,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120113"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="7.4"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.7647058823529411"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.82353"/>
 </behavior>
 <behavior name="Rig Shape 8 Y Speed" id="120117" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9262,7 +9262,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120113"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="8.3"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.3043478260869565"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.08696"/>
 </behavior>
 <behavior name="Rig Shape 8 Tilt Speed" id="120119" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9348,7 +9348,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120104"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="5.4"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.6666666666666667"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.66667"/>
 </behavior>
 <behavior name="Rig Shape 7 X Speed" id="120106" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9370,7 +9370,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120104"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="6.5"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.9607843137254903"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="3.13725"/>
 </behavior>
 <behavior name="Rig Shape 7 Y Speed" id="120108" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9392,7 +9392,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120104"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="7.4"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.4492753623188406"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.31884"/>
 </behavior>
 <behavior name="Rig Shape 7 Tilt Speed" id="120110" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9478,7 +9478,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120095"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="4.5"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.4285714285714286"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.28571"/>
 </behavior>
 <behavior name="Rig Shape 6 X Speed" id="120097" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9500,7 +9500,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120095"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="5.6"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.6806722689075633"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.68908"/>
 </behavior>
 <behavior name="Rig Shape 6 Y Speed" id="120099" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9522,7 +9522,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120095"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="6.5"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.2422360248447206"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.98758"/>
 </behavior>
 <behavior name="Rig Shape 6 Tilt Speed" id="120101" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9608,7 +9608,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120086"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="3.6"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.0"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="3.2"/>
 </behavior>
 <behavior name="Rig Shape 5 X Speed" id="120088" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9630,7 +9630,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120086"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="4.7"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.3529411764705883"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="3.76471"/>
 </behavior>
 <behavior name="Rig Shape 5 Y Speed" id="120090" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9652,7 +9652,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120086"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="5.6"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.7391304347826086"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.78261"/>
 </behavior>
 <behavior name="Rig Shape 5 Tilt Speed" id="120092" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9738,7 +9738,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120077"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="2.7"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.7647058823529411"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.82353"/>
 </behavior>
 <behavior name="Rig Shape 4 X Speed" id="120079" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9760,7 +9760,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120077"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="3.8000000000000003"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.0761245674740487"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="3.3218"/>
 </behavior>
 <behavior name="Rig Shape 4 Y Speed" id="120081" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9782,7 +9782,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120077"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="4.7"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.534526854219949"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.45524"/>
 </behavior>
 <behavior name="Rig Shape 4 Tilt Speed" id="120083" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9868,7 +9868,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120068"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="1.8"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.2"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.92"/>
 </behavior>
 <behavior name="Rig Shape 3 X Speed" id="120070" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9890,7 +9890,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120068"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="2.9000000000000004"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.411764705882353"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.25882"/>
 </behavior>
 <behavior name="Rig Shape 3 Y Speed" id="120072" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9912,7 +9912,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120068"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="3.8"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.0434782608695654"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.66957"/>
 </behavior>
 <behavior name="Rig Shape 3 Tilt Speed" id="120074" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -9998,7 +9998,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120059"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="0.9"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.3043478260869565"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.08696"/>
 </behavior>
 <behavior name="Rig Shape 2 X Speed" id="120061" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10020,7 +10020,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120059"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="2.0"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5345268542199488"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.45524"/>
 </behavior>
 <behavior name="Rig Shape 2 Y Speed" id="120063" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10042,7 +10042,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120059"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="2.9"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.1342155009451795"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.81474"/>
 </behavior>
 <behavior name="Rig Shape 2 Tilt Speed" id="120065" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10128,7 +10128,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120050"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="0.0"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="90"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5789473684210527"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.52632"/>
 </behavior>
 <behavior name="Rig Shape 1 X Speed" id="120052" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10150,7 +10150,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120050"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="1.1"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="80"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.8575851393188856"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.97214"/>
 </behavior>
 <behavior name="Rig Shape 1 Y Speed" id="120054" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10172,7 +10172,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120050"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="2.0"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.21"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.3729977116704808"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.1968"/>
 </behavior>
 <behavior name="Rig Shape 1 Tilt Speed" id="120056" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10199,7 +10199,7 @@
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/></parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
 <behavior name="Rig Motion Floating Shapes" id="120121" factoryID="26">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/200/202" sliderRange="1"/>
@@ -10288,7 +10288,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120041"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="0.0"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="420"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="0.9375"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5"/>
 </behavior>
 <behavior name="Rig Drift X Speed" id="120043" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10310,7 +10310,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120041"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="1.0471975511965976"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="210"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="0.9375"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="1.5"/>
 </behavior>
 <behavior name="Rig Drift Y Speed" id="120045" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10441,7 +10441,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120034"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="-1.5707963267948966"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="4800"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="2.5"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="4.0"/>
 </behavior>
 <behavior name="Rig Sweep Speed" id="120036" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10556,7 +10556,7 @@
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120021"/>
-<parameter name="Rate" id="200" flags="8606711824" default="0" value="0.0241660973353061"/>
+<parameter name="Rate" id="200" flags="8606711824" default="0" value="0.038666"/>
 </behavior>
 <behavior name="Rig Ring 5 Turn Speed" id="120023" factoryID="26">
 <channelBehavior affectingFactory="742cb47d503411d891e9000a95b0025a" affectingChannel="./200" sliderRange="1"/>
@@ -10704,7 +10704,7 @@
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120013"/>
-<parameter name="Rate" id="200" flags="8606711824" default="0" value="-0.028559933214452663"/>
+<parameter name="Rate" id="200" flags="8606711824" default="0" value="-0.045696"/>
 </behavior>
 <behavior name="Rig Ring 3 Turn Speed" id="120015" factoryID="26">
 <channelBehavior affectingFactory="742cb47d503411d891e9000a95b0025a" affectingChannel="./200" sliderRange="1"/>
@@ -10852,7 +10852,7 @@
 <timing in="0 1 1 0" out="1199198 120000 1 0" offset="0 1 1 0"/>
 <baseFlags>8589934608</baseFlags>
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120005"/>
-<parameter name="Rate" id="200" flags="8606711824" default="0" value="0.039269908169872414"/>
+<parameter name="Rate" id="200" flags="8606711824" default="0" value="0.062832"/>
 </behavior>
 <behavior name="Rig Ring 1 Turn Speed" id="120007" factoryID="26">
 <channelBehavior affectingFactory="742cb47d503411d891e9000a95b0025a" affectingChannel="./200" sliderRange="1"/>
@@ -10888,7 +10888,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120024"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="0.0"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.0175"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="4.285714285714286"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="6.85714"/>
 </behavior>
 <behavior name="Rig Rings Breathe X Speed" id="120026" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10910,7 +10910,7 @@
 <parameter name="Affecting Object (Hidden)" id="199" flags="77326254098" default="0" value="120024"/>
 <parameter name="Phase" id="200" flags="8606711824" default="0" value="0.0"/>
 <parameter name="Amplitude" id="201" flags="8606711824" default="100" value="0.0175"/>
-<parameter name="Speed" id="202" flags="8606711824" default="10" value="4.285714285714286"/>
+<parameter name="Speed" id="202" flags="8606711824" default="10" value="6.85714"/>
 </behavior>
 <behavior name="Rig Rings Breathe Y Speed" id="120028" factoryID="26">
 <channelBehavior affectingFactory="1a262447ab7011d7bb4600039366fb58" affectingChannel="./202" sliderRange="1"/>
@@ -10937,7 +10937,7 @@
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/></parameter>
 </parameter>
 <behavior name="Rig Motion Quiet Rings" id="120030" factoryID="26">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/200/202" sliderRange="1"/>
@@ -11285,7 +11285,7 @@
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/></parameter>
 </parameter>
 <behavior name="Rig Amber" id="30014" factoryID="26">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/200/202" sliderRange="1"/>
@@ -11623,7 +11623,7 @@
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags><parameter name="Z" id="3" flags="8606711824" default="0" value="0"/></parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="1" value="1"/><parameter name="Y" id="2" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
-<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="0"/></parameter>
+<parameter name="Blending" id="200" flags="8589938704"><parameter name="Opacity" id="202" flags="8606711824" default="1" value="1"/></parameter>
 </parameter>
 <behavior name="Rig Teal" id="30019" factoryID="26">
 <channelBehavior affectingFactory="44da0700f6ab11d68c24000393670732" affectingChannel="./1/200/202" sliderRange="1"/>

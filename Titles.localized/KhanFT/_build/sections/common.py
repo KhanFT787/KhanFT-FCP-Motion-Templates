@@ -93,11 +93,11 @@ class Card:
             self.seq_out[bid] = nd; return bid, x
         return self.hi(mk, 'out_id', 98000)
 
-    def text_out(self, label, gid, dist, seq=None, rename=None):
+    def text_out(self, label, gid, dist, seq=None, rename=None, default='None'):
         """exit for one text: '<label> Text Out' (the Text In looks, reversed; default None = leaves with the card)
         and '<label> Out Speed'. Behaviours go on a wrapper group gid around the text's Anim group."""
         d = self.d; band = ('out_id', 98000)
-        di = TEXT_OUT.index('None')
+        di = TEXT_OUT.index(default)
         W = self.hi(lambda: d.w_popup(f'{label} Text Out', [(rename or {}).get(t, t) for t in TEXT_OUT], di), *band)
         WS = self.hi(lambda: d.w_popup(f'{label} Out Speed', SPEEDS, 1), *band)
         self.out_w[label] = [(W, f'{label} Text Out'), (WS, f'{label} Out Speed')]
@@ -242,7 +242,7 @@ class Card:
 
     # ---- per-text extras: a box that fits the text (live bounds via Align To markers) + its own float
     def text_extras(self, label, tid, text_xml, box_on=False, float_on=False, box_col=(1, 1, 1), box_op=0.9,
-                    pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None):
+                    pad=(60, 34), rnd=26, border=None, shadow=(0.25, 40, 14), box_wrap=None, float_speed=0.3):
         """returns xml: Float group > [text, edge markers, box]. Publishes '<label> …' controls."""
         d = self.d; P = d.publish
         K, KY = 4.0, 2.25
@@ -251,7 +251,7 @@ class Card:
         W_PY = d.w_slider(f'{label} Box Padding Y', round(pad[1]/200, 4), 0, 200)
         W_FL = d.w_check(f'{label} Float', float_on)
         W_FA = d.w_slider(f'{label} Float Amount', 0.3, 0, 100)
-        W_FS = d.w_slider(f'{label} Float Speed', 0.3, 0, 100)
+        W_FS = d.w_slider(f'{label} Float Speed', float_speed, 0, 100)
         # padded edge markers (invisible 2x2 shapes aligned to the text's edges)
         M = {}; mk = ''
         for nm, code, axis, wid, mx, chan in (('L', 2, -1, W_PX, 300, './203/1'), ('R', 3, 1, W_PX, 300, './203/1'),
@@ -296,8 +296,8 @@ class Card:
         if box_wrap: box = box_wrap(box)
         # float
         FS = d.new()
-        o1, x1 = d.osc(FS, 'Float Y', './1/100/101/2', 30, 11.0, phase=round(sum(map(ord, label)) % 628 / 100, 2))
-        o2, x2 = d.osc(FS, 'Float Tilt', './1/100/109/3', 0.012, 7.0, phase=1.3)
+        o1, x1 = d.osc(FS, 'Float Y', './1/100/101/2', 30, 11.0 if float_speed == 0.3 else round(2 + 30*float_speed, 4), phase=round(sum(map(ord, label)) % 628 / 100, 2))
+        o2, x2 = d.osc(FS, 'Float Tilt', './1/100/109/3', 0.012, 7.0 if float_speed == 0.3 else round(1.5 + 19.5*float_speed, 4), phase=1.3)
         sp = d.rig('Rig Float Y Speed', o1, 'OSC', './202', W_FS, [(1, 2), (2, 32)], pname='Speed', rng='100')
         sp += d.rig('Rig Float Tilt Speed', o2, 'OSC', './202', W_FS, [(1, 1.5), (2, 21)], pname='Speed', rng='100')
         _, fsrc = d.group(f'{label} Float Source', FS, beh=x1 + x2 + sp); self.drivers += fsrc
@@ -313,7 +313,7 @@ class Card:
         return g
 
     # ---- optional floating icon: built-in finance icons or your own image, soft shadow, float
-    def icon_block(self, px=0, py=600, size=0.9, show=False, shadow=(0.35, 40, 26, 4.7124), t0=0.12, publish=True):
+    def icon_block(self, px=0, py=600, size=0.9, show=False, shadow=(0.35, 40, 26, 4.7124), t0=0.12, publish=True, icon_out='None'):
         d = self.d
         W_ICON = d.w_check('Show Icon', show)
         W_SRC = d.w_popup('Icon', ICONS + ['Custom Image'], 0)
@@ -348,12 +348,12 @@ class Card:
         band = ('icon_id', 130000)   # own range: the text-out band (98000+) runs past 99000 on cards with several texts
         W_IIN = self.hi(lambda: d.w_popup('Icon In', ICON_IN, 0), *band)
         W_IINS = self.hi(lambda: d.w_popup('Icon In Speed', SPEEDS, 1), *band)
-        W_IOUT = self.hi(lambda: d.w_popup('Icon Out', ICON_OUT, ICON_OUT.index('None')), *band)
+        W_IOUT = self.hi(lambda: d.w_popup('Icon Out', ICON_OUT, ICON_OUT.index(icon_out)), *band)
         W_IOUTS = self.hi(lambda: d.w_popup('Icon Out Speed', SPEEDS, 1), *band)
         beh = self.hi(lambda: self.style_links(IPA, ICON_IN, W_IIN, 0, icon_in_motion(t0), w_speed=W_IINS), *band)
         _, g = d.group('Icon Pop', IPA, children=g, beh=beh)
         IOU = self.hi(d.new, *band)
-        beh = self.hi(lambda: self.style_links(IOU, ICON_OUT, W_IOUT, ICON_OUT.index('None'), icon_out_motion(), w_speed=W_IOUTS), *band)
+        beh = self.hi(lambda: self.style_links(IOU, ICON_OUT, W_IOUT, ICON_OUT.index(icon_out), icon_out_motion(), w_speed=W_IOUTS), *band)
         _, g = d.group('Icon Out', IOU, children=g, beh=beh)
         ISH = d.new()
         _, g = d.group('Icon Show', ISH, children=g, op=1 if show else 0, sx=size, sy=size,
