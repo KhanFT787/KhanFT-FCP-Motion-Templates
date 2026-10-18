@@ -24,6 +24,8 @@ MMUL = {'Slow': 0.6, 'Normal': 1.0, 'Fast': 1.6}
 BAND = ('motion_id', 120000)
 BAND_X = ('motion_x', 150000)    # Type 6 layers added later (so the first four and Motion Strength keep their ids)
 STRENGTH = 0.5
+INK_PRESETS = ('Paper',)
+INK = (0.30, 0.24, 0.17)   # warm dark-brown ink for the motion on light presets
 PH = 1.0         # Oscillate Phase units per radian
 RUN_S = 90       # scrolling layers are long enough for this many seconds at Fast
 
@@ -576,7 +578,7 @@ BUILDERS = {
 }
 
 
-def motion_layer(c, d, FW, FH, layer=0, speed='Normal', kind='calm'):
+def motion_layer(c, d, FW, FH, layer=0, speed='Normal', kind='calm', presets=None, w_pre=None):
     """returns (xml, publish) - publish(P) adds the three controls to the inspector.
     Never call run() inside another run() lambda: the band cursor is only stored when the outer call returns."""
     layers = SETS[kind]
@@ -590,7 +592,23 @@ def motion_layer(c, d, FW, FH, layer=0, speed='Normal', kind='calm'):
         out = m.option(name, BUILDERS[name](m)) + out
     m.band = BAND
     ML = m.new()
-    _, xml = m.run(lambda: d.group('Motion Layer', ML, children=out, op=STRENGTH))
+    beh = ''
+    if presets and w_pre:   # light presets (Paper): white motion would vanish, so a Colorize turns it to soft ink
+        fid = m.new()
+        mix0 = 0   # base = the default preset's value (Teal)
+        ink = ''.join(f'<parameter name="{n}" id="{k+1}" flags="8606711824" default="0" value="{v}"/>' for k, (n, v) in enumerate(zip(('Red', 'Green', 'Blue'), INK)))
+        beh = (f'<filter name="Motion Ink" id="{fid}" factoryID="{d.F("FILT")}" pluginUUID="D995BBCF-F766-4950-89D5-7A4828CD9B6F" pluginVersion="1" pluginName="Colorize" pluginDynamicParams="0">\n'
+               f'{TIMING}\n<baseFlags>8589934608</baseFlags>\n'
+               f'<parameter name="Remap Black To" id="1" flags="12884906000"><foldFlags>15</foldFlags>{ink}</parameter>\n'
+               f'<parameter name="Remap White To" id="2" flags="12884906000"><foldFlags>15</foldFlags>{ink}</parameter>\n'
+               '<parameter name="Intensity" id="3" flags="12901679120" default="1" value="1"/>\n'
+               '<parameter name="Colorize::HDR In Rec. 709" id="4" flags="12905938992" default="0" value="0"/>\n'
+               f'<parameter name="Mix" id="10001" flags="12901679104" default="1" value="{mix0}"/>\n'
+               '<parameter name="Flip" id="10002" flags="12905938976" default="0" value="0"/>\n'
+               '<parameter name="Input Points" id="10003" flags="12905938976" default="1" value="1"/>\n</filter>\n')
+        beh += m.run(lambda: d.rig('Rig Motion Ink', fid, 'FILT', './10001', w_pre,
+                                   [(j+1, 1 if nm in INK_PRESETS else 0) for j, nm in enumerate(presets)], pname='Mix'))
+    _, xml = m.run(lambda: d.group('Motion Layer', ML, children=out, op=STRENGTH, beh=beh))
 
     def publish(P):
         P(W_LAY, './2/100', 'Motion Layer'); P(ML, './1/200/202', 'Motion Strength'); P(W_SPD, './2/100', 'Motion Speed')

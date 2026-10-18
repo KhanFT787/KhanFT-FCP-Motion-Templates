@@ -13,7 +13,7 @@ def build(card, thumb, motion_args):
     rep("c = Card('KhanFT Section Type 3 – Colour Field'); d = c.d", f"c = Card({card!r}); d = c.d")
     rep("P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')\n",
         "P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')\n"
-        f"from motion_layer import motion_layer\nmotion, motion_pub = motion_layer(c, d, FW, FH, {motion_args}); motion_pub(P)\n")
+        f"from motion_layer import motion_layer\nmotion, motion_pub = motion_layer(c, d, FW, FH, {motion_args}, presets=[p[0] for p in PRESETS], w_pre=W_PRE); motion_pub(P)\n")
     rep("children=grain + vig + content + backgrounds,", "children=grain + vig + content + motion + backgrounds,")
     rep("thumb='/tmp/claude-0/-home-claude/14ea8a7a-73b0-5e09-b753-32cc7b5c2796/scratchpad/chk_2.png'", "thumb=" + repr(thumb))
     # defaults

@@ -17,6 +17,11 @@ PRESETS = [('Amber', hexc('ffd35a'), hexc('f0a21e'), hexc('b86006')),
            ('Sage', hexc('d6e9b8'), hexc('97b46b'), hexc('4a6330')),
            ('Sand', hexc('f8e4ba'), hexc('dcb877'), hexc('8a6830')),
            ('Lilac', hexc('dccbff'), hexc('9c7ee6'), hexc('4c3492')),
+           ('Paper', hexc('fffbf2'), hexc('f6eedb'), hexc('e6d9bb')),
+           ('Mint', hexc('c9f5df'), hexc('6fd1a4'), hexc('1f7a55')),
+           ('Peach', hexc('ffe0c2'), hexc('f7a86b'), hexc('a3552a')),
+           ('Slate', hexc('dce5ef'), hexc('8fa4bd'), hexc('3f5470')),
+           ('Plum', hexc('f3cde8'), hexc('b5649e'), hexc('5c2052')),
            ('Custom', hexc('a8ec86'), hexc('4fae3c'), hexc('235c20'))]
 ENTR = ['Cut', 'Fade', 'Zoom'] + DROP_IN + ['Fade Up', 'Rise In', 'Slide from Left', 'Slide from Right']
 EXIT = ['Cut', 'Fade', 'Zoom Out'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Slide to Left', 'Slide to Right']
@@ -51,7 +56,7 @@ def rise(delay, dist):
 
 # ---------- backgrounds
 bgs = ''; BG = {}
-NEW_PRESETS = ('Sky', 'Rose', 'Sage', 'Sand', 'Lilac')   # added later: ids from the high range so older clips keep their settings
+NEW_PRESETS = ('Sky', 'Rose', 'Sage', 'Sand', 'Lilac', 'Paper', 'Mint', 'Peach', 'Slate', 'Plum')   # added later: ids from the high range so older clips keep their settings
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
     def make():
         g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, py=40, rnd=950, feather=1100)
