@@ -8,6 +8,7 @@ OUTDIR = os.environ.get('OUTDIR', '/home/claude/kft/out')
 SCR = '/tmp/claude-0/-home-claude/14ea8a7a-73b0-5e09-b753-32cc7b5c2796/scratchpad/'
 OB = os.path.join(SRC, 'orbit')
 FW, FH, OV = 3840, 2160, 500
+EDGE = 1800   # card colour extends this far past the frame so its soft glows never show a trailing haze while it moves
 c = Card('KhanFT Section Type 5 – Ledger Orbit'); d = c.d
 PRESETS = [('Graphite', hexc('202123'), hexc('151617'), hexc('0b0b0c')),
            ('Midnight', hexc('172033'), hexc('0f1624'), hexc('080b12')),
@@ -16,25 +17,31 @@ PRESETS = [('Graphite', hexc('202123'), hexc('151617'), hexc('0b0b0c')),
 SETS = [('Coin and Stones', ['Gold Coin', 'Jade Stone', 'Grey Stone']),
         ('Three Coins', ['Gold Coin', 'Silver Coin', 'Bronze Coin']),
         ('Custom Images', [None, None, None])]
-ENTR = merge_styles(['Cut', 'Fade', 'Zoom'], ENTR_ALL)
-EXIT = merge_styles(['Cut', 'Fade', 'Zoom Out'], EXIT_ALL)
+ENTR = ['Cut', 'Fade', 'Zoom'] + DROP_IN + ['Fade Up', 'Rise In', 'Slide from Left', 'Slide from Right']
+EXIT = ['Cut', 'Fade', 'Zoom Out'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Slide to Left', 'Slide to Right']
+ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_SET = d.w_popup('Objects', [s[0] for s in SETS], 0)
 W_RING = d.w_check('Show Ring', True)
 W_SPD = d.w_slider('Orbit Speed', 0.5, 0, 100)
-W_ENT = d.w_popup('Entrance', ENTR, 0)
-W_EXT = d.w_popup('Exit', EXIT, 0)
+W_ENT = d.w_popup('Entrance', ENTR, ENT0)
+W_EXT = d.w_popup('Exit', EXIT, EXT0)
+W_BLUR = c.hi(lambda: d.w_slider('Drop Blur Amount', 0.5, 0, 100), 'drop_id', 95000)
 c.W_FEEL = d.w_popup('Motion Feel', FEELS, 0)
 c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
 def card_in(st, feel):
+    r = drop_style(st, feel, 4100)
+    if r: return r
     if st not in ('Fade', 'Zoom'): return std_in(st, feel)
     din = DUR[feel]
     if st == 'Fade': return dict(op=keys(0.0, din*0.6, smooth))
     f = (lambda p: 1.07 - 0.07*ease_out4(p)) if feel != 'Gentle Bounce' else (lambda p: 1.07 - 0.07*spring(p, ov=0.25))
     return dict(sx=keys(0.0, din, f), op=keys(0.0, din*0.5, smooth))
 def card_out(st, feel):
+    r = drop_style(st, feel, 4100)
+    if r: return r
     if st not in ('Fade', 'Zoom Out'): return std_out(st, feel)
     dout = DUR[feel]*0.7; t0 = END - dout - 0.02
     if st == 'Fade': return dict(op=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1-smooth(q))[1:])
@@ -46,7 +53,7 @@ bgs = ''; BG = {}
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
     g1, a = d.rect(f'{nm} Glow', 3000, 2000, hi, px=-500, rnd=1000, feather=1200)
     g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1200)
-    g3, b = d.rect(f'{nm} Edge', FW+2*OV, FH+2*OV, edge)
+    g3, b = d.rect(f'{nm} Edge', FW+2*EDGE, FH+2*EDGE, edge)
     gg = d.new()
     _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
                    beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
@@ -132,7 +139,7 @@ _, t2 = d.group('Line 2 Offset', children=t2, py=-250)
 TTLP, ttl = c.place('Title Position', t1 + t2, LEFT, 30)
 
 ico = c.icon_block(px=1300, py=-650, size=0.6, show=False, t0=0.5)
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(VIG, './1/200/202', 'Vignette'); P(LN, './1/200/202', 'Line Texture'); P(GR, './1/200/202', 'Grain')
@@ -149,7 +156,7 @@ P(ORBP, './1/100/101', 'Orbit Position'); P(OSZ, './1/100/105', 'Orbit Size')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 CO = d.new(); CI = d.new()
-_, card = d.group('Card Out', CO, children=vig + grain + lines + ico + ttl + lbl + orbit + bgs, beh=c.style_links(CO, EXIT, W_EXT, 0, card_out))
-_, card = d.group('Card In', CI, children=card, beh=c.style_links(CI, ENTR, W_ENT, 0, card_in))
+_, card = d.group('Card Out', CO, children=vig + grain + lines + ico + ttl + lbl + orbit + bgs, beh=c.drop_blur(EXIT, W_EXT, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out))
+_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in))
 path, s = c.save(card, OUTDIR, markers=(1.4, END-0.6), thumb=SCR + 'chk_4.png')
 print('wrote', path, len(s))

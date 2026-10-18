@@ -6,6 +6,7 @@ from common import *
 OUTDIR = os.environ.get('OUTDIR', '/home/claude/kft/out')
 c = Card('KhanFT Section Type 3 – Colour Field'); d = c.d
 FW, FH, OV = 3840, 2160, 500
+EDGE = 1800   # card colour extends this far past the frame so its soft glows never show a trailing haze while it moves
 NAVY = hexc('0f1a2c')
 PRESETS = [('Amber', hexc('ffd35a'), hexc('f0a21e'), hexc('b86006')),
            ('Teal', hexc('7be6d2'), hexc('22a493'), hexc('0a5a53')),
@@ -17,28 +18,34 @@ PRESETS = [('Amber', hexc('ffd35a'), hexc('f0a21e'), hexc('b86006')),
            ('Sand', hexc('f8e4ba'), hexc('dcb877'), hexc('8a6830')),
            ('Lilac', hexc('dccbff'), hexc('9c7ee6'), hexc('4c3492')),
            ('Custom', hexc('a8ec86'), hexc('4fae3c'), hexc('235c20'))]
-ENTR = merge_styles(['Cut', 'Fade', 'Zoom'], ENTR_ALL)
-EXIT = merge_styles(['Cut', 'Fade', 'Zoom Out'], EXIT_ALL)
+ENTR = ['Cut', 'Fade', 'Zoom'] + DROP_IN + ['Fade Up', 'Rise In', 'Slide from Left', 'Slide from Right']
+EXIT = ['Cut', 'Fade', 'Zoom Out'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Slide to Left', 'Slide to Right']
+ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
 T_IN, T_OUT = 1.0, END - 0.6
 
 W_PRE = d.w_popup('Colour Preset', [p[0] for p in PRESETS], 0)
 W_SHC = d.w_check('Show Counter', True)
 W_PIPS = d.w_popup('Progress Pips', ['Off', '3', '4', '5', '6'], 2)
 W_CUR = d.w_popup('Current Pip', ['1', '2', '3', '4', '5', '6'], 0)
-W_ENT = d.w_popup('Entrance', ENTR, 0)
-W_EXT = d.w_popup('Exit', EXIT, 0)
+W_ENT = d.w_popup('Entrance', ENTR, ENT0)
+W_EXT = d.w_popup('Exit', EXIT, EXT0)
+W_BLUR = c.hi(lambda: d.w_slider('Drop Blur Amount', 0.5, 0, 100), 'drop_id', 95000)
 c.W_FEEL = d.w_popup('Motion Feel', FEELS, 0)
 W_PUSH = d.w_check('Slow Push-in', True)
 c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
 def card_in(st, feel):
+    r = drop_style(st, feel, 4100)
+    if r: return r
     if st not in ('Fade', 'Zoom'): return std_in(st, feel)
     din = DUR[feel]
     if st == 'Fade': return dict(op=[(0, 0)] + keys(0.0, din*0.6, smooth)[1:])
     f = (lambda p: 1.07 - 0.07*ease_out4(p)) if feel != 'Gentle Bounce' else (lambda p: 1.07 - 0.07*spring(p, ov=0.25))
     return dict(sx=keys(0.0, din, f), op=keys(0.0, din*0.5, smooth))
 def card_out(st, feel):
+    r = drop_style(st, feel, 4100)
+    if r: return r
     if st not in ('Fade', 'Zoom Out'): return std_out(st, feel)
     dout = DUR[feel]*0.7; t0 = END - dout - 0.02
     if st == 'Fade': return dict(op=[(0, 1), (t0, 1)] + keys(t0, dout, lambda q: 1-smooth(q))[1:])
@@ -62,14 +69,13 @@ for i, (nm, hi, mid, edge) in enumerate(PRESETS):
     def make():
         g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, py=40, rnd=950, feather=1100)
         g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1300)
-        g3, b = d.rect(f'{nm} Edge', FW+2*OV, FH+2*OV, edge)
+        g3, b = d.rect(f'{nm} Edge', FW+2*EDGE, FH+2*EDGE, edge)
         gg = d.new()
         _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
                        beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
         return x, (g1, g2, g3)
     if nm in NEW_PRESETS:
-        keep = getattr(c, 'hi_id', 80000); c.hi_id = getattr(c, 'preset_hi', 90000)
-        x, BG[nm] = c.hi(make); c.preset_hi = c.hi_id; c.hi_id = keep
+        x, BG[nm] = c.hi(make, 'preset_hi', 90000)
     else:
         x, BG[nm] = make()
     bgs += x
@@ -112,7 +118,7 @@ PIPP, prow = c.place('Pips Position', prow, 0, -830)
 
 # ---------- publish (inspector order): colours > icon > counter > title > pips > animation > reset
 ico = c.icon_block(px=0, py=640, size=0.85)
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(W_PRE, './2/100', 'Colour Preset')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
@@ -130,7 +136,7 @@ CONT = d.new()
 lid, lx = d.link('Push-in', CONT, 'GRP', './1/100/105', PD, CH['sx'][2], mix=1)
 _, content = d.group('Content', CONT, children=ico + cnt + ttl + prow, beh=lx + d.rig('Rig Push-in', lid, 'LNK', './207', W_PUSH, [(1, 0), (2, 1)], pname='Custom Mix'))
 CO = d.new(); CI = d.new()
-_, card = d.group('Card Out', CO, children=grain + vig + content + backgrounds, beh=c.style_links(CO, EXIT, W_EXT, 0, card_out))
-_, card = d.group('Card In', CI, children=card, beh=c.style_links(CI, ENTR, W_ENT, 0, card_in))
+_, card = d.group('Card Out', CO, children=grain + vig + content + backgrounds, beh=c.drop_blur(EXIT, W_EXT, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out))
+_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in))
 path, s = c.save(card, OUTDIR, thumb='/tmp/claude-0/-home-claude/14ea8a7a-73b0-5e09-b753-32cc7b5c2796/scratchpad/chk_2.png')
 print('wrote', path, len(s))

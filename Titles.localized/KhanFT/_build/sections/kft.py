@@ -17,10 +17,11 @@ U = dict(GRP='44da0700f6ab11d68c24000393670732', SHP='712462a4323911d78f84000393
          W='e35c74f01d5042f6b468eb530169bfb7', CW='11615b89cbc0483fb92e95eb0c80e59c',
          C='fdc1944b229111d7b1c300039389b702', SEQ='9279a0e120d64a82b26b4cf79391ff47',
          BASIC='03ce4d4f0ea74b3b9af072a0e4a61ab7', SUBST='f4c2c6ef713f4a18ae987242c8b7f619',
-         STYLE='044beba5ad3211d7ac9b000393833f6a', ALIGN='eecb322ed23242d8ae51f33765574dbd', RATE='742cb47d503411d891e9000a95b0025a')
+         STYLE='044beba5ad3211d7ac9b000393833f6a', ALIGN='eecb322ed23242d8ae51f33765574dbd', RATE='742cb47d503411d891e9000a95b0025a',
+         FILT='deca4859b16011d7a12d0003936f6f92')
 DESC = dict(GRP='Group', SHP='Shape', IMG='Image', TXT='Text', OSC='Oscillate', LNK='Link', RIG='Rig',
             RB='Rig Behavior', W='Widget', CW='Channel', C='Channel', SEQ='Sequence Text',
-            BASIC='Basic Ch', SUBST='Substance Ch', STYLE='Style', ALIGN='Align To', RATE='Rate')
+            BASIC='Basic Ch', SUBST='Substance Ch', STYLE='Style', ALIGN='Align To', RATE='Rate', FILT='ProPlugin Filter')
 
 def T(sec): return f'{int(round(sec*TB/FR))*FR} {TB} 1 0'
 
@@ -123,13 +124,18 @@ class Doc:
     def scal(name, pid, default, v):
         return f'<parameter name="{name}" id="{pid}" flags="8606711824" default="{default}" value="{v}"/>'
 
-    def group(self, name, gid=None, children='', px=0, py=0, sx=1, sy=1, rz=0, op=1, beh='', ax=0, ay=0):
+    def group(self, name, gid=None, children='', px=0, py=0, sx=1, sy=1, rz=0, op=1, beh='', ax=0, ay=0, pz=None, crop=None):
         """px/py/sx/sy/op may be numbers or keyframe lists [(t,v),...]"""
         gid = gid or self.new()
         def ch(nm, pid, dflt, v): return self.curve(nm, pid, dflt, v) if isinstance(v, list) else self.scal(nm, pid, dflt, v)
         anchor = ''
         if ax or ay:
             anchor = f'<parameter name="Anchor Point" id="107" flags="8589938704"><foldFlags>15</foldFlags>{self.scal("X","1",0,ax)}{self.scal("Y","2",0,ay)}</parameter>'
+        fixed = ''
+        if crop:   # Fixed Resolution: the group renders only this centred area (clips soft glows that spill past a card's edge)
+            fixed = ('<parameter name="Object" id="2" flags="8589938704"><parameter name="Fixed Resolution" id="301" flags="8589936658" default="0" value="1"/>'
+                     f'<parameter name="Fixed Width" id="302" flags="12884901910" default="3840" value="{crop[0]}"/>'
+                     f'<parameter name="Fixed Height" id="303" flags="12884901910" default="2160" value="{crop[1]}"/></parameter>\n')
         x = f'''<group name="{name}" id="{gid}">
 {children}<aspectRatio>1</aspectRatio>
 <flags>0</flags>
@@ -138,13 +144,13 @@ class Doc:
 <baseFlags>524304</baseFlags>
 <parameter name="Properties" id="1" flags="8589938704">
 <parameter name="Transform" id="100" flags="8589938704">
-<parameter name="Position" id="101" flags="8589938704"><foldFlags>11</foldFlags>{ch('X','1',0,px)}{ch('Y','2',0,py)}</parameter>
+<parameter name="Position" id="101" flags="8589938704"><foldFlags>11</foldFlags>{ch('X','1',0,px)}{ch('Y','2',0,py)}{ch('Z','3',0,pz) if pz is not None else ''}</parameter>
 <parameter name="Rotation" id="109" flags="8589938704"><foldFlags>15</foldFlags>{ch('Z','3',0,rz)}</parameter>
 <parameter name="Scale" id="105" flags="8589938704"><foldFlags>15</foldFlags>{ch('X','1',1,sx)}{ch('Y','2',1,sy)}</parameter>
 {anchor}</parameter>
 <parameter name="Blending" id="200" flags="8589938704">{ch('Opacity','202',1,op)}</parameter>
 </parameter>
-{beh}</group>
+{fixed}{beh}</group>
 '''
         return gid, x
 
@@ -280,7 +286,12 @@ class Doc:
                     x += f'<parameter name="{cn}" id="{k+1}" factoryID="{self.F("C")}"><flags>8606711824</flags><curve type="1" default="0" value="{cv}"/></parameter>'
                 x += '</parameter>\n'
             else:
-                x += f'<parameter name="{pname}" id="{sid}" factoryID="{self.F("C")}"><flags>8606711824</flags><curve type="1" default="1" value="{v}"/></parameter>\n'
+                if isinstance(v, list):   # animated snapshot: the rig blends between whole animation curves
+                    cv = self.curve(pname, sid, 1, v)
+                    cv = cv.replace(f'<parameter name="{pname}" id="{sid}" flags="8606711824">', f'<parameter name="{pname}" id="{sid}" factoryID="{self.F("C")}"><flags>8606711824</flags>', 1)
+                    x += cv + '\n'
+                else:
+                    x += f'<parameter name="{pname}" id="{sid}" factoryID="{self.F("C")}"><flags>8606711824</flags><curve type="1" default="1" value="{v}"/></parameter>\n'
         return x + '</parameter>\n</behavior>\n'
 
     def osc(self, target, name, chan, amp, speed, phase=0, afffac='GRP'):
@@ -369,6 +380,22 @@ class Doc:
 <parameter name="{name}" id="100" flags="8606712080" default="0" value="{val}"/></parameter></scenenode>
 '''
         return wid
+
+    def dir_blur(self, name, angle=1.5707963267948966, amount=0):
+        """Directional Blur filter (amount 0, no crop so the blur can spill past the card edge). Returns (fid, xml)."""
+        fid = self.new()
+        x = (f'<filter name="{name}" id="{fid}" factoryID="{self.F("FILT")}" pluginUUID="2E7B1340-5D4F-4015-8AA0-53BEB9F2CA52" pluginVersion="1" pluginName="Directional Blur" pluginDynamicParams="0">\n'
+             f'{TIMING}\n<baseFlags>8589934608</baseFlags>\n'
+             + (f'<parameter name="Amount" id="1" flags="12901679120" default="7" value="{amount}"/>\n' if not isinstance(amount, list) else
+                self.curve('Amount', '1', 7, amount).replace('flags="8606711824"', 'flags="12901679120"', 1) + '\n') +
+             f'<parameter name="Angle" id="2" flags="12901679120" default="0" value="{angle}"/>\n'
+             '<parameter name="Crop" id="3" flags="12901679104" default="0" value="0"/>\n'
+             '<parameter name="OSC Center" id="4" flags="12889165856"><foldFlags>15</foldFlags></parameter>\n'
+             '<parameter name="Mix" id="10001" flags="12901679104" default="1" value="1"/>\n'
+             '<parameter name="Flip" id="10002" flags="12905938976" default="0" value="0"/>\n'
+             '<parameter name="Input Points" id="10003" flags="12905938976" default="1" value="1"/>\n'
+             '<parameter name="Publish OSC" id="10005" flags="12901679104" default="0" value="0"/>\n</filter>\n')
+        return fid, x
 
     def publish(self, obj, chan, name): self.pub.append((obj, chan, name))
 

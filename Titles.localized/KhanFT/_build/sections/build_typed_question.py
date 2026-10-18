@@ -6,6 +6,7 @@ from common import *
 OUTDIR = os.environ.get('OUTDIR', '/home/claude/kft/out')
 SCR = '/tmp/claude-0/-home-claude/14ea8a7a-73b0-5e09-b753-32cc7b5c2796/scratchpad/'
 FW, FH, OV = 3840, 2160, 500
+EDGE = 1800   # card colour extends this far past the frame so its soft glows never show a trailing haze while it moves
 WHITE = hexc('f4f6fa')
 c = Card('KhanFT Section Type 4 – Typed Question'); d = c.d
 PRESETS = [('Navy', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
@@ -13,25 +14,31 @@ PRESETS = [('Navy', hexc('24395a'), hexc('18263c'), hexc('0e1726')),
            ('Forest', hexc('25453a'), hexc('183028'), hexc('0d1c17')),
            ('Plum', hexc('45284a'), hexc('2e1a33'), hexc('1b0f1e')),
            ('Custom', hexc('24395a'), hexc('18263c'), hexc('0e1726'))]
-ENTR = merge_styles(['Cut', 'Dissolve', 'Fade Up'], ENTR_ALL)
-EXIT = merge_styles(['Cut', 'Fade'], EXIT_ALL)
+ENTR = ['Cut', 'Dissolve', 'Fade Up'] + DROP_IN + ['Fade', 'Zoom', 'Rise In', 'Slide from Left', 'Slide from Right']
+EXIT = ['Cut', 'Fade'] + DROP_DOWN + DROP_OUT + ['Fade Down', 'Zoom Out', 'Slide to Left', 'Slide to Right']
+ENT0, EXT0 = ENTR.index('Drop In – Blur'), EXIT.index('Drop Down – Blur')   # defaults
 SPEEDS = [('Normal', 1.9)]
 T0 = 0.3
 W_PRE = d.w_popup('Background', [p[0] for p in PRESETS], 0)
 W_CUR = d.w_check('Show Cursor', True)
 W_GRID = d.w_check('Show Grid', True)
-W_ENT = d.w_popup('Entrance', ENTR, 1)
-W_EXT = d.w_popup('Exit', EXIT, 0)
+W_ENT = d.w_popup('Entrance', ENTR, ENT0)
+W_EXT = d.w_popup('Exit', EXIT, EXT0)
+W_BLUR = c.hi(lambda: d.w_slider('Drop Blur Amount', 0.5, 0, 100), 'drop_id', 95000)
 c.W_FEEL = d.w_popup('Motion Feel', FEELS, 0)
 c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 
 def card_in(st, feel):
+    r = drop_style(st, feel, 4100)
+    if r: return r
     if st not in ('Dissolve', 'Fade Up'): return std_in(st, feel)
     dd = DUR[feel]*(0.5 if st == 'Dissolve' else 1)
     if st == 'Dissolve': return dict(op=keys(0, 0.16, lambda p: p))
     return dict(op=keys(0, dd*0.7, smooth), py=keys(0, dd, lambda p: -80*(1-ease_out4(p))))
 def card_out(st, feel):
+    r = drop_style(st, feel, 4100)
+    if r: return r
     if st != 'Fade': return std_out(st, feel)
     dd = DUR[feel]*0.7; t0 = END-dd-0.01
     return dict(op=[(0, 1), (t0, 1)] + keys(t0, dd, lambda q: 1-smooth(q))[1:])
@@ -41,7 +48,7 @@ bgs = ''; BG = {}
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
     g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, rnd=950, feather=1200)
     g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1200)
-    g3, b = d.rect(f'{nm} Edge', FW+2*OV, FH+2*OV, edge)
+    g3, b = d.rect(f'{nm} Edge', FW+2*EDGE, FH+2*EDGE, edge)
     gg = d.new()
     _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
                    beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
@@ -95,7 +102,7 @@ qx = c.text_extras('Question', Q, cursor + q, box_on=True, box_col=hexc('6ea0c8'
 QP, qline = c.place('Question Position', qx, 0, -40)
 
 ico = c.icon_block(px=0, py=520, size=0.8, show=False, t0=0.2)
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel')
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(W_BLUR, './2/100', 'Drop Blur Amount'); P(c.W_FEEL, './2/100', 'Motion Feel')
 P(W_PRE, './2/100', 'Background')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
 P(W_GRID, './2/100', 'Show Grid'); P(GRID, './1/200/202', 'Grid Strength'); P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
@@ -106,7 +113,7 @@ P(c.W_RESET, './2/100', 'Reset Layout')
 
 CONT = d.new(); _, content = d.group('Content', CONT, children=ico + qline)
 CO = d.new(); CI = d.new()
-_, card = d.group('Card Out', CO, children=grain + vig + content + grid + bgs, beh=c.style_links(CO, EXIT, W_EXT, 0, card_out))
-_, card = d.group('Card In', CI, children=card, beh=c.style_links(CI, ENTR, W_ENT, 1, card_in))
+_, card = d.group('Card Out', CO, children=grain + vig + content + grid + bgs, beh=c.drop_blur(EXIT, W_EXT, W_BLUR, 4100, 'Exit') + c.style_links(CO, EXIT, W_EXT, EXT0, card_out))
+_, card = d.group('Card In', CI, children=card, beh=c.drop_blur(ENTR, W_ENT, W_BLUR, 4100, 'Entrance') + c.style_links(CI, ENTR, W_ENT, ENT0, card_in))
 path, s = c.save(card, OUTDIR, markers=(T0 + 0.2, END-0.6), thumb=SCR + 'chk_3.png')
 print('wrote', path, len(s))
