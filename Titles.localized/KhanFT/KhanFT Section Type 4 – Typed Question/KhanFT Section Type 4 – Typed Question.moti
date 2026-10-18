@@ -311,12 +311,28 @@
 	</sceneSettings>
 	<publishSettings>
 		<version>2</version>
-		<target object="30070" channel="./2/369" name="Question"/>
-		<target object="30072" channel="./14/16" name="Text Colour"/>
 		<target object="30001" channel="./2/100" name="Background"/>
 		<target object="30028" channel="./2/353/113/111" name="Custom Light"/>
 		<target object="30029" channel="./2/353/113/111" name="Custom Mid"/>
 		<target object="30030" channel="./2/353/113/111" name="Custom Edge"/>
+		<target object="30003" channel="./2/100" name="Show Grid"/>
+		<target object="30060" channel="./1/200/202" name="Grid Strength"/>
+		<target object="30067" channel="./1/200/202" name="Vignette"/>
+		<target object="30069" channel="./1/200/202" name="Grain"/>
+		<target object="30200" channel="./2/100" name="Show Icon"/>
+		<target object="30201" channel="./2/100" name="Icon"/>
+		<target object="30224" channel="./1/324/300" name="Custom Icon Image"/>
+		<target object="30289" channel="./1/100/101" name="Icon Position"/>
+		<target object="30287" channel="./1/100/105" name="Icon Size"/>
+		<target object="30202" channel="./2/100" name="Icon Float"/>
+		<target object="30203" channel="./2/100" name="Icon Float Amount"/>
+		<target object="30204" channel="./2/100" name="Icon Float Speed"/>
+		<target object="30224" channel="./1/208/211" name="Icon Shadow Opacity"/>
+		<target object="30224" channel="./1/208/213" name="Icon Shadow Softness"/>
+		<target object="30224" channel="./1/208/212" name="Icon Shadow Distance"/>
+		<target object="30070" channel="./2/369" name="Question"/>
+		<target object="30072" channel="./14/16" name="Text Colour"/>
+		<target object="30002" channel="./2/100" name="Show Cursor"/>
 		<target object="30092" channel="./2/100" name="Question Float"/>
 		<target object="30093" channel="./2/100" name="Question Float Amount"/>
 		<target object="30094" channel="./2/100" name="Question Float Speed"/>
@@ -332,26 +348,10 @@
 		<target object="30107" channel="./1/208/211" name="Question Box Shadow"/>
 		<target object="30107" channel="./1/208/213" name="Question Box Shadow Softness"/>
 		<target object="30107" channel="./1/208/212" name="Question Box Shadow Distance"/>
-		<target object="30002" channel="./2/100" name="Show Cursor"/>
-		<target object="30003" channel="./2/100" name="Show Grid"/>
-		<target object="30060" channel="./1/200/202" name="Grid Strength"/>
+		<target object="30188" channel="./1/100/101" name="Question Position"/>
 		<target object="30004" channel="./2/100" name="Entrance"/>
 		<target object="30005" channel="./2/100" name="Exit"/>
 		<target object="30006" channel="./2/100" name="Motion Feel"/>
-		<target object="30067" channel="./1/200/202" name="Vignette"/>
-		<target object="30069" channel="./1/200/202" name="Grain"/>
-		<target object="30200" channel="./2/100" name="Show Icon"/>
-		<target object="30201" channel="./2/100" name="Icon"/>
-		<target object="30224" channel="./1/324/300" name="Custom Icon Image"/>
-		<target object="30289" channel="./1/100/101" name="Icon Position"/>
-		<target object="30287" channel="./1/100/105" name="Icon Size"/>
-		<target object="30202" channel="./2/100" name="Icon Float"/>
-		<target object="30203" channel="./2/100" name="Float Amount"/>
-		<target object="30204" channel="./2/100" name="Float Speed"/>
-		<target object="30224" channel="./1/208/211" name="Shadow Opacity"/>
-		<target object="30224" channel="./1/208/213" name="Shadow Softness"/>
-		<target object="30224" channel="./1/208/212" name="Shadow Distance"/>
-		<target object="30188" channel="./1/100/101" name="Question Position"/>
 		<target object="30007" channel="./2/100" name="Reset Layout"/>
 </publishSettings>
 	<currentFrame>0 1 1 0</currentFrame>

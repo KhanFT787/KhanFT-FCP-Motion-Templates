@@ -11,6 +11,11 @@ PRESETS = [('Amber', hexc('ffd35a'), hexc('f0a21e'), hexc('b86006')),
            ('Teal', hexc('7be6d2'), hexc('22a493'), hexc('0a5a53')),
            ('Coral', hexc('ffad90'), hexc('f0664b'), hexc('9e3121')),
            ('Indigo', hexc('7c89ff'), hexc('3a47cf'), hexc('171c63')),
+           ('Sky', hexc('a6dcff'), hexc('3f9fe3'), hexc('114f87')),
+           ('Rose', hexc('ffb7c9'), hexc('ea6f92'), hexc('8a2445')),
+           ('Sage', hexc('d6e9b8'), hexc('97b46b'), hexc('4a6330')),
+           ('Sand', hexc('f8e4ba'), hexc('dcb877'), hexc('8a6830')),
+           ('Lilac', hexc('dccbff'), hexc('9c7ee6'), hexc('4c3492')),
            ('Custom', hexc('a8ec86'), hexc('4fae3c'), hexc('235c20'))]
 ENTR = ['Cut', 'Fade', 'Zoom']
 EXIT = ['Cut', 'Fade', 'Zoom Out']
@@ -50,14 +55,22 @@ def rise(delay, dist):
 
 # ---------- backgrounds
 bgs = ''; BG = {}
+NEW_PRESETS = ('Sky', 'Rose', 'Sage', 'Sand', 'Lilac')   # added later: ids from the high range so older clips keep their settings
 for i, (nm, hi, mid, edge) in enumerate(PRESETS):
-    g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, py=40, rnd=950, feather=1100)
-    g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1300)
-    g3, b = d.rect(f'{nm} Edge', FW+2*OV, FH+2*OV, edge)
-    gg = d.new()
-    _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
-                   beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
-    bgs += x; BG[nm] = (g1, g2, g3)
+    def make():
+        g1, a = d.rect(f'{nm} Glow', 3000, 1900, hi, py=40, rnd=950, feather=1100)
+        g2, m = d.rect(f'{nm} Mid', 4300, 3000, mid, rnd=1500, feather=1300)
+        g3, b = d.rect(f'{nm} Edge', FW+2*OV, FH+2*OV, edge)
+        gg = d.new()
+        _, x = d.group(f'{nm} Background', gg, children=a+m+b, op=1 if i == 0 else 0,
+                       beh=d.rig(f'Rig {nm}', gg, 'GRP', './1/200/202', W_PRE, [(j+1, 1 if j == i else 0) for j in range(len(PRESETS))], pname='Opacity'))
+        return x, (g1, g2, g3)
+    if nm in NEW_PRESETS:
+        keep = getattr(c, 'hi_id', 80000); c.hi_id = getattr(c, 'preset_hi', 90000)
+        x, BG[nm] = c.hi(make); c.preset_hi = c.hi_id; c.hi_id = keep
+    else:
+        x, BG[nm] = make()
+    bgs += x
 _, backgrounds = d.group('Backgrounds', children=bgs)
 vb = ''
 for nm, w, h, x, y in (('Top', FW+1600, 900, 0, FH/2+150), ('Bottom', FW+1600, 900, 0, -FH/2-150),
@@ -95,18 +108,18 @@ SH = d.new(); _, prow = d.group('Pips Row', SH, children=fill + pips, px=-1.5*PI
 PSH = d.new(); _, prow = d.group('Pips Show', PSH, children=prow, beh=d.rig('Rig Pips Show', PSH, 'GRP', './1/200/202', W_PIPS, [(j+1, 0 if n == 0 else 1) for j, n in enumerate(PIP_N)], pname='Opacity'))
 PIPP, prow = c.place('Pips Position', prow, 0, -830)
 
-# ---------- publish (inspector order) - icon block publishes its own block in the middle
-P(CNT, './2/369', 'Counter Text'); P(TTL, './2/369', 'Title Text')
+# ---------- publish (inspector order): colours > icon > counter > title > pips > animation > reset
+ico = c.icon_block(px=0, py=640, size=0.85)
 P(W_PRE, './2/100', 'Colour Preset')
 P(BG['Custom'][0], './2/353/113/111', 'Custom Light'); P(BG['Custom'][1], './2/353/113/111', 'Custom Mid'); P(BG['Custom'][2], './2/353/113/111', 'Custom Edge')
-P(TTL_STY, './14/16', 'Title Colour'); P(CNT_STY, './14/16', 'Counter Colour')
-P(W_SHC, './2/100', 'Show Counter')
-c.pub_extras('Title'); c.pub_extras('Counter')
-P(W_PIPS, './2/100', 'Progress Pips'); P(W_CUR, './2/100', 'Current Pip'); P(FILL, './2/353/113/111', 'Pip Colour')
-P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(VIG, './1/200/202', 'Vignette'); P(GR, './1/200/202', 'Grain')
-ico = c.icon_block(px=0, py=640, size=0.85)
-P(TTLP, './1/100/101', 'Title Position'); P(CNTP, './1/100/101', 'Counter Position'); P(PIPP, './1/100/101', 'Pips Position')
+c.pub_extras('Icon')
+P(CNT, './2/369', 'Counter Text'); P(W_SHC, './2/100', 'Show Counter'); P(CNT_STY, './14/16', 'Counter Colour')
+c.pub_extras('Counter'); P(CNTP, './1/100/101', 'Counter Position')
+P(TTL, './2/369', 'Title Text'); P(TTL_STY, './14/16', 'Title Colour')
+c.pub_extras('Title'); P(TTLP, './1/100/101', 'Title Position')
+P(W_PIPS, './2/100', 'Progress Pips'); P(W_CUR, './2/100', 'Current Pip'); P(FILL, './2/353/113/111', 'Pip Colour'); P(PIPP, './1/100/101', 'Pips Position')
+P(W_ENT, './2/100', 'Entrance'); P(W_EXT, './2/100', 'Exit'); P(c.W_FEEL, './2/100', 'Motion Feel'); P(W_PUSH, './2/100', 'Slow Push-in')
 P(c.W_RESET, './2/100', 'Reset Layout')
 
 # ---------- assemble

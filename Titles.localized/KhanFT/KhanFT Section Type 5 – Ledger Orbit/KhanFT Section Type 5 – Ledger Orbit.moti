@@ -311,12 +311,26 @@
 	</sceneSettings>
 	<publishSettings>
 		<version>2</version>
+		<target object="30001" channel="./2/100" name="Background"/>
+		<target object="30024" channel="./2/353/113/111" name="Custom Light"/>
+		<target object="30025" channel="./2/353/113/111" name="Custom Mid"/>
+		<target object="30026" channel="./2/353/113/111" name="Custom Edge"/>
+		<target object="30038" channel="./1/200/202" name="Vignette"/>
+		<target object="30031" channel="./1/200/202" name="Line Texture"/>
+		<target object="30033" channel="./1/200/202" name="Grain"/>
+		<target object="30458" channel="./2/100" name="Show Icon"/>
+		<target object="30459" channel="./2/100" name="Icon"/>
+		<target object="30482" channel="./1/324/300" name="Custom Icon Image"/>
+		<target object="30547" channel="./1/100/101" name="Icon Position"/>
+		<target object="30545" channel="./1/100/105" name="Icon Size"/>
+		<target object="30460" channel="./2/100" name="Icon Float"/>
+		<target object="30461" channel="./2/100" name="Icon Float Amount"/>
+		<target object="30462" channel="./2/100" name="Icon Float Speed"/>
+		<target object="30482" channel="./1/208/211" name="Icon Shadow Opacity"/>
+		<target object="30482" channel="./1/208/213" name="Icon Shadow Softness"/>
+		<target object="30482" channel="./1/208/212" name="Icon Shadow Distance"/>
 		<target object="30165" channel="./2/369" name="Chapter Label"/>
-		<target object="30289" channel="./2/369" name="Title Line 1"/>
-		<target object="30294" channel="./2/369" name="Title Line 2"/>
 		<target object="30167" channel="./14/16" name="Label Colour"/>
-		<target object="30291" channel="./14/16" name="Line 1 Colour"/>
-		<target object="30296" channel="./14/16" name="Line 2 Colour"/>
 		<target object="30275" channel="./1/200/202" name="Line Opacity"/>
 		<target object="30172" channel="./2/100" name="Label Float"/>
 		<target object="30173" channel="./2/100" name="Label Float Amount"/>
@@ -333,6 +347,9 @@
 		<target object="30187" channel="./1/208/211" name="Label Box Shadow"/>
 		<target object="30187" channel="./1/208/213" name="Label Box Shadow Softness"/>
 		<target object="30187" channel="./1/208/212" name="Label Box Shadow Distance"/>
+		<target object="30277" channel="./1/100/101" name="Label Position"/>
+		<target object="30289" channel="./2/369" name="Title Line 1"/>
+		<target object="30291" channel="./14/16" name="Line 1 Colour"/>
 		<target object="30302" channel="./2/100" name="Line 1 Float"/>
 		<target object="30303" channel="./2/100" name="Line 1 Float Amount"/>
 		<target object="30304" channel="./2/100" name="Line 1 Float Speed"/>
@@ -348,6 +365,8 @@
 		<target object="30317" channel="./1/208/211" name="Line 1 Box Shadow"/>
 		<target object="30317" channel="./1/208/213" name="Line 1 Box Shadow Softness"/>
 		<target object="30317" channel="./1/208/212" name="Line 1 Box Shadow Distance"/>
+		<target object="30294" channel="./2/369" name="Title Line 2"/>
+		<target object="30296" channel="./14/16" name="Line 2 Colour"/>
 		<target object="30374" channel="./2/100" name="Line 2 Float"/>
 		<target object="30375" channel="./2/100" name="Line 2 Float Amount"/>
 		<target object="30376" channel="./2/100" name="Line 2 Float Speed"/>
@@ -363,6 +382,7 @@
 		<target object="30389" channel="./1/208/211" name="Line 2 Box Shadow"/>
 		<target object="30389" channel="./1/208/213" name="Line 2 Box Shadow Softness"/>
 		<target object="30389" channel="./1/208/212" name="Line 2 Box Shadow Distance"/>
+		<target object="30446" channel="./1/100/101" name="Title Position"/>
 		<target object="30002" channel="./2/100" name="Objects"/>
 		<target object="30046" channel="./1/324/300" name="Custom Object 1"/>
 		<target object="30064" channel="./1/324/300" name="Custom Object 2"/>
@@ -370,31 +390,11 @@
 		<target object="30004" channel="./2/100" name="Orbit Speed"/>
 		<target object="30003" channel="./2/100" name="Show Ring"/>
 		<target object="30104" channel="./1/200/202" name="Ring Opacity"/>
-		<target object="30001" channel="./2/100" name="Background"/>
-		<target object="30024" channel="./2/353/113/111" name="Custom Light"/>
-		<target object="30025" channel="./2/353/113/111" name="Custom Mid"/>
-		<target object="30026" channel="./2/353/113/111" name="Custom Edge"/>
+		<target object="30153" channel="./1/100/101" name="Orbit Position"/>
+		<target object="30152" channel="./1/100/105" name="Orbit Size"/>
 		<target object="30005" channel="./2/100" name="Entrance"/>
 		<target object="30006" channel="./2/100" name="Exit"/>
 		<target object="30007" channel="./2/100" name="Motion Feel"/>
-		<target object="30038" channel="./1/200/202" name="Vignette"/>
-		<target object="30031" channel="./1/200/202" name="Line Texture"/>
-		<target object="30033" channel="./1/200/202" name="Grain"/>
-		<target object="30458" channel="./2/100" name="Show Icon"/>
-		<target object="30459" channel="./2/100" name="Icon"/>
-		<target object="30482" channel="./1/324/300" name="Custom Icon Image"/>
-		<target object="30547" channel="./1/100/101" name="Icon Position"/>
-		<target object="30545" channel="./1/100/105" name="Icon Size"/>
-		<target object="30460" channel="./2/100" name="Icon Float"/>
-		<target object="30461" channel="./2/100" name="Float Amount"/>
-		<target object="30462" channel="./2/100" name="Float Speed"/>
-		<target object="30482" channel="./1/208/211" name="Shadow Opacity"/>
-		<target object="30482" channel="./1/208/213" name="Shadow Softness"/>
-		<target object="30482" channel="./1/208/212" name="Shadow Distance"/>
-		<target object="30153" channel="./1/100/101" name="Orbit Position"/>
-		<target object="30152" channel="./1/100/105" name="Orbit Size"/>
-		<target object="30277" channel="./1/100/101" name="Label Position"/>
-		<target object="30446" channel="./1/100/101" name="Title Position"/>
 		<target object="30008" channel="./2/100" name="Reset Layout"/>
 </publishSettings>
 	<currentFrame>0 1 1 0</currentFrame>

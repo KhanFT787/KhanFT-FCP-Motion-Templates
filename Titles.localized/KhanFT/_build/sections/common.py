@@ -211,12 +211,12 @@ class Card:
         _, g = d.group('Icon Show', ISH, children=g, op=1 if show else 0, sx=size, sy=size,
                        beh=d.rig('Rig Show Icon', ISH, 'GRP', './1/200/202', W_ICON, [(1, 0), (2, 1)], pname='Opacity'))
         ICOP, g = self.place('Icon Position', g, px, py)
-        if publish:
-            P = d.publish
+        if publish:   # deferred: the build places the icon block with c.pub_extras('Icon')
+            P = lambda o, ch, n: self.extras_pub.setdefault('Icon', []).append((o, ch, n))
             P(W_ICON, './2/100', 'Show Icon'); P(W_SRC, './2/100', 'Icon'); P(DZ, './1/324/300', 'Custom Icon Image')
             P(ICOP, './1/100/101', 'Icon Position'); P(ISH, './1/100/105', 'Icon Size')
-            P(W_FL, './2/100', 'Icon Float'); P(W_FAMT, './2/100', 'Float Amount'); P(W_FSPD, './2/100', 'Float Speed')
-            P(DZ, './1/208/211', 'Shadow Opacity'); P(DZ, './1/208/213', 'Shadow Softness'); P(DZ, './1/208/212', 'Shadow Distance')
+            P(W_FL, './2/100', 'Icon Float'); P(W_FAMT, './2/100', 'Icon Float Amount'); P(W_FSPD, './2/100', 'Icon Float Speed')
+            P(DZ, './1/208/211', 'Icon Shadow Opacity'); P(DZ, './1/208/213', 'Icon Shadow Softness'); P(DZ, './1/208/212', 'Icon Shadow Distance')
         # icon layers copy the custom drop zone's shadow settings
         self.post_links = getattr(self, 'post_links', []) + [(iid, DZ) for iid in SHADOWED]
         return g

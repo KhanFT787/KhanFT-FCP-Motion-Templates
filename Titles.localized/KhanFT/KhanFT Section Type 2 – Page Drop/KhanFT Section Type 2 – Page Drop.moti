@@ -311,46 +311,24 @@
 	</sceneSettings>
 	<publishSettings>
 		<version>2</version>
-		<target object="30035" channel="./2/369" name="Title Line 1"/>
-		<target object="30145" channel="./2/369" name="Title Line 2"/>
-		<target object="30268" channel="./2/369" name="Counter Text"/>
 		<target object="30001" channel="./2/100" name="Card Colour"/>
 		<target object="30028" channel="./2/353/113/111" name="Custom Card"/>
 		<target object="30029" channel="./2/353/113/111" name="Custom Edge"/>
-		<target object="30037" channel="./14/16" name="Line 1 Colour"/>
-		<target object="30147" channel="./14/16" name="Line 2 Colour"/>
-		<target object="30270" channel="./14/16" name="Counter Colour"/>
+		<target object="30034" channel="./1/200/202" name="Grain"/>
+		<target object="30392" channel="./2/100" name="Show Icon"/>
+		<target object="30393" channel="./2/100" name="Icon"/>
+		<target object="30416" channel="./1/324/300" name="Custom Icon Image"/>
+		<target object="30481" channel="./1/100/101" name="Icon Position"/>
+		<target object="30479" channel="./1/100/105" name="Icon Size"/>
+		<target object="30394" channel="./2/100" name="Icon Float"/>
+		<target object="30395" channel="./2/100" name="Icon Float Amount"/>
+		<target object="30396" channel="./2/100" name="Icon Float Speed"/>
+		<target object="30416" channel="./1/208/211" name="Icon Shadow Opacity"/>
+		<target object="30416" channel="./1/208/213" name="Icon Shadow Softness"/>
+		<target object="30416" channel="./1/208/212" name="Icon Shadow Distance"/>
+		<target object="30268" channel="./2/369" name="Counter Text"/>
 		<target object="30002" channel="./2/100" name="Show Counter"/>
-		<target object="30042" channel="./2/100" name="Line 1 Float"/>
-		<target object="30043" channel="./2/100" name="Line 1 Float Amount"/>
-		<target object="30044" channel="./2/100" name="Line 1 Float Speed"/>
-		<target object="30039" channel="./2/100" name="Line 1 Box"/>
-		<target object="30057" channel="./2/353/113/111" name="Line 1 Box Colour"/>
-		<target object="30057" channel="./1/200/202" name="Line 1 Box Opacity"/>
-		<target object="30057" channel="./2/353/144" name="Line 1 Box Roundness"/>
-		<target object="30040" channel="./2/100" name="Line 1 Box Padding X"/>
-		<target object="30041" channel="./2/100" name="Line 1 Box Padding Y"/>
-		<target object="80001" channel="./2/100" name="Line 1 Box Vertical Offset"/>
-		<target object="30057" channel="./2/353/108/105" name="Line 1 Box Border"/>
-		<target object="30057" channel="./2/353/108/107" name="Line 1 Box Border Colour"/>
-		<target object="30057" channel="./1/208/211" name="Line 1 Box Shadow"/>
-		<target object="30057" channel="./1/208/213" name="Line 1 Box Shadow Softness"/>
-		<target object="30057" channel="./1/208/212" name="Line 1 Box Shadow Distance"/>
-		<target object="30152" channel="./2/100" name="Line 2 Float"/>
-		<target object="30153" channel="./2/100" name="Line 2 Float Amount"/>
-		<target object="30154" channel="./2/100" name="Line 2 Float Speed"/>
-		<target object="30149" channel="./2/100" name="Line 2 Box"/>
-		<target object="30167" channel="./2/353/113/111" name="Line 2 Box Colour"/>
-		<target object="30167" channel="./1/200/202" name="Line 2 Box Opacity"/>
-		<target object="30167" channel="./2/353/144" name="Line 2 Box Roundness"/>
-		<target object="30150" channel="./2/100" name="Line 2 Box Padding X"/>
-		<target object="30151" channel="./2/100" name="Line 2 Box Padding Y"/>
-		<target object="80015" channel="./2/100" name="Line 2 Box Vertical Offset"/>
-		<target object="30167" channel="./2/353/108/105" name="Line 2 Box Border"/>
-		<target object="30167" channel="./2/353/108/107" name="Line 2 Box Border Colour"/>
-		<target object="30167" channel="./1/208/211" name="Line 2 Box Shadow"/>
-		<target object="30167" channel="./1/208/213" name="Line 2 Box Shadow Softness"/>
-		<target object="30167" channel="./1/208/212" name="Line 2 Box Shadow Distance"/>
+		<target object="30270" channel="./14/16" name="Counter Colour"/>
 		<target object="30275" channel="./2/100" name="Counter Float"/>
 		<target object="30276" channel="./2/100" name="Counter Float Amount"/>
 		<target object="30277" channel="./2/100" name="Counter Float Speed"/>
@@ -366,23 +344,45 @@
 		<target object="30290" channel="./1/208/211" name="Counter Box Shadow"/>
 		<target object="30290" channel="./1/208/213" name="Counter Box Shadow Softness"/>
 		<target object="30290" channel="./1/208/212" name="Counter Box Shadow Distance"/>
+		<target object="30380" channel="./1/100/101" name="Counter Position"/>
+		<target object="30035" channel="./2/369" name="Title Line 1"/>
+		<target object="30037" channel="./14/16" name="Line 1 Colour"/>
+		<target object="30042" channel="./2/100" name="Line 1 Float"/>
+		<target object="30043" channel="./2/100" name="Line 1 Float Amount"/>
+		<target object="30044" channel="./2/100" name="Line 1 Float Speed"/>
+		<target object="30039" channel="./2/100" name="Line 1 Box"/>
+		<target object="30057" channel="./2/353/113/111" name="Line 1 Box Colour"/>
+		<target object="30057" channel="./1/200/202" name="Line 1 Box Opacity"/>
+		<target object="30057" channel="./2/353/144" name="Line 1 Box Roundness"/>
+		<target object="30040" channel="./2/100" name="Line 1 Box Padding X"/>
+		<target object="30041" channel="./2/100" name="Line 1 Box Padding Y"/>
+		<target object="80001" channel="./2/100" name="Line 1 Box Vertical Offset"/>
+		<target object="30057" channel="./2/353/108/105" name="Line 1 Box Border"/>
+		<target object="30057" channel="./2/353/108/107" name="Line 1 Box Border Colour"/>
+		<target object="30057" channel="./1/208/211" name="Line 1 Box Shadow"/>
+		<target object="30057" channel="./1/208/213" name="Line 1 Box Shadow Softness"/>
+		<target object="30057" channel="./1/208/212" name="Line 1 Box Shadow Distance"/>
+		<target object="30145" channel="./2/369" name="Title Line 2"/>
+		<target object="30147" channel="./14/16" name="Line 2 Colour"/>
+		<target object="30152" channel="./2/100" name="Line 2 Float"/>
+		<target object="30153" channel="./2/100" name="Line 2 Float Amount"/>
+		<target object="30154" channel="./2/100" name="Line 2 Float Speed"/>
+		<target object="30149" channel="./2/100" name="Line 2 Box"/>
+		<target object="30167" channel="./2/353/113/111" name="Line 2 Box Colour"/>
+		<target object="30167" channel="./1/200/202" name="Line 2 Box Opacity"/>
+		<target object="30167" channel="./2/353/144" name="Line 2 Box Roundness"/>
+		<target object="30150" channel="./2/100" name="Line 2 Box Padding X"/>
+		<target object="30151" channel="./2/100" name="Line 2 Box Padding Y"/>
+		<target object="80015" channel="./2/100" name="Line 2 Box Vertical Offset"/>
+		<target object="30167" channel="./2/353/108/105" name="Line 2 Box Border"/>
+		<target object="30167" channel="./2/353/108/107" name="Line 2 Box Border Colour"/>
+		<target object="30167" channel="./1/208/211" name="Line 2 Box Shadow"/>
+		<target object="30167" channel="./1/208/213" name="Line 2 Box Shadow Softness"/>
+		<target object="30167" channel="./1/208/212" name="Line 2 Box Shadow Distance"/>
+		<target object="30256" channel="./1/100/101" name="Title Position"/>
 		<target object="30003" channel="./2/100" name="Entrance"/>
 		<target object="30004" channel="./2/100" name="Exit"/>
 		<target object="30005" channel="./2/100" name="Motion Feel"/>
-		<target object="30034" channel="./1/200/202" name="Grain"/>
-		<target object="30392" channel="./2/100" name="Show Icon"/>
-		<target object="30393" channel="./2/100" name="Icon"/>
-		<target object="30416" channel="./1/324/300" name="Custom Icon Image"/>
-		<target object="30481" channel="./1/100/101" name="Icon Position"/>
-		<target object="30479" channel="./1/100/105" name="Icon Size"/>
-		<target object="30394" channel="./2/100" name="Icon Float"/>
-		<target object="30395" channel="./2/100" name="Float Amount"/>
-		<target object="30396" channel="./2/100" name="Float Speed"/>
-		<target object="30416" channel="./1/208/211" name="Shadow Opacity"/>
-		<target object="30416" channel="./1/208/213" name="Shadow Softness"/>
-		<target object="30416" channel="./1/208/212" name="Shadow Distance"/>
-		<target object="30256" channel="./1/100/101" name="Title Position"/>
-		<target object="30380" channel="./1/100/101" name="Counter Position"/>
 		<target object="30006" channel="./2/100" name="Reset Layout"/>
 </publishSettings>
 	<currentFrame>0 1 1 0</currentFrame>
