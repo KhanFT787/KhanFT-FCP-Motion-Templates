@@ -30,7 +30,7 @@ c.W_FEEL = d.w_popup('Motion Feel', FEELS, 0)
 c.W_RESET = d.w_check('Reset Layout', False)
 P = d.publish
 DIST_Y, DIST_X = FH + 120, FW + 120                 # transition slate
-TDY, TDX = FH//2 + EDGE + 100, FW//2 + EDGE + 100     # title card (fully off screen)
+TDY, TDX = FH + EDGE + 100, FW + EDGE + 100           # title card travels fully off screen (half frame + half card + margin)
 
 card_in, card_out = card_motion('in', TDX, TDY), card_motion('out', TDX, TDY)
 def rise(delay, dist):
