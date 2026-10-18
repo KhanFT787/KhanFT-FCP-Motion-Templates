@@ -27,10 +27,14 @@ class Card:
         self.media = {}            # relative path -> source file
         self.post_rigs = []        # (behaviour name regex, xml-fn) applied after save
         self.extras_pub = {}
+        self.seq_norm = {}         # Sequence Text id -> reveal time at Normal word speed (behaviour spans the Slow time)
+        self.speed_w = {}          # text label -> (word speed widget, published name)
 
     def pub_extras(self, label):
         w = getattr(self, 'text_in_w', {}).pop(label, None)
         if w: self.d.publish(w, './2/100', f'{label} Text In')
+        sw = self.speed_w.pop(label, None)
+        if sw: self.d.publish(sw[0], './2/100', sw[1])
         for o, c, n in self.extras_pub.pop(label, []): self.d.publish(o, c, n)
 
     # ---- per-text entrance ("<label> Text In" menu)
@@ -38,7 +42,7 @@ class Card:
         """run an old builder only to consume the same ids as before (keeps older clips' settings), discard its output"""
         keep = self.drivers; fn(); self.drivers = keep
 
-    def text_anim(self, label, gid, delay, dist, seq=None, default='Rise', rename=None):
+    def text_anim(self, label, gid, delay, dist, seq=None, default='Rise', rename=None, speed_name='Word Speed'):
         """behaviours for the text's Anim group: every TEXT_IN style x Motion Feel, picked by '<label> Text In'.
         seq: the text's Sequence Text behaviour (word-by-word reveal) - its start opacity is switched by the menu."""
         d = self.d; band = ('text_id', 96000)
@@ -51,6 +55,15 @@ class Card:
             self.seq_base = getattr(self, 'seq_base', {}); self.seq_base[seq] = 0 if default == 'Word by Word' else 1
             beh += self.hi(lambda: d.rig(f'Rig {label} Words', seq, 'SEQ', './1000/1044', W,
                                          [(j+1, 0 if s == 'Word by Word' else 1) for j, s in enumerate(TEXT_IN)], pname='Opacity'), *band)
+            # word speed: the Sequence Text spans the Slow time; End Offset (frames) ends it earlier for Normal / Fast
+            nd = self.seq_norm[seq]; slow = nd*WORD_MUL['Slow']
+            offs = [round((slow - nd*WORD_MUL[sp])*FPS, 3) for sp in WORD_SPEEDS]
+            sband = ('speed_id', 97000)
+            W2 = self.hi(lambda: d.w_popup(f'{label} {speed_name}', WORD_SPEEDS, 1), *sband)
+            self.speed_w[label] = (W2, f'{label} {speed_name}')
+            self.seq_end = getattr(self, 'seq_end', {}); self.seq_end[seq] = offs[1]
+            beh += self.hi(lambda: d.rig(f'Rig {label} Word Speed', seq, 'SEQ', './201/213', W2,
+                                         [(j+1, o) for j, o in enumerate(offs)], pname='End Offset'), *sband)
         return beh
 
     def word_seq(self, name, delay, nwords):
@@ -58,8 +71,9 @@ class Card:
         holder = []
         def fn(tid, sub):
             def mk():
-                bid, x = self.d.seq_words(name, sub, delay, delay + max(0.6, 0.2*nwords), dy=0, spread=0, op0=0)
-                holder.append(bid); return x
+                nd = max(0.6, 0.2*nwords)
+                bid, x = self.d.seq_words(name, sub, delay, delay + nd*WORD_MUL['Slow'], dy=0, spread=0, op0=0)
+                self.seq_norm[bid] = nd; holder.append(bid); return x
             return self.hi(mk, 'text_id', 96000)
         return fn, holder
 
@@ -334,14 +348,22 @@ class Card:
             i = s.index(f' id="{bid}" factoryID="'); j = s.index('</behavior>', i)
             blk = s[i:j]; old = '<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="0"/>'
             assert blk.count(old) == 1, bid
-            s = s[:i] + blk.replace(old, old.replace('value="0"', f'value="{v}"')) + s[j:]
-            # the menu rig must live on the text that owns the Sequence Text (next to it), not on the Anim group
-            m = re.search(r'<behavior name="Rig [^"]*" id="\d+" factoryID="\d+">\n<channelBehavior affectingFactory="[0-9a-f]+" affectingChannel="\./1000/1044"[^>]*/>\n'
-                          r'(?:(?!</behavior>).)*?"Affecting Object \(Hidden\)" id="199"[^>]*value="' + str(bid) + r'"/>.*?</behavior>\n', s, re.S)
-            assert m, bid
-            rig = m.group(0); s = s[:m.start()] + s[m.end():]
+            blk = blk.replace(old, old.replace('value="0"', f'value="{v}"'))
+            if bid in getattr(self, 'seq_end', {}):
+                blk, n = re.subn(r'(<parameter name="End Offset" id="213" flags="8606711824" default="0" value=")[^"]*"', rf'\g<1>{self.seq_end[bid]}"', blk)
+                assert n == 1, bid
+            s = s[:i] + blk + s[j:]
+            # the menu rigs must live on the text that owns the Sequence Text (next to it), not on the Anim group
+            pat = (r'<behavior name="Rig [^"]*" id="\d+" factoryID="\d+">\n<channelBehavior affectingFactory="[0-9a-f]+" affectingChannel="\./(?:1000/1044|201/213)"[^>]*/>\n'
+                   r'(?:(?!</behavior>).)*?"Affecting Object \(Hidden\)" id="199"[^>]*value="' + str(bid) + r'"/>.*?</behavior>\n')
+            rigs = []
+            while True:
+                m = re.search(pat, s, re.S)
+                if not m: break
+                rigs.append(m.group(0)); s = s[:m.start()] + s[m.end():]
+            assert rigs, bid
             j = s.index('</behavior>', s.index(f' id="{bid}" factoryID="')) + len('</behavior>')
-            s = s[:j] + '\n' + rig.rstrip('\n') + s[j:]
+            s = s[:j] + '\n' + ''.join(rigs).rstrip('\n') + s[j:]
         open(path, 'w').write(s)
         md = os.path.join(outdir, self.name, 'Media'); os.makedirs(md, exist_ok=True)
         for rel, src in self.media.items():
@@ -482,6 +504,9 @@ def card_motion(kind, dx, dy):
     return fn
 
 # ---- text entrances (per text, follows Motion Feel)
+WORD_SPEEDS = ['Slow', 'Normal', 'Fast']          # how fast the words come in (Word by Word / Typewriter)
+WORD_MUL = {'Slow': 1.5, 'Normal': 1.0, 'Fast': 0.6}
+FPS = 60000/1001
 TEXT_IN = ['Rise', 'Word by Word', 'Fade', 'Slide from Left', 'Slide from Right', 'Drop', 'Pop', 'None']
 def text_motion(delay, dist):
     def fn(st, feel):

@@ -344,6 +344,7 @@
 		<target object="30167" channel="./14/16" name="Label Colour"/>
 		<target object="30275" channel="./1/200/202" name="Line Opacity"/>
 		<target object="96002" channel="./2/100" name="Label Text In"/>
+		<target object="97001" channel="./2/100" name="Label Word Speed"/>
 		<target object="30172" channel="./2/100" name="Label Float"/>
 		<target object="30173" channel="./2/100" name="Label Float Amount"/>
 		<target object="30174" channel="./2/100" name="Label Float Speed"/>
@@ -363,6 +364,7 @@
 		<target object="30289" channel="./2/369" name="Title Line 1"/>
 		<target object="30291" channel="./14/16" name="Line 1 Colour"/>
 		<target object="96305" channel="./2/100" name="Line 1 Text In"/>
+		<target object="97003" channel="./2/100" name="Line 1 Word Speed"/>
 		<target object="30302" channel="./2/100" name="Line 1 Float"/>
 		<target object="30303" channel="./2/100" name="Line 1 Float Amount"/>
 		<target object="30304" channel="./2/100" name="Line 1 Float Speed"/>
@@ -381,6 +383,7 @@
 		<target object="30294" channel="./2/369" name="Title Line 2"/>
 		<target object="30296" channel="./14/16" name="Line 2 Colour"/>
 		<target object="96608" channel="./2/100" name="Line 2 Text In"/>
+		<target object="97005" channel="./2/100" name="Line 2 Word Speed"/>
 		<target object="30374" channel="./2/100" name="Line 2 Float"/>
 		<target object="30375" channel="./2/100" name="Line 2 Float Amount"/>
 		<target object="30376" channel="./2/100" name="Line 2 Float Speed"/>
@@ -861,6 +864,31 @@
 </parameter>
 </parameter>
 </scenenode>
+<scenenode name="Label Word Speed" id="97001" factoryID="27" version="5">
+<affecting>2</affecting>
+<snapshot>1</snapshot>
+<snapshot>2</snapshot>
+<snapshot>3</snapshot>
+<flags>0</flags>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>16</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704"/>
+<parameter name="Object" id="2" flags="8589938704">
+<parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Snapshots" id="101" flags="8589938706">
+<parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="3" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="2"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Label Word Speed" id="100" flags="8606777360" default="0" value="1">
+<entry name="Slow" tag="0"/>
+<entry name="Normal" tag="1"/>
+<entry name="Fast" tag="2"/>
+</parameter>
+</parameter>
+</scenenode>
 <scenenode name="Line 1 Box" id="30299" factoryID="27" version="5">
 <affecting>1</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -1065,6 +1093,31 @@
 </parameter>
 </parameter>
 </scenenode>
+<scenenode name="Line 1 Word Speed" id="97003" factoryID="27" version="5">
+<affecting>2</affecting>
+<snapshot>1</snapshot>
+<snapshot>2</snapshot>
+<snapshot>3</snapshot>
+<flags>0</flags>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>16</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704"/>
+<parameter name="Object" id="2" flags="8589938704">
+<parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Snapshots" id="101" flags="8589938706">
+<parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="3" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="2"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Line 1 Word Speed" id="100" flags="8606777360" default="0" value="1">
+<entry name="Slow" tag="0"/>
+<entry name="Normal" tag="1"/>
+<entry name="Fast" tag="2"/>
+</parameter>
+</parameter>
+</scenenode>
 <scenenode name="Line 2 Text In" id="96608" factoryID="27" version="5">
 <affecting>2</affecting>
 <snapshot>1</snapshot>
@@ -1102,6 +1155,31 @@
 <entry name="Drop" tag="5"/>
 <entry name="Pop" tag="6"/>
 <entry name="None" tag="7"/>
+</parameter>
+</parameter>
+</scenenode>
+<scenenode name="Line 2 Word Speed" id="97005" factoryID="27" version="5">
+<affecting>2</affecting>
+<snapshot>1</snapshot>
+<snapshot>2</snapshot>
+<snapshot>3</snapshot>
+<flags>0</flags>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>16</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704"/>
+<parameter name="Object" id="2" flags="8589938704">
+<parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Snapshots" id="101" flags="8589938706">
+<parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="3" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="2"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Line 2 Word Speed" id="100" flags="8606777360" default="0" value="1">
+<entry name="Slow" tag="0"/>
+<entry name="Normal" tag="1"/>
+<entry name="Fast" tag="2"/>
 </parameter>
 </parameter>
 </scenenode>
@@ -3027,7 +3105,7 @@
 				</parameter>
 			</parameter>
 			<behavior name="Words In" id="30293" factoryID="29">
-				<timing in="102102 120000 1 0" out="192192 120000 1 0" offset="0 1 1 0"/>
+				<timing in="102102 120000 1 0" out="236236 120000 1 0" offset="0 1 1 0"/>
 				<baseFlags>8589934608</baseFlags>
 				<parameter name="Format" id="1000" flags="8589938704"><parameter name="Position" id="1001" flags="8589938688"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 					<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="0"/>
@@ -3059,7 +3137,7 @@
 							</keypoint>
 						</curve>
 					</parameter>
-				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="0"/></parameter>
+				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="22.478"/></parameter>
 				<parameter name="Basic" id="2000" flags="12884938774" factoryID="30">
 					<parameter name="Substance" id="30292" flags="12884906002" factoryID="31">
 						<parameter name="Color" id="1" flags="4295004162">
@@ -3085,6 +3163,19 @@
 <parameter name="Opacity" id="6" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="7" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="8" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Rig Line 1 Word Speed" id="97004" factoryID="26">
+<channelBehavior affectingFactory="9279a0e120d64a82b26b4cf79391ff47" affectingChannel="./201/213" sliderRange="1"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30293"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="97003"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="End Offset" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0.0"/></parameter>
+<parameter name="End Offset" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="22.478"/></parameter>
+<parameter name="End Offset" id="3" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="40.46"/></parameter>
 </parameter>
 </behavior></scenenode><scenenode name="Line 1 Edge L" id="30305" factoryID="22" version="5">
 			<isShapeStyle>0</isShapeStyle>
@@ -4577,7 +4668,7 @@
 				</parameter>
 			</parameter>
 			<behavior name="Words In" id="30298" factoryID="29">
-				<timing in="126126 120000 1 0" out="216216 120000 1 0" offset="0 1 1 0"/>
+				<timing in="126126 120000 1 0" out="260260 120000 1 0" offset="0 1 1 0"/>
 				<baseFlags>8589934608</baseFlags>
 				<parameter name="Format" id="1000" flags="8589938704"><parameter name="Position" id="1001" flags="8589938688"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 					<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="0"/>
@@ -4609,7 +4700,7 @@
 							</keypoint>
 						</curve>
 					</parameter>
-				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="0"/></parameter>
+				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="22.478"/></parameter>
 				<parameter name="Basic" id="2000" flags="12884938774" factoryID="30">
 					<parameter name="Substance" id="30297" flags="12884906002" factoryID="31">
 						<parameter name="Color" id="1" flags="4295004162">
@@ -4635,6 +4726,19 @@
 <parameter name="Opacity" id="6" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="7" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="8" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Rig Line 2 Word Speed" id="97006" factoryID="26">
+<channelBehavior affectingFactory="9279a0e120d64a82b26b4cf79391ff47" affectingChannel="./201/213" sliderRange="1"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30298"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="97005"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="End Offset" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0.0"/></parameter>
+<parameter name="End Offset" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="22.478"/></parameter>
+<parameter name="End Offset" id="3" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="40.46"/></parameter>
 </parameter>
 </behavior></scenenode><scenenode name="Line 2 Edge L" id="30377" factoryID="22" version="5">
 			<isShapeStyle>0</isShapeStyle>
@@ -6214,7 +6318,7 @@
 				</parameter>
 			</parameter>
 			<behavior name="Label Words" id="96001" factoryID="29">
-				<timing in="90090 120000 1 0" out="162162 120000 1 0" offset="0 1 1 0"/>
+				<timing in="90090 120000 1 0" out="198198 120000 1 0" offset="0 1 1 0"/>
 				<baseFlags>8589934608</baseFlags>
 				<parameter name="Format" id="1000" flags="8589938704"><parameter name="Position" id="1001" flags="8589938688"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 					<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="1"/>
@@ -6246,7 +6350,7 @@
 							</keypoint>
 						</curve>
 					</parameter>
-				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="0"/></parameter>
+				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="17.982"/></parameter>
 				<parameter name="Basic" id="2000" flags="12884938774" factoryID="30">
 					<parameter name="Substance" id="30168" flags="12884906002" factoryID="31">
 						<parameter name="Color" id="1" flags="4295004162">
@@ -6272,6 +6376,19 @@
 <parameter name="Opacity" id="6" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="7" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="8" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Rig Label Word Speed" id="97002" factoryID="26">
+<channelBehavior affectingFactory="9279a0e120d64a82b26b4cf79391ff47" affectingChannel="./201/213" sliderRange="1"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="96001"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="97001"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="End Offset" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0.0"/></parameter>
+<parameter name="End Offset" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="17.982"/></parameter>
+<parameter name="End Offset" id="3" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="32.368"/></parameter>
 </parameter>
 </behavior></scenenode><scenenode name="Label Edge L" id="30175" factoryID="22" version="5">
 			<isShapeStyle>0</isShapeStyle>

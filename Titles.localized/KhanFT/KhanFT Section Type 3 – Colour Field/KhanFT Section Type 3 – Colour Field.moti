@@ -344,6 +344,7 @@
 		<target object="30002" channel="./2/100" name="Show Counter"/>
 		<target object="30045" channel="./14/16" name="Counter Colour"/>
 		<target object="96001" channel="./2/100" name="Counter Text In"/>
+		<target object="97001" channel="./2/100" name="Counter Word Speed"/>
 		<target object="30051" channel="./2/100" name="Counter Float"/>
 		<target object="30052" channel="./2/100" name="Counter Float Amount"/>
 		<target object="30053" channel="./2/100" name="Counter Float Speed"/>
@@ -363,6 +364,7 @@
 		<target object="30171" channel="./2/369" name="Title Text"/>
 		<target object="30173" channel="./14/16" name="Title Colour"/>
 		<target object="96304" channel="./2/100" name="Title Text In"/>
+		<target object="97003" channel="./2/100" name="Title Word Speed"/>
 		<target object="30178" channel="./2/100" name="Title Float"/>
 		<target object="30179" channel="./2/100" name="Title Float Amount"/>
 		<target object="30180" channel="./2/100" name="Title Float Speed"/>
@@ -895,6 +897,31 @@
 </parameter>
 </parameter>
 </scenenode>
+<scenenode name="Counter Word Speed" id="97001" factoryID="27" version="5">
+<affecting>2</affecting>
+<snapshot>1</snapshot>
+<snapshot>2</snapshot>
+<snapshot>3</snapshot>
+<flags>0</flags>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>16</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704"/>
+<parameter name="Object" id="2" flags="8589938704">
+<parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Snapshots" id="101" flags="8589938706">
+<parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="3" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="2"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Counter Word Speed" id="100" flags="8606777360" default="0" value="1">
+<entry name="Slow" tag="0"/>
+<entry name="Normal" tag="1"/>
+<entry name="Fast" tag="2"/>
+</parameter>
+</parameter>
+</scenenode>
 <scenenode name="Title Box" id="30175" factoryID="27" version="5">
 <affecting>1</affecting><snapshot>1</snapshot><snapshot>2</snapshot>
 <flags>0</flags><timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/><foldFlags>0</foldFlags><baseFlags>16</baseFlags>
@@ -1014,6 +1041,31 @@
 <entry name="Drop" tag="5"/>
 <entry name="Pop" tag="6"/>
 <entry name="None" tag="7"/>
+</parameter>
+</parameter>
+</scenenode>
+<scenenode name="Title Word Speed" id="97003" factoryID="27" version="5">
+<affecting>2</affecting>
+<snapshot>1</snapshot>
+<snapshot>2</snapshot>
+<snapshot>3</snapshot>
+<flags>0</flags>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<foldFlags>0</foldFlags>
+<baseFlags>16</baseFlags>
+<parameter name="Properties" id="1" flags="8589938704"/>
+<parameter name="Object" id="2" flags="8589938704">
+<parameter name="Options" id="103" flags="8589938688"><parameter name="Initial Value" id="106" flags="77326254096" default="0" value="0"/></parameter>
+<parameter name="Hidden" id="102" flags="8606711824" default="0" value="2"/>
+<parameter name="Snapshots" id="101" flags="8589938706">
+<parameter name="Snapshots" id="1" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="0"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="2" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="1"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+<parameter name="Snapshots" id="3" flags="8589938704"><parameter name="Value" id="1" flags="8589934608" default="0" value="2"/><parameter name="Interpolation" id="2" flags="8590000144" default="1" value="1"/></parameter>
+</parameter>
+<parameter name="Title Word Speed" id="100" flags="8606777360" default="0" value="1">
+<entry name="Slow" tag="0"/>
+<entry name="Normal" tag="1"/>
+<entry name="Fast" tag="2"/>
 </parameter>
 </parameter>
 </scenenode>
@@ -2891,7 +2943,7 @@
 				</parameter>
 			</parameter>
 			<behavior name="Counter Words" id="30047" factoryID="29">
-				<timing in="90090 120000 1 0" out="162162 120000 1 0" offset="0 1 1 0"/>
+				<timing in="90090 120000 1 0" out="198198 120000 1 0" offset="0 1 1 0"/>
 				<baseFlags>8589934608</baseFlags>
 				<parameter name="Format" id="1000" flags="8589938704"><parameter name="Position" id="1001" flags="8589938688"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 					<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="0"/>
@@ -2923,7 +2975,7 @@
 							</keypoint>
 						</curve>
 					</parameter>
-				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="0"/></parameter>
+				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="17.982"/></parameter>
 				<parameter name="Basic" id="2000" flags="12884938774" factoryID="30">
 					<parameter name="Substance" id="30046" flags="12884906002" factoryID="31">
 						<parameter name="Color" id="1" flags="4295004162">
@@ -2949,6 +3001,19 @@
 <parameter name="Opacity" id="6" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="7" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="8" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Rig Counter Word Speed" id="97002" factoryID="26">
+<channelBehavior affectingFactory="9279a0e120d64a82b26b4cf79391ff47" affectingChannel="./201/213" sliderRange="1"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="30047"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="97001"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="End Offset" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0.0"/></parameter>
+<parameter name="End Offset" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="17.982"/></parameter>
+<parameter name="End Offset" id="3" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="32.368"/></parameter>
 </parameter>
 </behavior></scenenode><scenenode name="Counter Edge L" id="30054" factoryID="22" version="5">
 			<isShapeStyle>0</isShapeStyle>
@@ -4526,7 +4591,7 @@
 				</parameter>
 			</parameter>
 			<behavior name="Title Words" id="96303" factoryID="29">
-				<timing in="102102 120000 1 0" out="174174 120000 1 0" offset="0 1 1 0"/>
+				<timing in="102102 120000 1 0" out="210210 120000 1 0" offset="0 1 1 0"/>
 				<baseFlags>8589934608</baseFlags>
 				<parameter name="Format" id="1000" flags="8589938704"><parameter name="Position" id="1001" flags="8589938688"><foldFlags>15</foldFlags><parameter name="X" id="1" flags="8606711824" default="0" value="0"/><parameter name="Y" id="2" flags="8606711824" default="0" value="0"/></parameter>
 					<parameter name="Opacity" id="1044" flags="8606711824" default="1" value="1"/>
@@ -4558,7 +4623,7 @@
 							</keypoint>
 						</curve>
 					</parameter>
-				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="0"/></parameter>
+				<parameter name="End Offset" id="213" flags="8606711824" default="0" value="17.982"/></parameter>
 				<parameter name="Basic" id="2000" flags="12884938774" factoryID="30">
 					<parameter name="Substance" id="30174" flags="12884906002" factoryID="31">
 						<parameter name="Color" id="1" flags="4295004162">
@@ -4584,6 +4649,19 @@
 <parameter name="Opacity" id="6" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="7" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
 <parameter name="Opacity" id="8" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="1"/></parameter>
+</parameter>
+</behavior>
+<behavior name="Rig Title Word Speed" id="97004" factoryID="26">
+<channelBehavior affectingFactory="9279a0e120d64a82b26b4cf79391ff47" affectingChannel="./201/213" sliderRange="1"/>
+<timing in="0 1 1 0" out="-4004 120000 1 0" offset="0 1 1 0"/>
+<baseFlags>8589934610</baseFlags>
+<parameter name="Affecting Object (Hidden)" id="199" flags="77309476882" default="0" value="96303"/>
+<parameter name="Widget" id="200" flags="77309476880" default="0" value="97003"/>
+<parameter name="Snapshots" id="202" flags="8590004242">
+<flags>8590004242</flags>
+<parameter name="End Offset" id="1" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="0.0"/></parameter>
+<parameter name="End Offset" id="2" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="17.982"/></parameter>
+<parameter name="End Offset" id="3" factoryID="20"><flags>8606711824</flags><curve type="1" default="1" value="32.368"/></parameter>
 </parameter>
 </behavior></scenenode><scenenode name="Title Edge L" id="30181" factoryID="22" version="5">
 			<isShapeStyle>0</isShapeStyle>

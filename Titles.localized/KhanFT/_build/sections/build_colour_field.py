@@ -78,7 +78,7 @@ GR, _, grain = d.image('Grain', 'Grain', 'Media/Grain.png', 1920, 1080, dropzone
 # ---------- counter
 CNT_SEQ = []
 def cnt_beh(tid, sub):
-    bid, x = d.seq_words('Counter Words', sub, 0.75, 1.35, dy=0, spread=0, op0=0); CNT_SEQ.append(bid); return x
+    bid, x = d.seq_words('Counter Words', sub, 0.75, 0.75 + 0.6*WORD_MUL['Slow'], dy=0, spread=0, op0=0); CNT_SEQ.append(bid); c.seq_norm[bid] = 0.6; return x
 CNT, CNT_STY, cnt = d.text('Counter', 'অধ্যায় ১ / ৪', 104, NAVY, beh_fn=cnt_beh)
 cnt = c.text_extras('Counter', CNT, cnt, pad=(50, 26))
 CNTA = d.new(); c.burn(lambda: c.feel_links(CNTA, rise(0.0, 30)))

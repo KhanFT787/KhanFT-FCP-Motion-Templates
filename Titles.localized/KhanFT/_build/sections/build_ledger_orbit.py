@@ -116,7 +116,7 @@ LBLP, lbl = c.place('Label Position', lbl + rule, LEFT, 360)
 T_SEQ = []
 def t_beh(t_in):
     def f(tid, sub):
-        bid, x = d.seq_words('Words In', sub, t_in, t_in+0.75, dy=0, spread=0, op0=0); T_SEQ.append(bid); return x
+        bid, x = d.seq_words('Words In', sub, t_in, t_in + 0.75*WORD_MUL['Slow'], dy=0, spread=0, op0=0); T_SEQ.append(bid); c.seq_norm[bid] = 0.75; return x
     return f
 T1, T1S, t1 = d.text('Title Line 1', 'চক্রবৃদ্ধির', 205, hexc('eeeeee'), align=0, beh_fn=t_beh(0.85))
 T2, T2S, t2 = d.text('Title Line 2', 'জাদু', 205, hexc('cfcfcf'), align=0, beh_fn=t_beh(1.05))
