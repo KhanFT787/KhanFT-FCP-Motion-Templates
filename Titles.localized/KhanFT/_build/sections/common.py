@@ -13,7 +13,8 @@ CH = {'px': ('Pos X', './1/100/101', [('1', './1/100/101/1')], 1),
       'rz': ('Rotate', './1/100/109', [('3', './1/100/109/3')], 1),
       'op': ('Fade', './1/200/202', [('202', './1/200/202')], 1),
       'sy': ('Scale Y', './1/100/105', [('2', './1/100/105/2')], 1),
-      'bl': ('Blur', './1/100/101', [('3', './1/100/101/3')], 1)}   # blur amount rides on a driver's Position Z
+      'bl': ('Blur', './1/100/101', [('3', './1/100/101/3')], 1),
+      'rx': ('Tilt', './1/100/109', [('1', './1/100/109/1')], 1)}   # blur amount rides on a driver's Position Z
 
 
 class Card:
@@ -125,7 +126,7 @@ class Card:
     def drv_group(self, name, kk):
         d = self.d
         gid, x = d.group(name, px=kk.get('px', 0), py=kk.get('py', 0), sx=kk.get('sx', 1), sy=kk.get('sy', kk.get('sx', 1)),
-                         rz=kk.get('rz', 0), op=kk.get('op', 1))
+                         rz=kk.get('rz', 0), op=kk.get('op', 1), rx=kk.get('rx', 0))
         self.drivers += x
         return gid
 
